@@ -61,9 +61,17 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     totalNight: 0,
     totalIMC: 0,
     estimatedFuelBurn: 0,
+    hasInternational: false,
+    mapData: {
+      nodes: [],
+      edges: [],
+      bounds: null,
+    }
   };
 
   const airports = new Set<string>();
+  const drawnEdges = new Set<string>();
+  let minLat = 90, maxLat = -90, minLon = 180, maxLon = -180;
   const aircraftTypes = new Set<string>();
   const tailNumbers = new Set<string>();
   const departureCounts: Record<string, number> = {};
@@ -74,19 +82,69 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalNight += f.night;
     stats.totalIMC += f.instrument;
     
-    // Parse the route to find all valid airports visited
+    // Parse the route to find any valid intermediate airports
     const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
     const validAirportsInRoute = routeTokens
       .map(t => t.toUpperCase())
       .filter(t => airportDB[t]);
       
-    // Fallback if route is empty or lacks waypoints: use explicit departure and destination
-    let flightLegs = validAirportsInRoute.length >= 2 
-      ? validAirportsInRoute 
-      : [f.departure.toUpperCase(), f.destination.toUpperCase()].filter(t => airportDB[t]);
+    // Build a continuous sequence: Departure -> [Route Waypoints] -> Destination
+    const rawLegs = [f.departure.toUpperCase(), ...validAirportsInRoute, f.destination.toUpperCase()];
 
-    // Add valid airports to the unique Set
-    flightLegs.forEach(apt => airports.add(apt));
+    // Filter valid airports and remove consecutive duplicates 
+    // (e.g., if departure was KVKX and route started with KVKX, don't repeat it)
+    const flightLegs: string[] = [];
+    rawLegs.forEach(apt => {
+      if (airportDB[apt]) {
+        if (flightLegs.length === 0 || flightLegs[flightLegs.length - 1] !== apt) {
+          flightLegs.push(apt);
+        }
+      }
+    });
+
+    // Extract Map Data (Edges/Paths)
+    for (let i = 0; i < flightLegs.length - 1; i++) {
+      const start = airportDB[flightLegs[i]];
+      const end = airportDB[flightLegs[i + 1]];
+      if (start && end) {
+        const edgeKey = `${flightLegs[i]}-${flightLegs[i+1]}`;
+        if (!drawnEdges.has(edgeKey)) {
+          drawnEdges.add(edgeKey);
+          // Mapbox uses [longitude, latitude]
+          stats.mapData.edges.push([
+            [start[1], start[0]], 
+            [end[1], end[0]]
+          ]);
+        }
+      }
+    }
+
+    // Add valid airports to the unique Set and calculate bounding box
+    flightLegs.forEach(apt => {
+      airports.add(apt);
+      const coords = airportDB[apt];
+      if (coords) {
+        const [lat, lon] = coords;
+        minLat = Math.min(minLat, lat);
+        maxLat = Math.max(maxLat, lat);
+        minLon = Math.min(minLon, lon);
+        maxLon = Math.max(maxLon, lon);
+      }
+    });
+
+    // Only check departure and destination to prevent VORs in the route (like HCM) 
+    // from triggering false-positive international flags.
+    [f.departure, f.destination].forEach(apt => {
+      const coords = airportDB[apt.toUpperCase()];
+      if (coords) {
+        const [lat, lon] = coords;
+        // Rough CONUS bounding box: Lat 24.3 to 49.4, Lon -125.0 to -66.9
+        const isConus = lat >= 24.3 && lat <= 49.4 && lon >= -125.0 && lon <= -66.9;
+        if (!isConus) {
+          stats.hasInternational = true;
+        }
+      }
+    });
 
     // Trust the distance logged in the CSV
     const flightDist = f.distance;
@@ -129,6 +187,18 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.homeBase = Object.keys(departureCounts).reduce((a, b) => 
     departureCounts[a] > departureCounts[b] ? a : b
   , "Unknown");
+
+  // Finalize Map Data Nodes
+  airports.forEach(apt => {
+    const coords = airportDB[apt];
+    if (coords) {
+      stats.mapData.nodes.push([coords[1], coords[0]]); // [lon, lat]
+    }
+  });
+
+  if (stats.mapData.nodes.length > 0) {
+    stats.mapData.bounds = [minLon, minLat, maxLon, maxLat];
+  }
 
   // Fix shortest flight init value if no flights
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;

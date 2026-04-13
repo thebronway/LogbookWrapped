@@ -16,6 +16,7 @@ export const getPage1Copy = (stats: CalculatedStats) => {
 };
 
 export const getPage2Copy = (stats: CalculatedStats) => {
+  if (stats.hasInternational) return "Mr. Worldwide. Crossing borders and collecting stamps.";
   const max = stats.longestFlight;
   if (max < 100) return "The Local Legend. You know your practice area like the back of your hand.";
   if (max > 500) return "The Cross-Country Cruiser. You definitely got your money's worth out of the autopilot.";

@@ -33,4 +33,10 @@ export interface CalculatedStats {
   totalNight: number;
   totalIMC: number;
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
+  hasInternational: boolean;
+  mapData: {
+    nodes: [number, number][]; // [longitude, latitude]
+    edges: [[number, number], [number, number]][]; // [[lon1, lat1], [lon2, lat2]]
+    bounds: [number, number, number, number] | null; // [minLon, minLat, maxLon, maxLat]
+  };
 }

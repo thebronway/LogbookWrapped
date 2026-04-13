@@ -28,6 +28,11 @@ async function build() {
 
     if (cols[2] === 'closed') continue;
 
+    // Filter to only include US and US Territories (PR, VI, GU, AS, MP)
+    // This prevents route VORs (like HCM) from colliding with global airport codes
+    const allowedCountries = ['US', 'PR', 'VI', 'GU', 'AS', 'MP']; 
+    if (!allowedCountries.includes(cols[8])) continue;
+
     const lat = parseFloat(cols[4]);
     const lon = parseFloat(cols[5]);
     if (isNaN(lat) || isNaN(lon)) continue;

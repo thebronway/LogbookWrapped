@@ -1,22 +1,143 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { CalculatedStats } from '../../core/types';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { CalculatedStats } from '../../core/index';
 import { getPage2Copy } from '../../core/Copywriter';
 
 export const Page2_FootprintMap: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
   const mapCopy = getPage2Copy(stats);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+
+  useEffect(() => {
+    const token = import.meta.env.VITE_MAPBOX_TOKEN;
+    if (!token) return; // Prevent crash if token is missing
+    
+    if (map.current || !mapContainer.current) return; // initialize map only once
+
+    mapboxgl.accessToken = token;
+
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/dark-v11', // Sleek dark mode
+      projection: { name: 'globe' }, // Creates beautiful geodesic curves naturally
+      zoom: 1,
+      center: [-95, 38], 
+      interactive: false, // Prevents user from messing up the "Wrapped" slide framing
+      attributionControl: false
+    });
+
+    map.current.on('style.load', () => {
+      // Add atmosphere for the glowing globe effect
+      map.current?.setFog({
+        'color': 'rgb(15, 23, 42)', // Slate 900
+        'high-color': 'rgb(30, 58, 138)', // Blue 900
+        'horizon-blend': 0.1,
+      });
+
+      // Prepare GeoJSON for Flight Paths (Edges)
+      const features: GeoJSON.Feature<GeoJSON.LineString>[] = stats.mapData.edges.map(edge => ({
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: edge
+        },
+        properties: {}
+      }));
+
+      map.current?.addSource('routes', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: features
+        }
+      });
+
+      // Add Glowing Lines
+      map.current?.addLayer({
+        id: 'route-lines',
+        type: 'line',
+        source: 'routes',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#3b82f6', // Tailwind blue-500
+          'line-width': 2,
+          'line-opacity': 0.4
+        }
+      });
+
+      // Prepare GeoJSON for Airports (Nodes)
+      map.current?.addSource('airports', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: stats.mapData.nodes.map(node => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: node
+            },
+            properties: {}
+          }))
+        }
+      });
+
+      // Add Cyan Dots for Airports
+      map.current?.addLayer({
+        id: 'airport-points',
+        type: 'circle',
+        source: 'airports',
+        paint: {
+          'circle-radius': 3,
+          'circle-color': '#22d3ee', // Tailwind cyan-400
+          'circle-opacity': 0.8,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#000000'
+        }
+      });
+
+      // Fit map to data bounds
+      if (stats.mapData.bounds) {
+        map.current?.fitBounds(stats.mapData.bounds, {
+          padding: 40,
+          duration: 3000, // Smooth 3-second pan on mount
+          essential: true
+        });
+      }
+    });
+
+    // Cleanup Mapbox instance on unmount to fix the React Strict Mode warning
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, [stats]);
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="flex flex-col h-full w-full bg-slate-900 text-white"
     >
-      <div className="h-1/2 w-full bg-slate-800 relative overflow-hidden flex items-center justify-center border-b border-slate-700">
-        {/* Placeholder for Mapbox/Leaflet */}
-        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500 via-slate-900 to-black"></div>
-        <p className="z-10 text-slate-400 font-mono text-sm tracking-widest">[ MAP VISUALIZATION ENGINE ]</p>
+      <div className="flex-1 w-full relative border-b border-slate-700">
+        {/* The Mapbox Container */}
+        <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
+        
+        {/* Fallback Warning if no token */}
+        {!import.meta.env.VITE_MAPBOX_TOKEN && (
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80 z-10">
+            <p className="text-red-400 text-sm font-mono border border-red-500/50 bg-red-500/10 p-4 rounded">
+              Missing VITE_MAPBOX_TOKEN in .env
+            </p>
+          </div>
+        )}
       </div>
-      <div className="h-1/2 p-8 flex flex-col justify-center bg-gradient-to-b from-slate-900 to-blue-950">
-        <p className="text-blue-400 text-sm font-bold uppercase tracking-widest mb-1">Coverage Area</p>
-        <p className="text-4xl font-black mb-4">The Footprint.</p>
+      <div className="p-8 flex flex-col justify-center bg-gradient-to-b from-slate-900 to-blue-950 shrink-0">
+        <p className="text-4xl font-black mb-4">Your Footprint.</p>
         <p className="text-slate-300 text-lg leading-relaxed">{mapCopy}</p>
       </div>
     </motion.div>
