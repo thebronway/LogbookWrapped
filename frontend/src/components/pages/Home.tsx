@@ -42,13 +42,13 @@ export const Home = () => {
         <meta name="description" content="A privacy-first web app that transforms EFB logbook exports into shareable aviation stories." />
       </Helmet>
 
-      {/* Hero Section */}
+      {/* Hero Section - Borders Removed */}
       <section className="flex flex-col lg:flex-row items-center justify-between gap-16 w-full">
-        <div className="flex-1 flex flex-col items-center lg:items-start gap-8 text-center lg:text-left">
+        <div className="flex-1 flex flex-col items-center lg:items-center gap-8 text-center lg:text-center">
           <img 
-            src="/logo.webp" 
+            src="/logo3.webp" 
             alt="Logbook Wrapped Logo" 
-            className="h-28 w-auto md:h-48 md:w-auto object-contain rounded-2xl shadow-2xl shadow-blue-500/20" 
+            className="h-28 w-auto md:h-52 md:w-auto object-contain" 
           />
           
           <div className="space-y-4">
@@ -56,7 +56,7 @@ export const Home = () => {
               Your Year in <span className="text-yellow-400">Aviation</span>, Visualized.
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-              LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> Turn your ForeFlight, Garmin, or MyFlightbook data into a stunning visual journey.
+              LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> Turn your logbook data into a stunning visual journey.
             </p>
           </div>
           
@@ -125,10 +125,10 @@ export const Home = () => {
         className="w-full flex flex-col items-center text-center gap-10 bg-slate-900 px-4 py-10 md:p-20 rounded-[2rem] md:rounded-[2.5rem] shadow-3xl scroll-mt-32"
       >
         <div className="max-w-2xl space-y-4">
-          <h2 className="text-4xl font-bold text-white tracking-tight">Ready to see your story?</h2>
+          <h2 className="text-4xl font-bold text-white tracking-tight">Ready to make your wrapped?</h2>
           <p className="text-lg text-slate-400">
-            Export your logbook as a <span className="text-white font-mono">.csv</span> from your EFB and drop it below. 
-            <br />No sign-up required.
+            1. Select a timeframe (Year, Any Range, All Time). <br />
+            2. Export your entire logbook as a <span className="text-white font-mono">.csv</span> from your EFB and upload it below.
           </p>
         </div>
         

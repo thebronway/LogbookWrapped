@@ -5,7 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { CalculatedStats } from '../../core/index';
 import { getPage2Copy } from '../../core/Copywriter';
 
-export const Page2_FootprintMap: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
+export const Page2_FootprintMap: React.FC<{stats: CalculatedStats, isExportMode?: boolean}> = ({ stats, isExportMode }) => {
   const mapCopy = getPage2Copy(stats);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -20,12 +20,14 @@ export const Page2_FootprintMap: React.FC<{stats: CalculatedStats}> = ({ stats }
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/dark-v11', // Sleek dark mode
-      projection: { name: 'globe' }, // Creates beautiful geodesic curves naturally
+      style: 'mapbox://styles/mapbox/dark-v11',
+      projection: { name: 'globe' }, 
       zoom: 1,
       center: [-95, 38], 
-      interactive: false, // Prevents user from messing up the "Wrapped" slide framing
-      attributionControl: false
+      interactive: false, 
+      attributionControl: false,
+      // CRITICAL FIX: Forces WebGL to keep the map in memory so html2canvas can screenshot it
+      preserveDrawingBuffer: true 
     });
 
     map.current.on('style.load', () => {
@@ -104,7 +106,8 @@ export const Page2_FootprintMap: React.FC<{stats: CalculatedStats}> = ({ stats }
       if (stats.mapData.bounds) {
         map.current?.fitBounds(stats.mapData.bounds, {
           padding: 40,
-          duration: 3000, // Smooth 3-second pan on mount
+          // CRITICAL FIX: If exporting, jump instantly (0ms) so the screenshot isn't taken mid-animation
+          duration: isExportMode ? 0 : 3000, 
           essential: true
         });
       }

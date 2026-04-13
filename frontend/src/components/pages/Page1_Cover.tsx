@@ -31,19 +31,16 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
         <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-blue-300 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Total Time</p>
           <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2">{stats.totalHours} Hours</p>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed">{hoursCopy}</p>
         </motion.div>
 
         <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-emerald-300 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Sorties</p>
           <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2">{stats.totalFlights} Flights</p>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed">{flightsCopy}</p>
         </motion.div>
 
         <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.9 }}>
           <p className="text-purple-300 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Home Base</p>
           <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2">{stats.homeBase}</p>
-          <p className="text-slate-300 text-base md:text-lg leading-relaxed">We hope you aren't paying hourly for tie-downs.</p>
         </motion.div>
       </div>
     </motion.div>

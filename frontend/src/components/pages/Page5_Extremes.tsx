@@ -15,13 +15,11 @@ export const Page5_Extremes: React.FC<{stats: CalculatedStats}> = ({ stats }) =>
           <p className="text-red-400 text-sm font-bold uppercase tracking-widest mb-1">The Quickie</p>
           <p className="text-3xl font-bold mb-2">Only {stats.shortestFlight} Hours</p>
           <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider">{stats.shortestFlightDate} • {stats.shortestFlightRoute}</p>
-          <p className="text-slate-300 text-lg">{shortCopy}</p>
         </motion.div>
         <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
           <p className="text-rose-400 text-sm font-bold uppercase tracking-widest mb-1">The Long Haul</p>
           <p className="text-3xl font-bold mb-2">{stats.longestFlight} NM</p>
           <p className="text-slate-400 text-sm mb-2 uppercase tracking-wider">{stats.longestFlightDate} • {stats.longestFlightRoute}</p>
-          <p className="text-slate-300 text-lg">{longCopy}</p>
         </motion.div>
       </div>
     </motion.div>

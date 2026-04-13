@@ -14,17 +14,14 @@ export const Page7_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) =>
         <div>
           <p className="text-cyan-300 text-sm font-bold uppercase tracking-widest mb-1">The Night Owl</p>
           <p className="text-3xl font-bold mb-1">{stats.totalNight} Hours</p>
-          <p className="text-slate-300">{nightCopy}</p>
         </div>
         <div>
           <p className="text-sky-300 text-sm font-bold uppercase tracking-widest mb-1">In The Soup</p>
           <p className="text-3xl font-bold mb-1">{stats.totalIMC} Hours Actual</p>
-          <p className="text-slate-300">{imcCopy}</p>
         </div>
         <div className="bg-cyan-950/40 p-4 rounded-xl border border-cyan-800/50">
           <p className="text-cyan-500 text-xs font-bold uppercase tracking-widest mb-1">Fuel Burn Estimate</p>
           <p className="text-2xl font-bold mb-1">{stats.estimatedFuelBurn.toLocaleString()} Gallons</p>
-          <p className="text-slate-400 text-sm">{fuelCopy}</p>
         </div>
       </div>
     </motion.div>
