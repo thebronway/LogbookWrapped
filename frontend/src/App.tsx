@@ -1,35 +1,47 @@
-import { useLogbookStore } from './store/useLogbookStore';
-import { Dropzone } from './components/ui/Dropzone';
-import { StoryContainer } from './components/layout/StoryContainer';
+import { Routes, Route, Link } from 'react-router-dom';
+import { Home } from './components/pages/Home';
+import { About } from './components/pages/About';
+import { Privacy } from './components/pages/Privacy';
+import { Disclaimer } from './components/pages/Disclaimer';
+import { Contact } from './components/pages/Contact';
 
 function App() {
-  const { status, stats, errorMessage, resetStore } = useLogbookStore();
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-950">
-      
-      {status === 'idle' && (
-        <>
-          <header className="mb-12 text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight mb-2 text-white">Logbook Wrapped</h1>
-            <p className="text-slate-400">Your year in aviation, visualized.</p>
-          </header>
-          <Dropzone />
-        </>
-      )}
-
-      {status === 'error' && (
-        <div className="bg-red-500/20 border border-red-500 text-red-200 p-4 rounded-lg max-w-md text-center">
-          <p>{errorMessage}</p>
-          <button onClick={resetStore} className="mt-4 underline text-sm hover:text-white">Try Again</button>
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950/30 text-slate-200 font-sans">
+      {/* Navigation Bar */}
+      <header className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/50">
+        <nav className="w-full p-4 flex justify-between items-center max-w-6xl mx-auto">
+        <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <span className="text-2xl font-bold text-white tracking-tight block">LogbookWrapped</span>
+        </Link>
+        <div className="flex gap-4 sm:gap-6 text-sm font-medium">
+          <Link to="/about" className="hover:text-white transition-colors">About</Link>
+          <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
         </div>
-      )}
+        </nav>
+      </header>
 
-      {/* Replace the JSON dump with the slick Story wrapper! */}
-      {status === 'success' && stats && (
-        <StoryContainer stats={stats} onClose={resetStore} />
-      )}
+      {/* Main Content Area */}
+      <main className="flex-grow flex flex-col w-full">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </main>
 
+      {/* Footer */}
+      <footer className="w-full p-6 text-center text-sm text-slate-500 border-t border-slate-800 mt-12">
+        <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <p>&copy; {new Date().getFullYear()} Logbook Wrapped. All rights reserved.</p>
+          <div className="flex gap-4">
+            <Link to="/privacy" className="hover:text-slate-300 transition-colors">Privacy</Link>
+            <Link to="/disclaimer" className="hover:text-slate-300 transition-colors">Disclaimer</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

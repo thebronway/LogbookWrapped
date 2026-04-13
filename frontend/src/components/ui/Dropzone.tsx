@@ -42,7 +42,7 @@ export const Dropzone = () => {
   }, [processFile]);
 
   return (
-    <div className="w-full max-w-xl space-y-6">
+    <div className="w-full max-w-xl mx-auto space-y-6">
       
       {/* Dynamic Date Picker */}
       <div className="bg-slate-800 border border-slate-700 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
@@ -96,7 +96,7 @@ export const Dropzone = () => {
         <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400'}`} />
         <h3 className="text-xl font-bold mb-2 text-center text-white">Drop your Logbook CSV here</h3>
         <p className="text-slate-400 text-center mb-6">
-          Supports ForeFlight, Garmin Pilot, and LogTen exports. <br/>100% private. No data leaves your browser.
+          Supports ForeFlight, Garmin Pilot, and LogTen exports. <br/><br/>100% private. No data leaves your browser.
         </p>
         
         <label className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg cursor-pointer font-bold tracking-wide transition-colors">
