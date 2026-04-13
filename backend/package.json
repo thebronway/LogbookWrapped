@@ -1,6 +1,6 @@
 {
   "name": "logbook-wrapped-proxy",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Serverless API proxy simulator for Printful",
   "main": "src/server.js",
   "type": "module",

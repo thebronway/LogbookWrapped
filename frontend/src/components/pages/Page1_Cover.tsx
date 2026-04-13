@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { getPage1Copy } from '../../core/Copywriter';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 interface Props {
   stats: CalculatedStats;
@@ -9,6 +10,11 @@ interface Props {
 
 export const Page1_Cover: React.FC<Props> = ({ stats }) => {
   const { hoursCopy, flightsCopy } = getPage1Copy(stats);
+  const dateFilter = useLogbookStore((state) => state.dateFilter);
+
+  let titleText = "Your Time";
+  if (dateFilter.type === 'this_year') titleText = `Your ${new Date().getFullYear()}`;
+  if (dateFilter.type === 'last_year') titleText = `Your ${new Date().getFullYear() - 1}`;
 
   return (
     <motion.div 
@@ -18,7 +24,7 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white"
     >
       <h2 className="text-5xl font-black mb-12 tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-        Your Year<br/>In The Sky.
+        {titleText}<br/>In The Sky.
       </h2>
 
       <div className="space-y-10">

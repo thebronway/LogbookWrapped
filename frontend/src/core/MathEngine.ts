@@ -1,11 +1,48 @@
-import { FlightRecord, CalculatedStats } from './types';
+import { FlightRecord, CalculatedStats, AirportDB } from './types';
 
-// Note: For true distance calculations client-side, we will eventually need to 
-// load a lightweight airports.json coordinate database into the /public folder.
-// For now, we simulate a flat 120 NM per flight hour as a rough GA estimate if DB is missing.
-const estimateDistance = (time: number) => time * 120; 
+const AIRCRAFT_GPH_DICTIONARY: Record<string, number> = {
+  // === SMALL: PISTON SINGLE & TWIN ===
+  "C152": 6.0,   // Cessna 152
+  "C172": 9.0,   // Cessna 172 Skyhawk
+  "C182": 13.0,  // Cessna 182 Skylane
+  "C206": 16.0,  // Cessna 206 Stationair
+  "PA28": 10.0,  // Piper Cherokee/Archer
+  "PA32": 15.0,  // Piper Saratoga
+  "PA44": 20.0,  // Piper Seminole (Twin)
+  "SR20": 11.0,  // Cirrus SR20
+  "SR22": 14.5,  // Cirrus SR22
+  "DA40": 9.0,   // Diamond DA40
+  "DA42": 12.0,  // Diamond DA42 (Twin)
+  "BE36": 15.0,  // Beechcraft Bonanza
+  "BE58": 32.0,  // Beechcraft Baron (Twin)
 
-export const calculateStats = (flights: FlightRecord[]): CalculatedStats => {
+  // === MEDIUM: TURBOPROPS & LIGHT/MID JETS ===
+  "PC12": 65.0,  // Pilatus PC-12
+  "C208": 45.0,  // Cessna Caravan
+  "TBM9": 60.0,  // Daher TBM 900 series
+  "BE20": 100.0, // Beechcraft King Air 200
+  "B190": 160.0, // Beechcraft 1900D
+  "SF50": 60.0,  // Cirrus Vision Jet
+  "C25A": 120.0, // Cessna Citation CJ3
+  "E55P": 183.0, // Embraer Phenom 300
+  "CL60": 255.0, // Challenger 604
+  "GL5T": 500.0, // Bombardier Global 5000/7500
+
+  // === LARGE: COMMERCIAL AIRLINERS ===
+  "E175": 450.0,  // Embraer E175
+  "A320": 850.0,  // Airbus A320
+  "A321": 950.0,  // Airbus A321
+  "B738": 900.0,  // Boeing 737-800
+  "B752": 1100.0, // Boeing 757-200
+  "B763": 1600.0, // Boeing 767-300
+  "B77W": 2500.0, // Boeing 777-300ER
+  "B789": 1700.0, // Boeing 787-9 Dreamliner
+  "A359": 1600.0, // Airbus A350-900 
+  "B744": 3600.0, // Boeing 747-400
+  "A388": 4600.0, // Airbus A380-800
+};
+
+export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): CalculatedStats => {
   const stats: CalculatedStats = {
     totalHours: 0,
     totalFlights: flights.length,
@@ -14,8 +51,11 @@ export const calculateStats = (flights: FlightRecord[]): CalculatedStats => {
     uniqueAircraftTypes: 0,
     uniqueTailNumbers: 0,
     shortestFlight: 9999,
+    shortestFlightDate: '',
+    shortestFlightRoute: '',
     longestFlight: 0,
     longestFlightRoute: '',
+    longestFlightDate: '',
     totalLandings: 0,
     uniqueAirports: 0,
     totalNight: 0,
@@ -34,31 +74,56 @@ export const calculateStats = (flights: FlightRecord[]): CalculatedStats => {
     stats.totalNight += f.night;
     stats.totalIMC += f.instrument;
     
-    // Distance Estimation (Will replace with Haversine formula + DB later)
-    const flightDist = estimateDistance(f.totalTime);
+    // Parse the route to find all valid airports visited
+    const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
+    const validAirportsInRoute = routeTokens
+      .map(t => t.toUpperCase())
+      .filter(t => airportDB[t]);
+      
+    // Fallback if route is empty or lacks waypoints: use explicit departure and destination
+    let flightLegs = validAirportsInRoute.length >= 2 
+      ? validAirportsInRoute 
+      : [f.departure.toUpperCase(), f.destination.toUpperCase()].filter(t => airportDB[t]);
+
+    // Add valid airports to the unique Set
+    flightLegs.forEach(apt => airports.add(apt));
+
+    // Trust the distance logged in the CSV
+    const flightDist = f.distance;
     stats.totalDistanceNm += flightDist;
 
     // Extremes
-    if (f.totalTime < stats.shortestFlight && f.totalTime > 0) stats.shortestFlight = f.totalTime;
+    if (f.totalTime < stats.shortestFlight && f.totalTime > 0) {
+      stats.shortestFlight = f.totalTime;
+      stats.shortestFlightDate = f.date;
+      stats.shortestFlightRoute = `${f.departure} to ${f.destination}`;
+    }
+    
     if (flightDist > stats.longestFlight) {
       stats.longestFlight = flightDist;
+      stats.longestFlightDate = f.date;
       stats.longestFlightRoute = `${f.departure} to ${f.destination}`;
     }
 
     // Uniques
-    if (f.departure !== 'Unknown') airports.add(f.departure);
-    if (f.destination !== 'Unknown') airports.add(f.destination);
     aircraftTypes.add(f.aircraftType);
     tailNumbers.add(f.aircraftId);
 
-    // Home Base calculation
-    departureCounts[f.departure] = (departureCounts[f.departure] || 0) + 1;
+    // Home Base calculation (using first leg or departure)
+    const dep = flightLegs.length > 0 ? flightLegs[0] : f.departure;
+    departureCounts[dep] = (departureCounts[dep] || 0) + 1;
+
+    // Fuel Burn calculation
+    let gph = AIRCRAFT_GPH_DICTIONARY[f.aircraftType.toUpperCase()];
+    if (!gph) {
+      gph = 10; // The safe 10gal/hr GA estimate fallback
+    }
+    stats.estimatedFuelBurn += (f.totalTime * gph);
   });
 
   stats.uniqueAirports = airports.size;
   stats.uniqueAircraftTypes = aircraftTypes.size;
   stats.uniqueTailNumbers = tailNumbers.size;
-  stats.estimatedFuelBurn = stats.totalHours * 10; // Standard 10gal/hr assumption
   
   // Find Home Base (most frequent departure)
   stats.homeBase = Object.keys(departureCounts).reduce((a, b) => 
@@ -66,18 +131,6 @@ export const calculateStats = (flights: FlightRecord[]): CalculatedStats => {
   , "Unknown");
 
   // Fix shortest flight init value if no flights
-  if (stats.shortestFlight === 9999) stats.shortestFlight = 0;
-
-stats.uniqueAirports = airports.size;
-  stats.uniqueAircraftTypes = aircraftTypes.size;
-  stats.uniqueTailNumbers = tailNumbers.size;
-  stats.estimatedFuelBurn = stats.totalHours * 10; // Standard 10gal/hr assumption
-  
-  // Find Home Base (most frequent departure)
-  stats.homeBase = Object.keys(departureCounts).reduce((a, b) => 
-    departureCounts[a] > departureCounts[b] ? a : b
-  , "Unknown");
-
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;
 
   // --- ADD THIS ROUNDING BLOCK ---

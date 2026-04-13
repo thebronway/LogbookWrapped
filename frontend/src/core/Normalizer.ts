@@ -32,12 +32,14 @@ export const normalizeFlightData = (rawRows: any[]): FlightRecord[] => {
     }
 
     const totalTime = parseFloat(row[profile.totalTime]) || 0;
+    const distance = parseFloat(row[profile.distance]) || 0;
 
     return {
       date: row[profile.date] || 'Unknown Date',
       route: route,
       departure: departure || 'Unknown',
       destination: destination || 'Unknown',
+      distance: distance,
       aircraftId: row[profile.aircraftId] || 'UNKNOWN',
       aircraftType: row[profile.aircraftType] || 'UNKNOWN',
       totalTime: totalTime,

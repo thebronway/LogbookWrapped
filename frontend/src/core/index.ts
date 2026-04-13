@@ -1,8 +1,11 @@
+export type AirportDB = Record<string, [number, number]>;
+
 export interface FlightRecord {
   date: string;
   route: string;
   departure: string; // Extracted from route
   destination: string; // Extracted from route
+  distance: number;
   aircraftId: string;
   aircraftType: string;
   totalTime: number;
@@ -20,8 +23,11 @@ export interface CalculatedStats {
   uniqueAircraftTypes: number;
   uniqueTailNumbers: number;
   shortestFlight: number;
+  shortestFlightDate: string;
+  shortestFlightRoute: string;
   longestFlight: number; // in NM
   longestFlightRoute: string;
+  longestFlightDate: string;
   totalLandings: number;
   uniqueAirports: number;
   totalNight: number;

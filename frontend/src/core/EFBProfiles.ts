@@ -3,6 +3,7 @@ export interface EFBProfile {
   route: string;
   departure: string;
   destination: string;
+  distance: string;
   aircraftId: string;
   aircraftType: string;
   totalTime: string;
@@ -19,6 +20,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     route: 'Route',
     departure: 'From',
     destination: 'To',
+    distance: 'Distance',
     aircraftId: 'AircraftID',
     aircraftType: 'TypeCode', 
     totalTime: 'TotalTime',
@@ -33,6 +35,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     route: 'Route',
     departure: 'Departure',
     destination: 'Destination',
+    distance: 'Distance',
     aircraftId: 'Aircraft',
     aircraftType: 'Model',
     totalTime: 'Duration',

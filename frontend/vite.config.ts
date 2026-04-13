@@ -5,7 +5,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5297,
-    host: true, // Needed for Docker to expose the port properly
+    host: true,
+    allowedHosts: ['logbookwrapped.conway.im'],
     watch: {
       usePolling: true,
     }
