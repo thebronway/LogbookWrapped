@@ -61,10 +61,10 @@ export const Page8_Summary: React.FC<{stats: CalculatedStats}> = ({ stats }) => 
 
         <button 
           onClick={() => setShowDonation(true)}
-          className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-900 py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-yellow-900/20"
+          className="w-full bg-yellow-400 hover:bg-yellow-300 text-slate-900 py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-yellow-900/20"
         >
           <Heart size={20} />
-          Donate to Help Cover Server & Map Costs
+          Donate to Help Cover Server Costs
         </button>
 
         {/* Future Printful Hook */}
