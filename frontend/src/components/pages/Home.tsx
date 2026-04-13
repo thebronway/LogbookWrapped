@@ -29,7 +29,7 @@ export const Home = () => {
         <Helmet>
           <title>Your Logbook Wrapped</title>
         </Helmet>
-        <div className="p-6 flex-grow flex items-center justify-center">
+        <div className="w-full flex-grow flex items-center justify-center p-0 lg:p-6">
           <StoryContainer stats={stats} onClose={resetStore} />
         </div>
       </>
