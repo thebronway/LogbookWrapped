@@ -67,8 +67,8 @@ export const Page2_FootprintMap: React.FC<{stats: CalculatedStats, isExportMode?
         },
         paint: {
           'line-color': '#3b82f6', // Tailwind blue-500
-          'line-width': 2,
-          'line-opacity': 0.4
+          'line-width': 4, // Thicker lines for better export visibility
+          'line-opacity': 0.6 // Slightly higher opacity to help them stand out
         }
       });
 
@@ -94,13 +94,41 @@ export const Page2_FootprintMap: React.FC<{stats: CalculatedStats, isExportMode?
         type: 'circle',
         source: 'airports',
         paint: {
-          'circle-radius': 3,
+          'circle-radius': 5, // Larger dots so airports are clearly visible
           'circle-color': '#22d3ee', // Tailwind cyan-400
-          'circle-opacity': 0.8,
+          'circle-opacity': 0.9,
           'circle-stroke-width': 1,
           'circle-stroke-color': '#000000'
         }
       });
+
+      // Add Gold Dot for Home Base
+      if (stats.mapData.homeBaseCoords) {
+        map.current?.addSource('home-base', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: stats.mapData.homeBaseCoords
+            },
+            properties: {}
+          }
+        });
+
+        map.current?.addLayer({
+          id: 'home-base-point',
+          type: 'circle',
+          source: 'home-base',
+          paint: {
+            'circle-radius': 7, // Slightly larger than normal airports
+            'circle-color': '#fbbf24', // Tailwind amber-400
+            'circle-opacity': 1.0,
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#000000'
+          }
+        });
+      }
 
       // Fit map to data bounds
       if (stats.mapData.bounds) {

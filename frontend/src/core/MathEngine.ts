@@ -66,6 +66,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
       nodes: [],
       edges: [],
       bounds: null,
+      homeBaseCoords: null,
     }
   };
 
@@ -187,6 +188,12 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.homeBase = Object.keys(departureCounts).reduce((a, b) => 
     departureCounts[a] > departureCounts[b] ? a : b
   , "Unknown");
+
+  // Save the coordinates for the map
+  if (stats.homeBase !== "Unknown" && airportDB[stats.homeBase]) {
+    const coords = airportDB[stats.homeBase];
+    stats.mapData.homeBaseCoords = [coords[1], coords[0]]; // [lon, lat]
+  }
 
   // Finalize Map Data Nodes
   airports.forEach(apt => {

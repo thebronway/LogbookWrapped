@@ -38,5 +38,6 @@ export interface CalculatedStats {
     nodes: [number, number][]; // [longitude, latitude]
     edges: [[number, number], [number, number]][]; // [[lon1, lat1], [lon2, lat2]]
     bounds: [number, number, number, number] | null; // [minLon, minLat, maxLon, maxLat]
+    homeBaseCoords: [number, number] | null; // [longitude, latitude]
   };
 }
