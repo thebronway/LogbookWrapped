@@ -19,20 +19,12 @@ export const ExportWrapper: React.FC<Props> = ({ children, pageId }) => {
           minHeight: '800px',
         }}
       >
-        {/* Universal Export Title */}
-        <div className="absolute top-6 left-0 w-full flex justify-center z-[50]">
-          <span className="text-slate-400 font-bold tracking-widest uppercase text-xs opacity-80">
-            My LogbookWrapped
-          </span>
-        </div>
-
-        <div className="w-full h-full relative z-10 flex flex-col pt-4">
+        <div className="w-full h-full relative z-10 flex flex-col">
           {children}
         </div>
         
-        {/* Watermark: Adjusted margin for the smaller container and scaled up exactly 25% relative to the new layout */}
         <div className="absolute bottom-4 right-4 z-[999] opacity-70">
-          <img src="/logo3.webp" alt="LogbookWrapped" className="w-[70px] h-auto" />
+          <img src="/logo4.webp" alt="LogbookWrapped" className="w-[84px] h-auto" />
         </div>
       </div>
   );

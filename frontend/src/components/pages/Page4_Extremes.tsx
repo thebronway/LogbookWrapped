@@ -9,7 +9,7 @@ export const Page4_Extremes: React.FC<{stats: CalculatedStats}> = ({ stats }) =>
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-b from-slate-900 via-red-950 to-slate-900 text-white"
     >
-      <h2 className="text-4xl font-black mb-10 text-red-500">The Extremes.</h2>
+      <h2 className="text-4xl font-black mb-10 text-red-500">My Logbook Extremes.</h2>
       <div className="space-y-10">
         <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           <p className="text-red-400 text-sm font-bold uppercase tracking-widest mb-1">The Quickie</p>

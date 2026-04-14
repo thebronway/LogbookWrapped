@@ -131,9 +131,11 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col h-full w-full bg-black text-white overflow-hidden">
         
-        {/* Top Area: Solid Bar Header */}
-        <div className="w-full shrink-0 pt-8 pb-4 px-8 bg-gradient-to-tl from-sky-950 via-slate-900 to-slate-900 border-b border-slate-800 flex items-end">
-            <h2 className="text-4xl font-black text-sky-400">My Passport.</h2>
+        {/* Top Area: Fixed height + flex-col justify-center is more stable for html2canvas export */}
+        <div className="w-full h-32 shrink-0 px-8 bg-gradient-to-tl from-sky-950 via-slate-900 to-slate-900 border-b border-slate-800 flex flex-col justify-center">
+            <h2 className="text-4xl font-black text-sky-400">
+              My Logbook Passport.
+            </h2>
         </div>
 
         {/* Middle Area: Map */}
@@ -149,7 +151,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         </div>
 
         {/* Bottom Area: Compact Stats Grid */}
-        <div className="w-full shrink-0 pt-6 pb-8 px-4 bg-gradient-to-br from-sky-950 via-slate-900 to-slate-900">
+        <div className="w-full shrink-0 pt-6 pb-24 px-4 bg-gradient-to-br from-sky-950 via-slate-900 to-slate-900">
             <div className="grid grid-cols-3 gap-y-6 max-w-sm mx-auto text-center">
                 <div className="flex flex-col items-center justify-center">
                     <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Hours</span>

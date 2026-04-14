@@ -18,7 +18,7 @@ export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-tr from-orange-950 via-slate-900 to-slate-900 text-white"
     >
       <h2 className="text-4xl font-black mb-12 tracking-tight text-orange-500">
-        The Big Picture.
+        My Logbook <br /> Big Picture.
       </h2>
 
       <div className="space-y-12">

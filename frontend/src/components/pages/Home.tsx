@@ -14,7 +14,7 @@ export const Home = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % SCREENSHOTS.length);
-    }, 3500);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -97,8 +97,11 @@ export const Home = () => {
         </div>
 
         <div className="relative group">
+          {/* The Glow/Shadow behind the phone */}
           <div className="absolute -inset-1 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-          <div className="relative w-[300px] md:w-[340px] aspect-[9/19] rounded-[3rem] border-[8px] border-slate-800 bg-slate-900 overflow-hidden shadow-2xl ring-1 ring-slate-700">
+          
+          {/* The Phone Frame - Adjusted to aspect-[9/16] */}
+          <div className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-[3rem] border-[8px] border-slate-800 bg-slate-900 overflow-hidden shadow-2xl ring-1 ring-slate-700">
             {SCREENSHOTS.map((src, index) => (
               <img
                 key={index}
@@ -109,7 +112,9 @@ export const Home = () => {
                 }`}
               />
             ))}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl"></div>
+            
+            {/* The Notch/Dynamic Island - Narrowed to look more modern */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-5 bg-slate-900 rounded-full border border-slate-800/50"></div>
           </div>
         </div>
       </section>
