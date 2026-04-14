@@ -122,8 +122,7 @@ export const Home = () => {
       {/* Upload Section */}
       <section 
         id="upload-section" 
-        // Dropped the border on the main card as well for a seamless look
-        className="w-full flex flex-col items-center text-center gap-10 bg-slate-900 px-4 py-10 md:p-20 rounded-[2rem] md:rounded-[2.5rem] shadow-3xl scroll-mt-32"
+        className="w-full flex flex-col items-center text-center gap-10 bg-slate-900/40 border border-slate-800/50 backdrop-blur-md px-4 py-10 md:p-20 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl scroll-mt-32"
       >
         <div className="max-w-2xl space-y-4">
           <h2 className="text-4xl font-bold text-white tracking-tight">Ready to make your wrapped?</h2>
@@ -134,7 +133,7 @@ export const Home = () => {
         </div>
         
         {/* Borderless Dropzone Container */}
-        <div className="w-full max-w-2xl bg-slate-950/40 p-1 md:p-2 rounded-3xl hover:bg-slate-950/60 transition-all shadow-inner group">
+        <div className="w-full max-w-2xl">
           {status === 'error' ? (
             <div className="p-8 text-center space-y-4">
               <div className="inline-flex p-3 bg-red-500/10 rounded-full text-red-500 mb-2">

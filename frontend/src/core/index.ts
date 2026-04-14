@@ -1,4 +1,4 @@
-export type AirportDB = Record<string, [number, number]>;
+export type AirportDB = Record<string, [number, number, string]>;
 
 export interface FlightRecord {
   date: string;

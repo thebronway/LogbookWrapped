@@ -84,31 +84,33 @@ export const Dropzone = () => {
       </div>
 
       {/* The Dropzone */}
-      <div 
-        className={`w-full p-12 border-4 border-dashed rounded-2xl flex flex-col items-center justify-center transition-all duration-200 shadow-xl ${
-          isDragging ? 'border-blue-500 bg-blue-500/10 scale-105' : 'border-slate-600 bg-slate-800'
+      <label 
+        className={`w-full p-12 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-all duration-200 shadow-xl cursor-pointer group ${
+          isDragging 
+            ? 'border-blue-500 bg-blue-500/20 scale-105' 
+            : 'border-slate-600 bg-slate-800/50 hover:bg-slate-800 hover:border-blue-500/50'
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
       >
-        <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400'}`} />
-        <h3 className="text-xl font-bold mb-2 text-center text-white">Drop your Logbook CSV here</h3>
+        <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`} />
+        <h3 className="text-xl font-bold mb-2 text-center text-white group-hover:text-blue-50 transition-colors">Drop your Logbook CSV here</h3>
         <p className="text-slate-400 text-center mb-6">
           Supports ForeFlight, Garmin Pilot, and LogTen exports. <br/><br/>100% private. No data leaves your browser.
         </p>
         
-        <label className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-lg cursor-pointer font-bold tracking-wide transition-colors">
+        <span className="bg-blue-600/80 group-hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-bold tracking-wide transition-colors">
           Browse Files
-          <input 
-            type="file" 
-            className="hidden" 
-            accept=".csv" 
-            onChange={handleFileInput} 
-          />
-        </label>
-      </div>
+        </span>
+        <input 
+          type="file" 
+          className="hidden" 
+          accept=".csv" 
+          onChange={handleFileInput} 
+        />
+      </label>
       
     </div>
   );

@@ -1,46 +1,5 @@
 import { FlightRecord, CalculatedStats, AirportDB } from './types';
-
-const AIRCRAFT_GPH_DICTIONARY: Record<string, number> = {
-  // === SMALL: PISTON SINGLE & TWIN ===
-  "C152": 6.0,   // Cessna 152
-  "C172": 9.0,   // Cessna 172 Skyhawk
-  "C182": 13.0,  // Cessna 182 Skylane
-  "C206": 16.0,  // Cessna 206 Stationair
-  "PA28": 10.0,  // Piper Cherokee/Archer
-  "PA32": 15.0,  // Piper Saratoga
-  "PA44": 20.0,  // Piper Seminole (Twin)
-  "SR20": 11.0,  // Cirrus SR20
-  "SR22": 14.5,  // Cirrus SR22
-  "DA40": 9.0,   // Diamond DA40
-  "DA42": 12.0,  // Diamond DA42 (Twin)
-  "BE36": 15.0,  // Beechcraft Bonanza
-  "BE58": 32.0,  // Beechcraft Baron (Twin)
-
-  // === MEDIUM: TURBOPROPS & LIGHT/MID JETS ===
-  "PC12": 65.0,  // Pilatus PC-12
-  "C208": 45.0,  // Cessna Caravan
-  "TBM9": 60.0,  // Daher TBM 900 series
-  "BE20": 100.0, // Beechcraft King Air 200
-  "B190": 160.0, // Beechcraft 1900D
-  "SF50": 60.0,  // Cirrus Vision Jet
-  "C25A": 120.0, // Cessna Citation CJ3
-  "E55P": 183.0, // Embraer Phenom 300
-  "CL60": 255.0, // Challenger 604
-  "GL5T": 500.0, // Bombardier Global 5000/7500
-
-  // === LARGE: COMMERCIAL AIRLINERS ===
-  "E175": 450.0,  // Embraer E175
-  "A320": 850.0,  // Airbus A320
-  "A321": 950.0,  // Airbus A321
-  "B738": 900.0,  // Boeing 737-800
-  "B752": 1100.0, // Boeing 757-200
-  "B763": 1600.0, // Boeing 767-300
-  "B77W": 2500.0, // Boeing 777-300ER
-  "B789": 1700.0, // Boeing 787-9 Dreamliner
-  "A359": 1600.0, // Airbus A350-900 
-  "B744": 3600.0, // Boeing 747-400
-  "A388": 4600.0, // Airbus A380-800
-};
+import { AIRCRAFT_GPH_DICTIONARY } from './AircraftGPH';
 
 export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): CalculatedStats => {
   const stats: CalculatedStats = {
@@ -90,31 +49,41 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
     const validAirportsInRoute = routeTokens
       .map(t => t.toUpperCase())
-      .filter(t => airportDB[t]);
+      .filter(t => {
+        if (!airportDB[t]) return false;
+        // Ignore purely alphabetical 3-letter strings in the route (e.g., OAK, LAX) as they are likely VORs.
+        // Airports with numbers (e.g., 2W5) bypass this and are included.
+        if (t.length === 3 && /^[A-Z]{3}$/.test(t)) return false;
+        return true;
+      });
       
     // Build a continuous sequence: Departure -> [Route Waypoints] -> Destination
     const rawLegs = [f.departure.toUpperCase(), ...validAirportsInRoute, f.destination.toUpperCase()];
 
-    // Filter valid airports and remove consecutive duplicates 
-    // (e.g., if departure was KVKX and route started with KVKX, don't repeat it)
+    // Filter valid airports, resolve to their Primary ID (to handle lazy LAX -> KLAX), and remove consecutive duplicates
     const flightLegs: string[] = [];
     rawLegs.forEach(apt => {
-      if (airportDB[apt]) {
-        if (flightLegs.length === 0 || flightLegs[flightLegs.length - 1] !== apt) {
-          flightLegs.push(apt);
+      const dbEntry = airportDB[apt];
+      if (dbEntry) {
+        // dbEntry is now [lat, lon, primaryId]
+        const primaryId = dbEntry[2] || apt; 
+        if (flightLegs.length === 0 || flightLegs[flightLegs.length - 1] !== primaryId) {
+          flightLegs.push(primaryId);
         }
       }
     });
 
     // Extract Map Data (Edges/Paths)
     for (let i = 0; i < flightLegs.length - 1; i++) {
-      const start = airportDB[flightLegs[i]];
-      const end = airportDB[flightLegs[i + 1]];
+      const startId = flightLegs[i];
+      const endId = flightLegs[i + 1];
+      const start = airportDB[startId];
+      const end = airportDB[endId];
+      
       if (start && end) {
-        const edgeKey = `${flightLegs[i]}-${flightLegs[i+1]}`;
+        const edgeKey = `${startId}-${endId}`;
         if (!drawnEdges.has(edgeKey)) {
           drawnEdges.add(edgeKey);
-          // Mapbox uses [longitude, latitude]
           stats.mapData.edges.push([
             [start[1], start[0]], 
             [end[1], end[0]]
@@ -124,9 +93,9 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     }
 
     // Add valid airports to the unique Set and calculate bounding box
-    flightLegs.forEach(apt => {
-      airports.add(apt);
-      const coords = airportDB[apt];
+    flightLegs.forEach(aptId => {
+      airports.add(aptId);
+      const coords = airportDB[aptId];
       if (coords) {
         const [lat, lon] = coords;
         minLat = Math.min(minLat, lat);

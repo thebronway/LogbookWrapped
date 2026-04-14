@@ -37,9 +37,13 @@ async function build() {
     const lon = parseFloat(cols[5]);
     if (isNaN(lat) || isNaN(lon)) continue;
 
-    if (cols[1]) airports[cols[1].toUpperCase()] = [lat, lon];
-    if (cols[13]) airports[cols[13].toUpperCase()] = [lat, lon];
-    if (cols[14]) airports[cols[14].toUpperCase()] = [lat, lon];
+    const primaryId = cols[1].toUpperCase();
+    if (cols[1]) airports[primaryId] = [lat, lon, primaryId];
+    // Map ICAO, IATA, GPS, and Local Codes so we capture every alias (like LAX and 2W5)
+    if (cols[12]) airports[cols[12].toUpperCase()] = [lat, lon, primaryId]; // icao_code
+    if (cols[13]) airports[cols[13].toUpperCase()] = [lat, lon, primaryId]; // iata_code
+    if (cols[14]) airports[cols[14].toUpperCase()] = [lat, lon, primaryId]; // gps_code
+    if (cols[15]) airports[cols[15].toUpperCase()] = [lat, lon, primaryId]; // local_code (Where 2W5 lives!)
   }
 
   delete airports[''];

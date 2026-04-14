@@ -35,7 +35,7 @@ export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
           </p>
           <div className="mt-8 bg-orange-900/30 border border-orange-500/30 p-5 rounded-xl flex flex-col justify-center">
             <p className="text-2xl font-bold text-orange-200">
-              {days} solid days
+              {days} solid day{days === 1 ? '' : 's'}
             </p>
             <p className="text-xl text-orange-300/80">
               and {hours} hours

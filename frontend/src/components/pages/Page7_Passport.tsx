@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import * as d3 from 'd3';
+import * as topojson from 'topojson-client';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
@@ -11,124 +11,106 @@ interface Props {
 }
 
 export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
+  const mapRef = useRef<SVGSVGElement>(null);
+  const [geoData, setGeoData] = useState<any>(null);
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   useEffect(() => {
-    const token = import.meta.env.VITE_MAPBOX_TOKEN;
-    if (!token) return; 
-    
-    if (map.current || !mapContainer.current) return; 
+    Promise.all([
+      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()),
+      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json())
+    ]).then(([worldTopo, usTopo]) => {
+      setGeoData({
+        world: topojson.feature(worldTopo, worldTopo.objects.land),
+        stateBorders: topojson.mesh(usTopo, usTopo.objects.states, (a, b) => a !== b) 
+      });
+    });
+  }, []);
 
-    mapboxgl.accessToken = token;
+  useEffect(() => {
+    if (!geoData || !mapRef.current) return;
 
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
-      projection: { name: 'globe' }, 
-      zoom: 1,
-      center: [-95, 38], 
-      interactive: false, 
-      attributionControl: false,
-      preserveDrawingBuffer: true 
+    const width = 1040; 
+    const height = 1100; 
+    const svg = d3.select(mapRef.current);
+    svg.selectAll("*").remove();
+
+    const projection = d3.geoMercator();
+
+    if (stats.mapData.nodes.length > 0) {
+      const flightBounds = {
+        type: "MultiPoint",
+        coordinates: stats.mapData.nodes
+      };
+
+      projection.fitExtent(
+        [[40, 40], [width - 40, height - 40]], 
+        flightBounds as any
+      );
+    } else {
+      projection.scale(150).translate([width / 2, height / 2]); 
+    }
+
+    const pathGenerator = d3.geoPath().projection(projection);
+
+    svg.append("path")
+      .datum(geoData.world)
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#0f172a") 
+      .attr("stroke", "#1e293b") 
+      .attr("stroke-width", 1);
+
+    svg.append("path")
+      .datum(geoData.stateBorders)
+      .attr("d", pathGenerator as any)
+      .attr("fill", "none")
+      .attr("stroke", "#334155") 
+      .attr("stroke-width", 0.75)
+      .attr("stroke-dasharray", "3,3");
+
+    stats.mapData.edges.forEach(edge => {
+      const routePath = pathGenerator({
+        type: "LineString",
+        coordinates: edge
+      });
+
+      svg.append("path")
+        .attr("d", routePath as string)
+        .attr("fill", "none")
+        .attr("stroke", "#3b82f6") 
+        .attr("stroke-width", 6) 
+        .attr("stroke-opacity", 0.7) 
+        .attr("stroke-linecap", "round");
     });
 
-    map.current.on('style.load', () => {
-      map.current?.setFog({
-        'color': 'rgb(15, 23, 42)', 
-        'high-color': 'rgb(30, 58, 138)', 
-        'horizon-blend': 0.1,
-      });
-
-      const features: GeoJSON.Feature<GeoJSON.LineString>[] = stats.mapData.edges.map(edge => ({
-        type: 'Feature',
-        geometry: { type: 'LineString', coordinates: edge },
-        properties: {}
-      }));
-
-      map.current?.addSource('routes', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: features }
-      });
-
-      map.current?.addLayer({
-        id: 'route-lines',
-        type: 'line',
-        source: 'routes',
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: {
-          'line-color': '#3b82f6', 
-          'line-width': 4, 
-          'line-opacity': 0.6 
-        }
-      });
-
-      map.current?.addSource('airports', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: stats.mapData.nodes.map(node => ({
-            type: 'Feature',
-            geometry: { type: 'Point', coordinates: node },
-            properties: {}
-          }))
-        }
-      });
-
-      map.current?.addLayer({
-        id: 'airport-points',
-        type: 'circle',
-        source: 'airports',
-        paint: {
-          'circle-radius': 5, 
-          'circle-color': '#22d3ee', 
-          'circle-opacity': 0.9,
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#000000'
-        }
-      });
-
-      if (stats.mapData.homeBaseCoords) {
-        map.current?.addSource('home-base', {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            geometry: { type: 'Point', coordinates: stats.mapData.homeBaseCoords },
-            properties: {}
-          }
-        });
-
-        map.current?.addLayer({
-          id: 'home-base-point',
-          type: 'circle',
-          source: 'home-base',
-          paint: {
-            'circle-radius': 7, 
-            'circle-color': '#fbbf24', 
-            'circle-opacity': 1.0,
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#000000'
-          }
-        });
-      }
-
-      if (stats.mapData.bounds) {
-        map.current?.fitBounds(stats.mapData.bounds, {
-          padding: 40,
-          duration: isExportMode ? 0 : 3000, 
-          essential: true
-        });
+    stats.mapData.nodes.forEach(node => {
+      const coords = projection(node);
+      if (coords) {
+        svg.append("circle")
+          .attr("cx", coords[0])
+          .attr("cy", coords[1])
+          .attr("r", 8)
+          .attr("fill", "#22d3ee") 
+          .attr("opacity", 0.9)
+          .attr("stroke", "#000000") 
+          .attr("stroke-width", 1);
       }
     });
 
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
+    if (stats.mapData.homeBaseCoords) {
+      const homeCoords = projection(stats.mapData.homeBaseCoords);
+      if (homeCoords) {
+        svg.append("circle")
+          .attr("cx", homeCoords[0])
+          .attr("cy", homeCoords[1])
+          .attr("r", 10) 
+          .attr("fill", "#fbbf24") 
+          .attr("opacity", 1.0)
+          .attr("stroke", "#000000")
+          .attr("stroke-width", 2);
       }
-    };
-  }, [stats, isExportMode]);
+    }
+  }, [geoData, stats]);
 
   // Dynamic Title Logic
   let titleX = '';
@@ -141,29 +123,27 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col h-full w-full bg-black text-white overflow-hidden">
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      className="flex flex-col h-full w-full text-white overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #0f172a 0%, #2e1065 35%, #0c4a6e 75%, #020617 100%)' }}
+    >
         
         {/* Top Area */}
-        <div className="w-full shrink-0 pt-16 pb-12 px-8 bg-gradient-to-tl from-sky-950 via-slate-900 to-slate-900 border-b border-slate-800 flex flex-col justify-center relative z-10">
-            <h2 className="text-4xl font-black text-sky-400 m-0 tracking-tight">
+        <div className="w-full shrink-0 pt-16 pb-12 px-8 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20">
+            <h2 className="text-4xl font-black text-white m-0 tracking-tight">
               My {titleX}Logbook Passport.
             </h2>
         </div>
 
         {/* Middle Area: Map */}
-        <div className="flex-grow w-full relative border-b border-slate-800">
-            <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
-            {!import.meta.env.VITE_MAPBOX_TOKEN && (
-              <div className="absolute inset-0 flex items-center justify-center bg-slate-900/80 z-10">
-                <p className="text-red-400 text-sm font-mono border border-red-500/50 bg-red-500/10 p-4 rounded">
-                  Missing VITE_MAPBOX_TOKEN in .env
-                </p>
-              </div>
-            )}
+        <div className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden p-4">
+            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full rounded-2xl bg-slate-950/50 shadow-xl border border-slate-800" />
         </div>
 
         {/* Bottom Area: Compact Stats Grid */}
-        <div className={`w-full shrink-0 px-4 bg-gradient-to-br from-sky-950 via-slate-900 to-slate-900 ${isExportMode ? 'pt-8 pb-20' : 'pt-8 pb-12'}`}>
+        <div className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-8 pb-20' : 'pt-8 pb-12'}`}>
             <div className="grid grid-cols-3 gap-y-6 max-w-sm mx-auto text-center">
                 <div className="flex flex-col items-center justify-center">
                     <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Hours</span>
