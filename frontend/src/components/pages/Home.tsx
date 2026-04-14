@@ -5,11 +5,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 import { Dropzone } from '../ui/Dropzone';
 import { StoryContainer } from '../layout/StoryContainer';
 
-const SCREENSHOTS = [
-  "https://placehold.co/600x800/1e293b/ffffff?text=The+Aviator",
-  "https://placehold.co/600x800/1e293b/ffffff?text=The+Footprint",
-  "https://placehold.co/600x800/1e293b/ffffff?text=The+Fleet"
-];
+const SCREENSHOTS = Array.from({ length: 8 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
 export const Home = () => {
   const { status, stats, errorMessage, resetStore } = useLogbookStore();

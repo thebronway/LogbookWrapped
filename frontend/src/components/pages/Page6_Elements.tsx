@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { getPage7Copy } from '../../core/Copywriter';
 
-export const Page7_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
+export const Page6_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
   const { nightCopy, imcCopy, fuelCopy } = getPage7Copy(stats);
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}

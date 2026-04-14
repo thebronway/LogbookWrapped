@@ -7,7 +7,7 @@ interface Props {
   stats: CalculatedStats;
 }
 
-export const Page3_Fleet: React.FC<Props> = ({ stats }) => {
+export const Page2_Fleet: React.FC<Props> = ({ stats }) => {
   const fleetCopy = getPage3Copy(stats);
 
   return (

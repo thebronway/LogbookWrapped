@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { Page1_Cover } from '../pages/Page1_Cover';
-import { Page2_FootprintMap } from '../pages/Page2_FootprintMap';
-import { Page3_Fleet } from '../pages/Page3_Fleet';
-import { Page4_BigPicture } from '../pages/Page4_BigPicture';
-import { Page5_Extremes } from '../pages/Page5_Extremes';
-import { Page6_Superlatives } from '../pages/Page6_Superlatives';
-import { Page7_Elements } from '../pages/Page7_Elements';
+import { Page2_Fleet } from '../pages/Page2_Fleet';
+import { Page3_BigPicture } from '../pages/Page3_BigPicture';
+import { Page4_Extremes } from '../pages/Page4_Extremes';
+import { Page5_Superlatives } from '../pages/Page5_Superlatives';
+import { Page6_Elements } from '../pages/Page6_Elements';
+import { Page7_Passport } from '../pages/Page7_Passport';
 import { Page8_Summary } from '../pages/Page8_Summary';
 import { ExportModal } from '../ui/ExportModal';
 import { PosterModal } from '../ui/PosterModal';
@@ -36,12 +36,12 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
   const pages = [
     <Page1_Cover stats={stats} key="p1" />,
-    <Page2_FootprintMap stats={stats} key="p2" />,
-    <Page3_Fleet stats={stats} key="p3" />,
-    <Page4_BigPicture stats={stats} key="p4" />,
-    <Page5_Extremes stats={stats} key="p5" />,
-    <Page6_Superlatives stats={stats} key="p6" />,
-    <Page7_Elements stats={stats} key="p7" />,
+    <Page2_Fleet stats={stats} key="p2" />,
+    <Page3_BigPicture stats={stats} key="p3" />,
+    <Page4_Extremes stats={stats} key="p4" />,
+    <Page5_Superlatives stats={stats} key="p5" />,
+    <Page6_Elements stats={stats} key="p6" />,
+    <Page7_Passport stats={stats} key="p7" />,
     <Page8_Summary 
       stats={stats} 
       key="p8" 
@@ -94,29 +94,35 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         </div>
 
         {/* CSS Grid dynamically mapping the 8 pages */}
-        {/* minmax allows rows to expand if content is too tall, and [&>div]:overflow-y-auto turns bento cells into scrollable widgets if needed */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(380px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
+          {/* Row 1: Cover (pages[0]), Fleet (pages[1]), Big Picture (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[0]}
           </div>
-          <div className="col-span-1 lg:col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[1]}
           </div>
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[2]}
           </div>
+          
+          {/* Row 2 & 3: Passport (pages[6]) rendered here so it sits under Cover */}
+          <div className="col-span-1 lg:col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+            {pages[6]}
+          </div>
+          
+          {/* Row 2 & 3 Right Side: Extremes (pages[3]), Superlatives (pages[4]), Elements (pages[5]) stacked next to Passport */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[3]}
           </div>
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[4]}
           </div>
-          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+          <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[5]}
           </div>
-          <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[6]}
-          </div>
+
+          {/* Bottom: Summary (pages[7]) */}
           <div className="col-span-1 md:col-span-2 lg:col-span-4 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[7]}
           </div>

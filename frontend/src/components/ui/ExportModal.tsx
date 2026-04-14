@@ -6,12 +6,12 @@ import { CalculatedStats } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
 
 import { Page1_Cover } from '../pages/Page1_Cover';
-import { Page2_FootprintMap } from '../pages/Page2_FootprintMap';
-import { Page3_Fleet } from '../pages/Page3_Fleet';
-import { Page4_BigPicture } from '../pages/Page4_BigPicture';
-import { Page5_Extremes } from '../pages/Page5_Extremes';
-import { Page6_Superlatives } from '../pages/Page6_Superlatives';
-import { Page7_Elements } from '../pages/Page7_Elements';
+import { Page2_Fleet } from '../pages/Page2_Fleet';
+import { Page3_BigPicture } from '../pages/Page3_BigPicture';
+import { Page4_Extremes } from '../pages/Page4_Extremes';
+import { Page5_Superlatives } from '../pages/Page5_Superlatives';
+import { Page6_Elements } from '../pages/Page6_Elements';
+import { Page7_Passport } from '../pages/Page7_Passport';
 import { Page8_Summary } from '../pages/Page8_Summary';
 
 interface Props {
@@ -26,14 +26,12 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
 
   const pages = [
     { id: 'export-p1', name: 'Cover', render: () => <Page1_Cover stats={stats} /> },
-    // isExportMode passed to Map to lock WebGL buffer and disable animations
-    { id: 'export-p2', name: 'Footprint', render: () => <Page2_FootprintMap stats={stats} isExportMode={true} /> },
-    { id: 'export-p3', name: 'Fleet', render: () => <Page3_Fleet stats={stats} /> },
-    { id: 'export-p4', name: 'Big Picture', render: () => <Page4_BigPicture stats={stats} /> },
-    { id: 'export-p5', name: 'Extremes', render: () => <Page5_Extremes stats={stats} /> },
-    { id: 'export-p6', name: 'Superlatives', render: () => <Page6_Superlatives stats={stats} /> },
-    { id: 'export-p7', name: 'Elements', render: () => <Page7_Elements stats={stats} /> },
-    // isExportMode passed to Summary to hide buttons
+    { id: 'export-p2', name: 'Fleet', render: () => <Page2_Fleet stats={stats} /> },
+    { id: 'export-p3', name: 'Big Picture', render: () => <Page3_BigPicture stats={stats} /> },
+    { id: 'export-p4', name: 'Extremes', render: () => <Page4_Extremes stats={stats} /> },
+    { id: 'export-p5', name: 'Superlatives', render: () => <Page5_Superlatives stats={stats} /> },
+    { id: 'export-p6', name: 'Elements', render: () => <Page6_Elements stats={stats} /> },
+    { id: 'export-p7', name: 'Passport', render: () => <Page7_Passport stats={stats} isExportMode={true} /> },
     { id: 'export-p8', name: 'Summary', render: () => <Page8_Summary stats={stats} isExportMode={true} /> },
   ];
 

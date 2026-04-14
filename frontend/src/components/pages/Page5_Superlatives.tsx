@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { getPage6Copy } from '../../core/Copywriter';
 
-export const Page6_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
+export const Page5_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
   const { ratioCopy, aptsCopy, ratio } = getPage6Copy(stats);
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
@@ -19,6 +19,7 @@ export const Page6_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }
         <div>
           <p className="text-pink-300 text-sm font-bold uppercase tracking-widest mb-1">The Horizon</p>
           <p className="text-4xl font-bold mb-2">{stats.uniqueAirports} Airports</p>
+          <p className="text-fuchsia-200/50 text-sm font-mono mb-2">Most Frequented: {stats.homeBase}</p>
         </div>
       </div>
     </motion.div>
