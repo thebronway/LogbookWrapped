@@ -52,7 +52,7 @@ export const Home = () => {
               Your Year in <span className="text-yellow-400">Aviation</span>, Visualized.
             </h1>
             <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-              LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> Turn your logbook data into a stunning visual journey.
+              LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> <br />Turn your logbook data into a stunning visual journey.
             </p>
           </div>
           

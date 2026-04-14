@@ -37,7 +37,7 @@ export const Page2_Fleet: React.FC<Props> = ({ stats }) => {
           initial={{ scale: 0.9, opacity: 0 }} 
           animate={{ scale: 1, opacity: 1 }} 
           transition={{ delay: 1 }}
-          className="bg-indigo-900/40 p-6 rounded-2xl border border-indigo-500/30"
+          className="bg-indigo-900/40 p-6 rounded-2xl border border-indigo-500/30 flex flex-col justify-center"
         >
           <p className="text-lg font-medium leading-relaxed italic text-indigo-100">
             "{fleetCopy}"

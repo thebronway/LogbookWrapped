@@ -16,7 +16,7 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       className="flex flex-col h-full w-full p-6 bg-slate-950 text-white overflow-y-auto"
     >
-      <h2 className="text-4xl font-black mt-8 mb-6 text-center text-white">My LogbookWrapped.</h2>
+      <h2 className="text-4xl font-black mt-8 mb-12 text-center text-white">My LogbookWrapped.</h2>
 
       {/* THE EXPORTABLE CARD */}
       <div 

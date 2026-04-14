@@ -11,16 +11,17 @@ export const Page5_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }
     >
       <h2 className="text-4xl font-black mb-10 text-fuchsia-400">My Logbook Superlatives.</h2>
       <div className="space-y-10">
-        <div>
+        <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-fuchsia-300 text-sm font-bold uppercase tracking-widest mb-1">Landings to Hours</p>
           <p className="text-4xl font-bold mb-2">{stats.totalLandings} Landings</p>
           <p className="text-fuchsia-200/50 text-sm font-mono mb-2">Ratio: {ratio} Ldg/Hr</p>
-        </div>
-        <div>
+        </motion.div>
+        
+        <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-pink-300 text-sm font-bold uppercase tracking-widest mb-1">The Stamp Collector</p>
           <p className="text-4xl font-bold mb-2">{stats.uniqueAirports} Airports Visited</p>
           <p className="text-fuchsia-200/50 text-sm font-mono mb-2">Most Frequented: {stats.homeBase}</p>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );

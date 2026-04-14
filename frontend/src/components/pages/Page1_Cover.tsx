@@ -23,7 +23,7 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white"
     >
-      <h2 className="text-4xl md:text-5xl font-black mb-6 md:mb-12 tracking-tight text-sky-400">
+      <h2 className="text-4xl md:text-5xl font-black mb-8 md:mb-12 tracking-tight text-sky-400">
         {titleText}<br/>In The Sky.
       </h2>
 

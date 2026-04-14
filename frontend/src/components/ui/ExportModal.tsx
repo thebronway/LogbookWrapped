@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Share2, Archive, Loader2 } from 'lucide-react';
 import JSZip from 'jszip';
-import html2canvas from 'html2canvas';
+import { toBlob } from 'html-to-image';
 import { CalculatedStats } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
 
@@ -38,21 +38,20 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
   const generateBlob = async (elementId: string): Promise<Blob | null> => {
     const el = document.getElementById(elementId);
     if (!el) return null;
-    const canvas = await html2canvas(el, { 
-      scale: 2.4, 
-      useCORS: true, 
-      backgroundColor: '#020617',
-      logging: false,
-      width: 450,
-      height: 800,
-      windowWidth: 450,
-      windowHeight: 800,
-      x: 0,
-      y: 0,
-      scrollX: 0,
-      scrollY: 0
-    });
-    return new Promise(resolve => canvas.toBlob(resolve, 'image/png', 0.95));
+    
+    try {
+      return await toBlob(el, {
+        pixelRatio: 2.4,
+        backgroundColor: '#020617',
+        width: 450,
+        height: 800,
+        // This is the magic flag that tells it to ignore Tailwind's phantom border rendering
+        skipFonts: true, 
+      });
+    } catch (error) {
+      console.error(`Failed to generate blob for ${elementId}:`, error);
+      return null;
+    }
   };
 
   useEffect(() => {

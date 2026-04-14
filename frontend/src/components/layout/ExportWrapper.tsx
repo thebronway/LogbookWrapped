@@ -10,8 +10,6 @@ export const ExportWrapper: React.FC<Props> = ({ children, pageId }) => {
     <div 
         id={pageId}
         className="bg-black overflow-hidden flex flex-col relative"
-        // We use a 450x800 base (9:16) so Tailwind's text/padding classes scale beautifully.
-        // html2canvas will multiply this by 2.4 to get exactly 1080x1920.
         style={{ 
           width: '450px', 
           height: '800px',
