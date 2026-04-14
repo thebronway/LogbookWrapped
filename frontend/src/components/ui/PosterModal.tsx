@@ -1,13 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Printer, X } from 'lucide-react';
+import { Printer, X, Download, Loader2 } from 'lucide-react';
+import { toPng } from 'html-to-image';
+import { CalculatedStats } from '../../core/types';
+import { PosterPrintLayout } from '../layout/PosterPrintLayout';
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  stats: CalculatedStats;
 }
 
-export const PosterModal: React.FC<Props> = ({ isOpen, onClose }) => {
+export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const el = document.getElementById('poster-print-target');
+      if (!el) throw new Error('Poster element not found');
+
+      const dataUrl = await toPng(el, {
+        pixelRatio: 2, 
+        backgroundColor: '#020617',
+        skipFonts: true, 
+      });
+
+      const link = document.createElement('a');
+      link.download = `LogbookWrapped_Poster.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (error) {
+      console.error('Failed to export poster:', error);
+      alert('Failed to generate poster. Check console for details.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
   return (
     <AnimatePresence>
       {isOpen && (
@@ -36,12 +65,25 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
             {/* Scrollable Body Container */}
             <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto pr-2 pb-24">
-              <div className="w-full aspect-[2/3] bg-slate-900 rounded-2xl overflow-hidden mb-6 border border-slate-700 shadow-xl">
-                 <img 
-                    src="https://placehold.co/600x900/0f172a/3b82f6?text=Poster+Preview+Graphic" 
-                    alt="Poster Preview" 
-                    className="w-full h-full object-cover" 
-                 />
+              {/* Dynamic Preview Container */}
+              <div 
+                className="w-full aspect-[2/3] bg-[#020617] rounded-2xl overflow-hidden mb-6 border border-slate-700 shadow-xl relative"
+                style={{ containerType: 'inline-size' }}
+              >
+                {/* Using 100cqi (Container Query Inline) ensures the 1200px width layout
+                  perfectly scales down to fit the parent container's width, no matter 
+                  if the user is on mobile or a giant desktop screen. 
+                */}
+                <div 
+                  className="absolute top-0 left-0 origin-top-left pointer-events-none" 
+                  style={{ 
+                    width: '1200px', 
+                    height: '1800px', 
+                    transform: 'scale(calc(100cqi / 1200))' 
+                  }}
+                >
+                  <PosterPrintLayout stats={stats} />
+                </div>
               </div>
 
               <div className="bg-amber-500/10 border border-amber-500/50 rounded-xl p-5 mb-8">
@@ -51,15 +93,19 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </p>
               </div>
 
-              <a 
-                href="https://printful.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-indigo-900/20 text-lg"
+              <button 
+                onClick={handleExport}
+                disabled={isExporting}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-600 disabled:opacity-70 disabled:cursor-not-allowed text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-emerald-900/20 text-lg"
               >
-                <Printer size={24} />
-                Continue to Print Partner
-              </a>
+                {isExporting ? <Loader2 className="animate-spin" size={24} /> : <Download size={24} />}
+                {isExporting ? 'Generating High-Res Art...' : 'Download Test Print (24x36)'}
+              </button>
+
+              {/* Hidden Export Target (Rendered securely off-screen for a pixel-perfect 1200x1800 image capture) */}
+              <div className="fixed top-0 left-[9999px] pointer-events-none z-[-1]">
+                <PosterPrintLayout id="poster-print-target" stats={stats} />
+              </div>
             </div>
           </div>
         </motion.div>
