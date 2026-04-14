@@ -47,6 +47,7 @@ export const normalizeFlightData = (rawRows: any[]): FlightRecord[] => {
       night: parseFloat(row[profile.night]) || 0,
       landings: totalLandings,
       instrument: parseFloat(row[profile.instrument]) || 0,
+      simulated: profile.simulated ? (parseFloat(row[profile.simulated]) || 0) : 0,
     };
   }).filter(flight => flight.totalTime > 0 && flight.date !== 'Unknown Date'); 
 };

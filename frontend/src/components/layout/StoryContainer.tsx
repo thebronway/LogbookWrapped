@@ -68,7 +68,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
     const timer = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
-    }, 8000); // 8 seconds per slide
+    }, 10000); // 8 seconds per slide
 
     // If the user manually taps the screen, this cleanup clears the timer 
     // so it doesn't double-skip!
@@ -82,7 +82,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     return (
       <>
         {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
-        {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} />}
+        {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
         {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
         
         <div className="w-full max-w-[1600px] mx-auto py-8 animate-in fade-in duration-500">
@@ -138,7 +138,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   return (
     <>
       {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
-      {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} />}
+      {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       
       <div className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none">
@@ -150,7 +150,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             100% { width: 100%; }
           }
           .animate-progress {
-            animation: fillProgress 8s linear forwards;
+            animation: fillProgress 10s linear forwards;
           }
         `}</style>
 

@@ -20,7 +20,7 @@ export const Page5_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }
         <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-pink-300 text-sm font-bold uppercase tracking-widest mb-1">The Stamp Collector</p>
           <p className="text-4xl font-bold mb-2">{stats.uniqueAirports} Airports Visited</p>
-          <p className="text-fuchsia-200/50 text-sm font-mono mb-2">Most Frequented: {stats.homeBase}</p>
+          <p className="text-fuchsia-200/50 text-sm font-mono mb-2">HOME BASE: {stats.homeBase}</p>
         </motion.div>
       </div>
     </motion.div>

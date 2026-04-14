@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { CalculatedStats } from '../../core/types';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 interface Props {
   stats: CalculatedStats;
@@ -12,6 +13,7 @@ interface Props {
 export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
+  const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   useEffect(() => {
     const token = import.meta.env.VITE_MAPBOX_TOKEN;
@@ -128,13 +130,23 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
     };
   }, [stats, isExportMode]);
 
+  // Dynamic Title Logic
+  let titleX = '';
+  if (dateFilter?.type === 'this_year') {
+    titleX = `${new Date().getFullYear()} `;
+  } else if (dateFilter?.type === 'last_year') {
+    titleX = `${new Date().getFullYear() - 1} `;
+  } else if (dateFilter?.type === 'all_time') {
+    titleX = 'All-Time ';
+  }
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col h-full w-full bg-black text-white overflow-hidden">
         
         {/* Top Area */}
         <div className="w-full shrink-0 pt-16 pb-12 px-8 bg-gradient-to-tl from-sky-950 via-slate-900 to-slate-900 border-b border-slate-800 flex flex-col justify-center relative z-10">
-            <h2 className="text-4xl font-black text-sky-400 m-0">
-              My Logbook Passport.
+            <h2 className="text-4xl font-black text-sky-400 m-0 tracking-tight">
+              My {titleX}Logbook Passport.
             </h2>
         </div>
 
@@ -159,7 +171,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
                 </div>
                 <div className="flex flex-col items-center justify-center border-l border-r border-slate-700">
                     <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Flights</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.totalSorties || 0}</span>
+                    <span className="text-2xl font-black text-white leading-none">{stats.totalFlights || 0}</span>
                 </div>
                 <div className="flex flex-col items-center justify-center">
                     <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Distance (NM)</span>

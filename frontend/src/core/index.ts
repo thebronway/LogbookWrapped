@@ -13,6 +13,7 @@ export interface FlightRecord {
   night: number;
   landings: number;
   instrument: number; // Actual IMC
+  simulated: number; // Simulated IMC
 }
 
 export interface CalculatedStats {
@@ -32,6 +33,8 @@ export interface CalculatedStats {
   uniqueAirports: number;
   totalNight: number;
   totalIMC: number;
+  totalSimulated: number;
+  totalActualAndSim: number;
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
   hasInternational: boolean;
   mapData: {

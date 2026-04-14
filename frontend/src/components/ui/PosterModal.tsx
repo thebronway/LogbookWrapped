@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Printer, X, Download, Loader2 } from 'lucide-react';
 import { toPng } from 'html-to-image';
 import { CalculatedStats } from '../../core/types';
 import { PosterPrintLayout } from '../layout/PosterPrintLayout';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 interface Props {
   isOpen: boolean;
@@ -13,6 +14,19 @@ interface Props {
 
 export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
   const [isExporting, setIsExporting] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const dateRange = useLogbookStore((state) => state.dateRange);
+
+  // Bulletproof dynamic scaling based on the exact width of the container
+  useEffect(() => {
+    if (!containerRef.current || !isOpen) return;
+    const observer = new ResizeObserver((entries) => {
+      setScale(entries[0].contentRect.width / 1200);
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, [isOpen]);
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -54,7 +68,7 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
             
             {/* Header */}
             <div className="flex justify-between items-center w-full max-w-2xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0">
-              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Get Your Footprint on Canvas</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Turn Your Passport in a Poster</h2>
               <button 
                 onClick={onClose}
                 className="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shrink-0 ml-4"
@@ -67,29 +81,29 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
             <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto pr-2 pb-24">
               {/* Dynamic Preview Container */}
               <div 
-                className="w-full aspect-[2/3] bg-[#020617] rounded-2xl overflow-hidden mb-6 border border-slate-700 shadow-xl relative"
-                style={{ containerType: 'inline-size' }}
+                ref={containerRef}
+                className="w-full bg-[#020617] rounded-2xl overflow-hidden mb-6 border border-slate-700 shadow-xl relative"
+                style={{ aspectRatio: '2 / 3' }}
               >
-                {/* Using 100cqi (Container Query Inline) ensures the 1200px width layout
-                  perfectly scales down to fit the parent container's width, no matter 
-                  if the user is on mobile or a giant desktop screen. 
+                {/* The React ResizeObserver measures this container in real-time
+                  and perfectly scales the 1200x1800 canvas to fit.
                 */}
                 <div 
                   className="absolute top-0 left-0 origin-top-left pointer-events-none" 
                   style={{ 
                     width: '1200px', 
                     height: '1800px', 
-                    transform: 'scale(calc(100cqi / 1200))' 
+                    transform: `scale(${scale})` 
                   }}
                 >
-                  <PosterPrintLayout stats={stats} />
+                  <PosterPrintLayout stats={stats} dateRange={dateRange} />
                 </div>
               </div>
 
               <div className="bg-amber-500/10 border border-amber-500/50 rounded-xl p-5 mb-8">
                 <p className="text-amber-200 text-sm sm:text-base leading-relaxed">
                   <strong>Privacy Notice:</strong> Up until now, 100% of your logbook processing has remained securely on your device. 
-                  By proceeding to order a physical print, <strong>your footprint map data and summary stats will be securely transmitted to a third-party server</strong> to fulfill your order. Your raw logbook entries are never shared.
+                  By proceeding to order a physical print, <strong>your passport map data and summary stats will be securely transmitted to a third-party server</strong> to fulfill your order. Your raw logbook entries are never uploaded or shared.
                 </p>
               </div>
 

@@ -60,6 +60,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     uniqueAirports: 0,
     totalNight: 0,
     totalIMC: 0,
+    totalSimulated: 0,
+    totalActualAndSim: 0,
     estimatedFuelBurn: 0,
     hasInternational: false,
     mapData: {
@@ -82,6 +84,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalLandings += f.landings;
     stats.totalNight += f.night;
     stats.totalIMC += f.instrument;
+    stats.totalSimulated += f.simulated;
     
     // Parse the route to find any valid intermediate airports
     const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
@@ -215,6 +218,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.totalHours = Number(stats.totalHours.toFixed(1));
   stats.totalNight = Number(stats.totalNight.toFixed(1));
   stats.totalIMC = Number(stats.totalIMC.toFixed(1));
+  stats.totalSimulated = Number(stats.totalSimulated.toFixed(1));
+  stats.totalActualAndSim = Number((stats.totalIMC + stats.totalSimulated).toFixed(1));
   stats.estimatedFuelBurn = Number(stats.estimatedFuelBurn.toFixed(1));
   stats.totalDistanceNm = Number(stats.totalDistanceNm.toFixed(0)); // Whole numbers for distance
   stats.shortestFlight = Number(stats.shortestFlight.toFixed(1));

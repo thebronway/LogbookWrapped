@@ -12,6 +12,7 @@ export interface EFBProfile {
   landings: string;
   nightLandings: string | null;
   instrument: string;
+  simulated: string | null;
 }
 
 export const PROFILES: Record<string, EFBProfile> = {
@@ -29,6 +30,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     landings: 'DayLandingsFullStop', // <--- FIXED
     nightLandings: 'NightLandingsFullStop', // <--- FIXED
     instrument: 'ActualInstrument',
+    simulated: 'SimulatedInstrument',
   },
   GARMIN: {
     date: 'Date',
@@ -44,5 +46,6 @@ export const PROFILES: Record<string, EFBProfile> = {
     landings: 'Landings',
     nightLandings: null,
     instrument: 'IMC',
+    simulated: 'Simulated',
   }
 };
