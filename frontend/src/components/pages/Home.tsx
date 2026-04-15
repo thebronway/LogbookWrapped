@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import { Shield, Zap, Share2, ArrowDownCircle, Info } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { Dropzone } from '../ui/Dropzone';
@@ -129,6 +130,12 @@ export const Home = () => {
           <p className="text-lg text-slate-400">
             1. Select a timeframe (Year, Any Range, All Time). <br />
             2. Export your entire logbook as a <span className="text-white font-mono">.csv</span> from your EFB and upload it below.
+          </p>
+          <p className="text-sm text-slate-500 pt-2">
+            Curious how we patch missing data? Read about our{' '}
+            <Link to="/logbook" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">
+              parsing logic and assumptions
+            </Link>.
           </p>
         </div>
         

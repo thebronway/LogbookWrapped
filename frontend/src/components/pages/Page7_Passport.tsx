@@ -105,20 +105,22 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
 
     // 2. Identify Visited Territories
     const visitedCountries = geoData.countryFeatures?.filter((feature: any) => 
-      stats.mapData.nodes.some(node => d3.geoContains(feature, node))
+      feature.id !== "840" && stats.mapData.nodes.some(node => d3.geoContains(feature, node))
     ) || [];
     
     const visitedStates = geoData.stateFeatures?.filter((feature: any) => 
       stats.mapData.nodes.some(node => d3.geoContains(feature, node))
     ) || [];
 
-    // 3. Color in visited Countries
+    // 3. Color in visited Countries (excluding US, styled like states)
     svg.selectAll(".visited-country")
       .data(visitedCountries)
       .enter().append("path")
       .attr("d", pathGenerator as any)
-      .attr("fill", "#1e293b") 
-      .attr("stroke", "none");
+      .attr("fill", "#1e3a8a") 
+      .attr("stroke", "#60a5fa") 
+      .attr("stroke-width", 3) 
+      .attr("stroke-opacity", 1.0);
 
     // 4. Color in visited US States (Rich Blue)
     svg.selectAll(".visited-state")

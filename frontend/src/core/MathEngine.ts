@@ -1,5 +1,17 @@
 import { FlightRecord, CalculatedStats, AirportDB } from './types';
-import { AIRCRAFT_GPH_DICTIONARY } from './AircraftGPH';
+import { AIRCRAFT_PROFILES } from './AircraftProfiles';
+
+// Haversine formula to calculate Great Circle distance in Nautical Miles
+const getDistanceNm = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+  const R = 3440.065; // Radius of Earth in NM
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+};
 
 export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): CalculatedStats => {
   const stats: CalculatedStats = {
@@ -44,34 +56,64 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalNight += f.night;
     stats.totalIMC += f.instrument;
     stats.totalSimulated += f.simulated;
-    
-    // Parse the route to find any valid intermediate airports
-    const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
-    const validAirportsInRoute = routeTokens
-      .map(t => t.toUpperCase())
-      .filter(t => {
-        if (!airportDB[t]) return false;
-        // Ignore purely alphabetical 3-letter strings in the route (e.g., OAK, LAX) as they are likely VORs.
-        // Airports with numbers (e.g., 2W5) bypass this and are included.
-        if (t.length === 3 && /^[A-Z]{3}$/.test(t)) return false;
-        return true;
-      });
-      
-    // Build a continuous sequence: Departure -> [Route Waypoints] -> Destination
-    const rawLegs = [f.departure.toUpperCase(), ...validAirportsInRoute, f.destination.toUpperCase()];
 
-    // Filter valid airports, resolve to their Primary ID (to handle lazy LAX -> KLAX), and remove consecutive duplicates
+    // 1. Get Aircraft Profile (with safe 120kt / 10gph fallback for Unknown Aircraft)
+    const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || { gph: 10, speed: 120 };
+    
+    // 2. Define the Plausibility Envelope (2.0x buffer)
+    // If flight time is 0 (e.g., sim session or mistake), grant a massive budget so we don't drop the route
+    const maxFlightDistance = f.totalTime > 0 ? (f.totalTime * profile.speed * 2.0) : 99999;
+
+    // 3. Setup Shorthand Blocklist
+    const ignoredTokens = new Set(['DCT', 'DIR', 'GPS', 'RNAV', 'ILS', 'LOC', 'VOR', 'NDB', 'VFR', 'IFR', 'VECT', 'VTF', 'RADAR']);
+
+    const routeTokens = f.route ? f.route.split(/[\s-]+/) : [];
+    const validWaypoints = routeTokens
+      .map(t => t.toUpperCase())
+      .filter(t => !ignoredTokens.has(t) && airportDB[t]);
+
+    // 4. Construct Flight Legs & Calculate Distance
+    const depEntry = airportDB[f.departure.toUpperCase()];
+    const destEntry = airportDB[f.destination.toUpperCase()];
+    
     const flightLegs: string[] = [];
-    rawLegs.forEach(apt => {
-      const dbEntry = airportDB[apt];
-      if (dbEntry) {
-        // dbEntry is now [lat, lon, primaryId]
-        const primaryId = dbEntry[2] || apt; 
-        if (flightLegs.length === 0 || flightLegs[flightLegs.length - 1] !== primaryId) {
-          flightLegs.push(primaryId);
+    let calculatedDistance = 0;
+    
+    if (depEntry) flightLegs.push(depEntry[2] || f.departure.toUpperCase());
+    
+    let currentLat = depEntry ? depEntry[0] : null;
+    let currentLon = depEntry ? depEntry[1] : null;
+
+    validWaypoints.forEach(wpt => {
+      const dbEntry = airportDB[wpt];
+      if (dbEntry && currentLat !== null && currentLon !== null && destEntry) {
+        // Test: If we route through this waypoint to the destination, does it blow our 2.0x distance budget?
+        const distToWpt = getDistanceNm(currentLat, currentLon, dbEntry[0], dbEntry[1]);
+        const distFromWptToDest = getDistanceNm(dbEntry[0], dbEntry[1], destEntry[0], destEntry[1]);
+        
+        if ((calculatedDistance + distToWpt + distFromWptToDest) <= maxFlightDistance) {
+          // Plausible! Keep it.
+          const primaryId = dbEntry[2] || wpt;
+          if (flightLegs[flightLegs.length - 1] !== primaryId) {
+            flightLegs.push(primaryId);
+            calculatedDistance += distToWpt;
+            currentLat = dbEntry[0];
+            currentLon = dbEntry[1];
+          }
         }
       }
     });
+
+    // Add Destination
+    if (destEntry) {
+      const destId = destEntry[2] || f.destination.toUpperCase();
+      if (flightLegs[flightLegs.length - 1] !== destId) {
+        flightLegs.push(destId);
+        if (currentLat !== null && currentLon !== null) {
+          calculatedDistance += getDistanceNm(currentLat, currentLon, destEntry[0], destEntry[1]);
+        }
+      }
+    }
 
     // Extract Map Data (Edges/Paths)
     for (let i = 0; i < flightLegs.length - 1; i++) {
@@ -105,7 +147,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
       }
     });
 
-    // Only check departure and destination to prevent VORs in the route (like HCM) 
+    // Only check departure and destination to prevent VORs in the route
     // from triggering false-positive international flags.
     [f.departure, f.destination].forEach(apt => {
       const coords = airportDB[apt.toUpperCase()];
@@ -119,8 +161,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
       }
     });
 
-    // Trust the distance logged in the CSV
-    const flightDist = f.distance;
+    // Determine Final Distance (Fallback to Calculated if missing)
+    const flightDist = f.distance && f.distance > 0 ? f.distance : calculatedDistance;
     stats.totalDistanceNm += flightDist;
 
     // Extremes
@@ -145,11 +187,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     departureCounts[dep] = (departureCounts[dep] || 0) + 1;
 
     // Fuel Burn calculation
-    let gph = AIRCRAFT_GPH_DICTIONARY[f.aircraftType.toUpperCase()];
-    if (!gph) {
-      gph = 10; // The safe 10gal/hr GA estimate fallback
-    }
-    stats.estimatedFuelBurn += (f.totalTime * gph);
+    stats.estimatedFuelBurn += (f.totalTime * profile.gph);
   });
 
   stats.uniqueAirports = airports.size;

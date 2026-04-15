@@ -81,7 +81,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   if (isDesktop) {
     return (
       <>
-        {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
+        {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} onOpenPoster={() => setIsPosterModalOpen(true)} />}
         {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
         {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
         
@@ -137,7 +137,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   // ==========================================
   return (
     <>
-      {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
+      {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} onOpenPoster={() => setIsPosterModalOpen(true)} />}
       {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       

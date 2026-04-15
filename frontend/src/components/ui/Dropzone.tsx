@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { UploadCloud, Calendar } from 'lucide-react';
 import { useLogbookStore, DateFilterType } from '../../store/useLogbookStore';
 
@@ -7,6 +7,7 @@ export const Dropzone = () => {
   const processFile = useLogbookStore((state) => state.processFile);
   const dateFilter = useLogbookStore((state) => state.dateFilter);
   const setDateFilter = useLogbookStore((state) => state.setDateFilter);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const currentYear = new Date().getFullYear();
 
@@ -84,7 +85,7 @@ export const Dropzone = () => {
       </div>
 
       {/* The Dropzone */}
-      <label 
+      <div 
         className={`w-full p-12 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center transition-all duration-200 shadow-xl cursor-pointer group ${
           isDragging 
             ? 'border-blue-500 bg-blue-500/20 scale-105' 
@@ -94,6 +95,7 @@ export const Dropzone = () => {
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
       >
         <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`} />
         <h3 className="text-xl font-bold mb-2 text-center text-white group-hover:text-blue-50 transition-colors">Drop your Logbook CSV here</h3>
@@ -108,9 +110,10 @@ export const Dropzone = () => {
           type="file" 
           className="hidden" 
           accept=".csv" 
-          onChange={handleFileInput} 
+          onChange={handleFileInput}
+          ref={fileInputRef}
         />
-      </label>
+      </div>
       
     </div>
   );
