@@ -45,12 +45,15 @@ async function build() {
     if (isNaN(lat) || isNaN(lon)) continue;
 
     const primaryId = cols[1].toUpperCase();
-    if (cols[1]) airports[primaryId] = [lat, lon, primaryId];
+    // Region is in cols[9] (e.g., "US-CA"). We'll split it to just grab "CA".
+    const state = cols[9] ? (cols[9].includes('-') ? cols[9].split('-')[1] : cols[9]) : 'Unknown';
+    
+    if (cols[1]) airports[primaryId] = [lat, lon, primaryId, state];
     // Map ICAO, IATA, GPS, and Local Codes so we capture every alias (like LAX and 2W5)
-    if (cols[12]) airports[cols[12].toUpperCase()] = [lat, lon, primaryId]; // icao_code
-    if (cols[13]) airports[cols[13].toUpperCase()] = [lat, lon, primaryId]; // iata_code
-    if (cols[14]) airports[cols[14].toUpperCase()] = [lat, lon, primaryId]; // gps_code
-    if (cols[15]) airports[cols[15].toUpperCase()] = [lat, lon, primaryId]; // local_code (Where 2W5 lives!)
+    if (cols[12]) airports[cols[12].toUpperCase()] = [lat, lon, primaryId, state]; // icao_code
+    if (cols[13]) airports[cols[13].toUpperCase()] = [lat, lon, primaryId, state]; // iata_code
+    if (cols[14]) airports[cols[14].toUpperCase()] = [lat, lon, primaryId, state]; // gps_code
+    if (cols[15]) airports[cols[15].toUpperCase()] = [lat, lon, primaryId, state]; // local_code
   }
 
   delete airports[''];

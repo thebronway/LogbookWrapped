@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Github } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const LogbookLogic = () => {
   return (
@@ -24,7 +25,7 @@ export const LogbookLogic = () => {
 
       <div className="space-y-10">
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">1. The "Ghost Landing" Fix</h2>
+          <h2 className="text-2xl font-bold text-white">1. No Landings Logged</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> Unless you jumped out with a parachute, you landed. If your departure and destination are different and you logged flight time, we automatically credit you with 1 landing.
           </p>
@@ -37,7 +38,25 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">2. Self-Healing Aircraft Types</h2>
+          <h2 className="text-2xl font-bold text-white">2. Aircraft Normalization</h2>
+          <p className="leading-relaxed">
+            <strong>The Rule:</strong> Pilots log aircraft types in dozens of creative ways. We strip out dashes and spaces, then use smart substring matching to automatically group variants into their core profiles.
+          </p>
+          <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
+            <p className="text-sm text-blue-200/90 font-mono">
+              <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
+              You log your plane as "C-172P", "172N", and "C172". Instead of splitting your stats into three different planes, we beautifully bundle them all under "C172".
+            </p>
+          </div>
+          <div className="pt-2">
+            <Link to="/aircraftprofiles" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-blue-400 hover:bg-slate-700 hover:text-blue-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700">
+              View Supported Aircraft Database &rarr;
+            </Link>
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">3. Self-Healing Aircraft Types</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> The app scans your entire logbook to memorize your fleet. If it sees you flew a specific tail number as a C172 yesterday, it automatically fills in the blank for today so your performance stats don't break.
           </p>
@@ -50,7 +69,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">3. The Hobbs & Block Fallback</h2>
+          <h2 className="text-2xl font-bold text-white">4. The Hobbs & Block Fallback</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> We rebuild missing flight times for you. We check your Hobbs meters, then Tach meters, and finally calculate your Block Time (even if your flight crossed midnight).
           </p>
@@ -63,7 +82,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">4. The Local Flight Loop</h2>
+          <h2 className="text-2xl font-bold text-white">5. The Local Flight Loop</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> We assume you returned to base. We copy your departure airport into the destination slot so you still get a nice dot on the map.
           </p>
@@ -76,7 +95,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">5. Shorthand vs. Ghost Airports</h2>
+          <h2 className="text-2xl font-bold text-white">6. Shorthand vs. Ghost Airports</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> To prevent your map from drawing wild lines to the Caribbean, we explicitly ignore common pilot shorthands in the route column (DCT, DIR, GPS, RNAV, VOR, VFR, etc.).
           </p>
@@ -89,7 +108,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">6. The Plausibility Envelope</h2>
+          <h2 className="text-2xl font-bold text-white">7. The Plausibility Envelope</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> We calculate Earth-curvature distances. Based on your aircraft's known cruise speed, if reaching a waypoint would require you to fly Mach 3, we know it's a VOR masquerading as an airport and drop it from the map.
           </p>
@@ -102,7 +121,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">7. Missing Distances & Fuel Burn</h2>
+          <h2 className="text-2xl font-bold text-white">8. Missing Distances & Fuel Burn</h2>
           <p className="leading-relaxed">
             <strong>The Rule:</strong> We use the Haversine Great Circle formula to calculate the exact distance of your flight path. For fuel, we look up your Aircraft Type in our database of over 50 performance profiles. Flying something experimental? We safely default to 120 knots and 10 GPH.
           </p>

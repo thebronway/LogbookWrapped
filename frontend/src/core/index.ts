@@ -1,4 +1,4 @@
-export type AirportDB = Record<string, [number, number, string]>;
+export type AirportDB = Record<string, [number, number, string, string?]>;
 
 export interface FlightRecord {
   date: string;
@@ -37,6 +37,11 @@ export interface CalculatedStats {
   totalActualAndSim: number;
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
   hasInternational: boolean;
+  mostUsedAirframe: string;
+  favoriteRoute: string;
+  favoriteRouteCount: number;
+  mostVisitedState: string;
+  mostVisitedStateCount: number;
   mapData: {
     nodes: [number, number][]; // [longitude, latitude]
     edges: [[number, number], [number, number]][]; // [[lon1, lat1], [lon2, lat2]]

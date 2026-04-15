@@ -11,12 +11,29 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
       if (!text) return reject(new Error("File is empty"));
 
       let csvTextToParse = text;
+      const preParsedAircraftMap: Record<string, string> = {};
 
       // Slice off everything above the actual flight logs
       if (text.includes('ForeFlight Logbook Import') || text.includes('Aircraft Table')) {
+        const aircraftTableStart = text.indexOf('AircraftID,TypeCode');
         const flightsMarker = 'Date,AircraftID';
         const flightHeaderIndex = text.indexOf(flightsMarker);
         
+        // Extract the aircraft types from the ForeFlight metadata header before slicing
+        if (aircraftTableStart !== -1 && flightHeaderIndex !== -1 && aircraftTableStart < flightHeaderIndex) {
+          const aircraftTableText = text.substring(aircraftTableStart, flightHeaderIndex);
+          const lines = aircraftTableText.split('\n');
+          lines.forEach(line => {
+            const cols = line.split(',');
+            // Map column 0 (Tail) to column 1 (Type)
+            if (cols.length >= 2 && cols[0] !== 'AircraftID') {
+              const tail = cols[0].trim();
+              let type = cols[1].trim();
+              if (tail && type) preParsedAircraftMap[tail] = type.replace(/["']/g, "");
+            }
+          });
+        }
+
         if (flightHeaderIndex !== -1) {
           csvTextToParse = text.substring(flightHeaderIndex);
         }
@@ -27,7 +44,7 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
         skipEmptyLines: true,
         complete: (results) => {
           try {
-            const normalized = normalizeFlightData(results.data);
+            const normalized = normalizeFlightData(results.data, preParsedAircraftMap);
             resolve(normalized);
           } catch (error) {
             console.error(error);

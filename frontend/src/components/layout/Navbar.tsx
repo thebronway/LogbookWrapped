@@ -1,16 +1,24 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const resetStore = useLogbookStore((state) => state.resetStore);
 
   const closeMenu = () => setIsMobileMenuOpen(false);
+
+  const handleLogoClick = () => {
+    closeMenu();
+    resetStore();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/50">
       <nav className="w-full p-4 flex justify-between items-center max-w-6xl mx-auto relative">
-        <Link to="/" onClick={closeMenu} className="flex items-center hover:opacity-80 transition-opacity z-50">
+        <Link to="/" onClick={handleLogoClick} className="flex items-center gap-3 hover:opacity-80 transition-opacity z-50">
+          <img src="/logo.webp" alt="LogbookWrapped Logo" className="w-20 h-20 object-contain" />
           <span className="text-2xl font-bold text-white tracking-tight block">LogbookWrapped</span>
         </Link>
         

@@ -1,7 +1,37 @@
 import { FlightRecord } from './types';
 import { PROFILES } from './EFBProfiles';
+import { AIRCRAFT_PROFILES } from './AircraftProfiles';
 
-export const normalizeFlightData = (rawRows: any[]): FlightRecord[] => {
+// Dynamically matches messy inputs to your core database without hardcoding
+const standardizeAircraftType = (rawType: string): string => {
+  if (!rawType) return 'UNKNOWN';
+
+  // Step A: Sanitize (uppercase, remove spaces, dashes, etc.)
+  const cleanType = rawType.toUpperCase().replace(/[-\s_]/g, '');
+  const availableProfiles = Object.keys(AIRCRAFT_PROFILES);
+
+  // Step B: Direct or Substring Match (e.g., "C172P" includes "C172")
+  for (const profile of availableProfiles) {
+    if (cleanType.includes(profile)) {
+      return profile;
+    }
+  }
+
+  // Step C: Numeric "Missing Prefix" Match (e.g., "172N" matching "C172")
+  for (const profile of availableProfiles) {
+    const numericPart = profile.replace(/\D/g, ''); // Extract only numbers
+    
+    // Require at least 2 digits to prevent false positives (like matching just "2" or "9")
+    if (numericPart.length >= 2 && cleanType.includes(numericPart)) {
+      return profile;
+    }
+  }
+
+  // If no match is found, return the sanitized version so they still group together nicely
+  return cleanType;
+};
+
+export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Record<string, string>): FlightRecord[] => {
   if (!rawRows || rawRows.length === 0) return [];
 
   const headers = Object.keys(rawRows[0]);
@@ -9,7 +39,7 @@ export const normalizeFlightData = (rawRows: any[]): FlightRecord[] => {
   const profile = isForeFlight ? PROFILES.FOREFLIGHT : PROFILES.GARMIN;
 
   // 2a. Build the Self-Healing Aircraft Type Dictionary
-  const tailToTypeMap: Record<string, string> = {};
+  const tailToTypeMap: Record<string, string> = preParsedAircraftMap || {};
   rawRows.forEach(row => {
     const tail = row[profile.aircraftId];
     const type = row[profile.aircraftType];
@@ -103,12 +133,15 @@ export const normalizeFlightData = (rawRows: any[]): FlightRecord[] => {
     }
 
     const aircraftId = row[profile.aircraftId] || 'UNKNOWN';
-    let aircraftType = row[profile.aircraftType];
+    let rawAircraftType = row[profile.aircraftType];
 
     // 2b. Apply the Self-Healing Aircraft Type
-    if (!aircraftType && tailToTypeMap[aircraftId]) {
-      aircraftType = tailToTypeMap[aircraftId];
+    if (!rawAircraftType && tailToTypeMap[aircraftId]) {
+      rawAircraftType = tailToTypeMap[aircraftId];
     }
+
+    // Run the dynamic standardizer
+    const aircraftType = standardizeAircraftType(rawAircraftType);
 
     return {
       date: row[profile.date] || 'Unknown Date',

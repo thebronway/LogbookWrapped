@@ -26,7 +26,7 @@ export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
           <p className="text-orange-400 text-sm font-bold uppercase tracking-widest mb-1">Total Distance</p>
           <p className="text-5xl font-black mb-4">{stats.totalDistanceNm.toLocaleString()} NM</p>
           <p className="text-slate-300 text-lg leading-relaxed"></p>
-          <p className="text-slate-300 text-sm font-mono mb-2">{distCopy}</p>
+          <p className="text-orange-300/75 text-sm font-mono mb-2">{distCopy}</p>
         </motion.div>
 
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.7 }}>

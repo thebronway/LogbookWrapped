@@ -35,6 +35,11 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     totalActualAndSim: 0,
     estimatedFuelBurn: 0,
     hasInternational: false,
+    mostUsedAirframe: 'Unknown',
+    favoriteRoute: 'None',
+    favoriteRouteCount: 0,
+    mostVisitedState: 'Unknown',
+    mostVisitedStateCount: 0,
     mapData: {
       nodes: [],
       edges: [],
@@ -49,6 +54,9 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const aircraftTypes = new Set<string>();
   const tailNumbers = new Set<string>();
   const departureCounts: Record<string, number> = {};
+  const aircraftTypeCounts: Record<string, number> = {};
+  const routeCounts: Record<string, number> = {};
+  const stateCounts: Record<string, number> = {};
 
   flights.forEach(f => {
     stats.totalHours += f.totalTime;
@@ -137,9 +145,12 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     // Add valid airports to the unique Set and calculate bounding box
     flightLegs.forEach(aptId => {
       airports.add(aptId);
-      const coords = airportDB[aptId];
-      if (coords) {
-        const [lat, lon] = coords;
+      const dbEntry = airportDB[aptId];
+      if (dbEntry) {
+        const [lat, lon, , state] = dbEntry;
+        if (state && state !== 'Unknown') {
+          stateCounts[state] = (stateCounts[state] || 0) + 1;
+        }
         minLat = Math.min(minLat, lat);
         maxLat = Math.max(maxLat, lat);
         minLon = Math.min(minLon, lon);
@@ -181,6 +192,13 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     // Uniques
     aircraftTypes.add(f.aircraftType);
     tailNumbers.add(f.aircraftId);
+    
+    // Track usage frequencies
+    aircraftTypeCounts[f.aircraftType] = (aircraftTypeCounts[f.aircraftType] || 0) + 1;
+    if (f.departure && f.destination) {
+      const routeStr = `${f.departure} to ${f.destination}`;
+      routeCounts[routeStr] = (routeCounts[routeStr] || 0) + 1;
+    }
 
     // Home Base calculation (using first leg or departure)
     const dep = flightLegs.length > 0 ? flightLegs[0] : f.departure;
@@ -194,6 +212,23 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.uniqueAircraftTypes = aircraftTypes.size;
   stats.uniqueTailNumbers = tailNumbers.size;
   
+  // Calculate top superlative stats
+  stats.mostUsedAirframe = Object.keys(aircraftTypeCounts).reduce((a, b) => 
+    aircraftTypeCounts[a] > aircraftTypeCounts[b] ? a : b
+  , "Unknown");
+
+  const favRoute = Object.keys(routeCounts).reduce((a, b) => 
+    routeCounts[a] > routeCounts[b] ? a : b
+  , "None");
+  stats.favoriteRoute = favRoute;
+  stats.favoriteRouteCount = routeCounts[favRoute] || 0;
+
+  const topState = Object.keys(stateCounts).reduce((a, b) => 
+    stateCounts[a] > stateCounts[b] ? a : b
+  , "Unknown");
+  stats.mostVisitedState = topState;
+  stats.mostVisitedStateCount = stateCounts[topState] || 0;
+
   // Find Home Base (most frequent departure)
   stats.homeBase = Object.keys(departureCounts).reduce((a, b) => 
     departureCounts[a] > departureCounts[b] ? a : b
