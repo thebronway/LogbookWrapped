@@ -17,12 +17,19 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
 
   useEffect(() => {
     Promise.all([
-      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()),
+      // 1. Reverted to 50m because 10m does not exist and breaks the app
+      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()), 
       fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json())
     ]).then(([worldTopo, usTopo]) => {
+      
+      const allCountries = topojson.feature(worldTopo, worldTopo.objects.countries).features;
+      
       setGeoData({
-        world: topojson.feature(worldTopo, worldTopo.objects.land),
-        stateBorders: topojson.mesh(usTopo, usTopo.objects.states, (a, b) => a !== b) 
+        // Specifically grab Canada (124) and Mexico (484) to frame the US without blobs
+        neighbors: allCountries.filter((c: any) => c.id === "124" || c.id === "484"),
+        stateBorders: topojson.mesh(usTopo, usTopo.objects.states),
+        stateFeatures: topojson.feature(usTopo, usTopo.objects.states).features,
+        countryFeatures: allCountries
       });
     });
   }, []);
@@ -53,18 +60,64 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
 
     const pathGenerator = d3.geoPath().projection(projection);
 
-    svg.append("path")
-      .datum(geoData.world)
+    // 0. Draw the Ocean / Water base layer (Pitch Black)
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#000000") 
+      .attr("rx", 16); 
+
+    // 1. Draw Canada and Mexico (Neighbor context)
+    svg.selectAll(".neighbor-country")
+      .data(geoData.neighbors || [])
+      .enter().append("path")
       .attr("d", pathGenerator as any)
       .attr("fill", "#0f172a") 
       .attr("stroke", "#1e293b") 
       .attr("stroke-width", 1);
 
+    // 1b. Draw High-Res US states (This guarantees the Great Lakes are clean water)
+    svg.selectAll(".base-state")
+      .data(geoData.stateFeatures)
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#0f172a") 
+      .attr("stroke", "#1e293b") 
+      .attr("stroke-width", 1);
+
+    // 2. Identify Visited Territories
+    const visitedCountries = geoData.countryFeatures?.filter((feature: any) => 
+      stats.mapData.nodes.some(node => d3.geoContains(feature, node))
+    ) || [];
+    
+    const visitedStates = geoData.stateFeatures?.filter((feature: any) => 
+      stats.mapData.nodes.some(node => d3.geoContains(feature, node))
+    ) || [];
+
+    // 3. Color in visited Countries
+    svg.selectAll(".visited-country")
+      .data(visitedCountries)
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#1e293b") 
+      .attr("stroke", "none");
+
+    // 4. Color in visited US States (Your Rich Blue with thick borders)
+    svg.selectAll(".visited-state")
+      .data(visitedStates)
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#1e3a8a") 
+      .attr("stroke", "#60a5fa") 
+      .attr("stroke-width", 3) 
+      .attr("stroke-opacity", 1.0);
+
+    // 5. Draw state borders over everything
     svg.append("path")
       .datum(geoData.stateBorders)
       .attr("d", pathGenerator as any)
       .attr("fill", "none")
-      .attr("stroke", "#334155") 
+      .attr("stroke", "#475569") 
       .attr("stroke-width", 0.75)
       .attr("stroke-dasharray", "3,3");
 
@@ -77,9 +130,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       svg.append("path")
         .attr("d", routePath as string)
         .attr("fill", "none")
-        .attr("stroke", "#3b82f6") 
-        .attr("stroke-width", 6) 
-        .attr("stroke-opacity", 0.7) 
+        .attr("stroke", "#fbbf24") // Bright Amber/Gold lines
+        .attr("stroke-width", 5) 
+        .attr("stroke-opacity", 0.8) 
         .attr("stroke-linecap", "round");
     });
 
@@ -89,11 +142,11 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         svg.append("circle")
           .attr("cx", coords[0])
           .attr("cy", coords[1])
-          .attr("r", 8)
-          .attr("fill", "#22d3ee") 
-          .attr("opacity", 0.9)
+          .attr("r", 6)
+          .attr("fill", "#ffffff") // Pure White airport dots
+          .attr("opacity", 1.0)
           .attr("stroke", "#000000") 
-          .attr("stroke-width", 1);
+          .attr("stroke-width", 1.5);
       }
     });
 
@@ -103,11 +156,11 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         svg.append("circle")
           .attr("cx", homeCoords[0])
           .attr("cy", homeCoords[1])
-          .attr("r", 10) 
-          .attr("fill", "#fbbf24") 
+          .attr("r", 12) 
+          .attr("fill", "#10b981") // Emerald Green Home Base
           .attr("opacity", 1.0)
-          .attr("stroke", "#000000")
-          .attr("stroke-width", 2);
+          .attr("stroke", "#ffffff")
+          .attr("stroke-width", 3); 
       }
     }
   }, [geoData, stats]);

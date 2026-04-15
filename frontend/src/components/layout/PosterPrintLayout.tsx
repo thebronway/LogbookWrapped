@@ -24,8 +24,8 @@ export const PosterPrintLayout: React.FC<Props> = ({ id, stats }) => {
     ]).then(([worldTopo, usTopo]) => {
       setGeoData({
         world: topojson.feature(worldTopo, worldTopo.objects.land),
-        // We use 'mesh' for states so it only draws the borders (lines) between them, not solid shapes
-        stateBorders: topojson.mesh(usTopo, usTopo.objects.states, (a, b) => a !== b) 
+        // Removed the (a !== b) filter so the outer edges of Texas/Northern states don't disappear
+        stateBorders: topojson.mesh(usTopo, usTopo.objects.states) 
       });
     });
   }, []);
