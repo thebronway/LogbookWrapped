@@ -16,14 +16,6 @@ export const getPage1Copy = (stats: CalculatedStats) => {
 };
 
 export const getPage2Copy = (stats: CalculatedStats) => {
-  if (stats.hasInternational) return "Mr. Worldwide. Crossing borders and collecting stamps.";
-  const max = stats.longestFlight;
-  if (max < 100) return "The Local Legend. You know your practice area like the back of your hand.";
-  if (max > 500) return "The Cross-Country Cruiser. You definitely got your money's worth out of the autopilot.";
-  return "Exploring the grid. A solid mix of local hops and cross-country adventures.";
-};
-
-export const getPage3Copy = (stats: CalculatedStats) => {
   const x = stats.uniqueAircraftTypes;
   const y = stats.uniqueTailNumbers;
   if (x === 1 && y === 1) return "A true loyalist. Monogamy is alive and well in aviation.";
@@ -33,7 +25,7 @@ export const getPage3Copy = (stats: CalculatedStats) => {
   return "You flew a respectable variety of aircraft this year.";
 };
 
-export const getPage4Copy = (stats: CalculatedStats) => {
+export const getPage3Copy = (stats: CalculatedStats) => {
   const dist = stats.totalDistanceNm;
   let distCopy = "You literally flew the equivalent of a lap around the globe.";
   if (dist < 100) distCopy = "Just warming up the oil. Did you even leave the traffic pattern?";
@@ -50,7 +42,7 @@ export const getPage4Copy = (stats: CalculatedStats) => {
   return { distCopy, days, hours };
 };
 
-export const getPage5Copy = (stats: CalculatedStats) => {
+export const getPage4Copy = (stats: CalculatedStats) => {
   const short = stats.shortestFlight;
   let shortCopy = "Short hops aren't your style. Once the wheels leave the ground, you're up there to stay.";
   if (short <= 0.1) shortCopy = "One lap around the pattern. Was that a maintenance check or just a touch-and-go?";
@@ -66,7 +58,7 @@ export const getPage5Copy = (stats: CalculatedStats) => {
   return { shortCopy, longCopy };
 };
 
-export const getPage6Copy = (stats: CalculatedStats) => {
+export const getPage5Copy = (stats: CalculatedStats) => {
   const ratio = stats.totalHours > 0 ? stats.totalLandings / stats.totalHours : 0;
   let ratioCopy = "A perfectly balanced diet of cruising and landing.";
   if (ratio >= 3.0) ratioCopy = "Bounce much? You spent more time in the traffic pattern than an aggressive mosquito.";
@@ -80,13 +72,15 @@ export const getPage6Copy = (stats: CalculatedStats) => {
   return { ratioCopy, aptsCopy, ratio: ratio.toFixed(1) };
 };
 
-export const getPage7Copy = (stats: CalculatedStats) => {
+export const getPage6Copy = (stats: CalculatedStats) => {
   const n = stats.totalNight;
   let nightCopy = "Vampire mode: ON. You probably log more time under the stars than the sun.";
   if (n === 0) nightCopy = "Strictly a day-walker. Sun goes down, gear goes down.";
-  else if (n <= 2) nightCopy = "Just enough to keep your night currency from expiring... barely.";
-  else if (n <= 10) nightCopy = "You dabble in the dark arts when the daytime thermals get too bumpy.";
-  else if (n <= 25) nightCopy = "Comfortable in the dark. You know the best illuminated wind socks in the state.";
+  else if (n <= 1) nightCopy = "The sun beat you home. Just a few minutes of twilight for the soul.";
+  else if (n <= 3) nightCopy = "Night currency: Secured. Just enough to keep the FAA happy.";
+  else if (n <= 15) nightCopy = "The Sunset Chaser. You’ve seen some incredible views while the world goes to sleep.";
+  else if (n <= 25) nightCopy = "Moonlight Cruiser. You know exactly which airports have the best-lit runways.";
+  else if (n > 25) nightCopy = "Vampire Mode: ON. You probably see better in the dark than during the day.";
 
   const i = stats.totalIMC;
   let imcCopy = "Ice water in your veins. The local approach controllers know your voice.";
@@ -99,4 +93,12 @@ export const getPage7Copy = (stats: CalculatedStats) => {
   else if (f < 1000) fuelCopy = "Keeping the local fuel truck in business.";
 
   return { nightCopy, imcCopy, fuelCopy };
+};
+
+export const getPage7Copy = (stats: CalculatedStats) => {
+  if (stats.hasInternational) return "Mr. Worldwide. Crossing borders and collecting stamps.";
+  const max = stats.longestFlight;
+  if (max < 100) return "The Local Legend. You know your practice area like the back of your hand.";
+  if (max > 500) return "The Cross-Country Cruiser. You definitely got your money's worth out of the autopilot.";
+  return "Exploring the grid. A solid mix of local hops and cross-country adventures.";
 };

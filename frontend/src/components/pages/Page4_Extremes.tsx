@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage5Copy } from '../../core/Copywriter';
+import { getPage4Copy } from '../../core/Copywriter';
 
 export const Page4_Extremes: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
-  const { shortCopy, longCopy } = getPage5Copy(stats);
+  const { shortCopy, longCopy } = getPage4Copy(stats);
   return (
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-b from-slate-900 via-red-950 to-slate-900 text-white"

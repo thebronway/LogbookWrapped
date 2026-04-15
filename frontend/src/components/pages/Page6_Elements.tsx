@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage7Copy } from '../../core/Copywriter';
+import { getPage6Copy } from '../../core/Copywriter';
 
 export const Page6_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
-  const { nightCopy, imcCopy, fuelCopy } = getPage7Copy(stats);
+  const { nightCopy, imcCopy, fuelCopy } = getPage6Copy(stats);
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-b from-cyan-950 via-slate-900 to-slate-900 text-white"
@@ -14,10 +14,12 @@ export const Page6_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) =>
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           <p className="text-cyan-300 text-sm font-bold uppercase tracking-widest mb-1">The Night Owl</p>
           <p className="text-3xl font-bold mb-1">{stats.totalNight} Hours</p>
+          <p className="text-cyan-200/50 text-sm font-mono mb-2">{nightCopy}</p>
         </motion.div>
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
           <p className="text-sky-300 text-sm font-bold uppercase tracking-widest mb-1">In The Clouds</p>
-          <p className="text-3xl font-bold mb-1">{stats.totalIMC} Hours Actual<br />{stats.totalSimulated} Hours Simulated</p>
+          <p className="text-3xl font-bold mb-1">{stats.totalIMC} Hours Actual</p>
+          <p className="text-sky-200/50 text-sm font-mono mb-2">{stats.totalSimulated} Hours Simulated</p>
         </motion.div>
         <motion.div 
           initial={{ y: 20, opacity: 0 }} 

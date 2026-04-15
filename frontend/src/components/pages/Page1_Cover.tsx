@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const Page1_Cover: React.FC<Props> = ({ stats }) => {
-  const { hoursCopy, flightsCopy } = getPage1Copy(stats);
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   let titleText = "My Time";

@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage4Copy } from '../../core/Copywriter';
+import { getPage3Copy } from '../../core/Copywriter';
 
 interface Props {
   stats: CalculatedStats;
 }
 
 export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
-  const { distCopy, days, hours } = getPage4Copy(stats);
+  const { distCopy, days, hours } = getPage3Copy(stats);
 
   return (
     <motion.div 
@@ -25,7 +25,8 @@ export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-orange-400 text-sm font-bold uppercase tracking-widest mb-1">Total Distance</p>
           <p className="text-5xl font-black mb-4">{stats.totalDistanceNm.toLocaleString()} NM</p>
-          <p className="text-slate-300 text-lg leading-relaxed">{distCopy}</p>
+          <p className="text-slate-300 text-lg leading-relaxed"></p>
+          <p className="text-slate-300 text-sm font-mono mb-2">{distCopy}</p>
         </motion.div>
 
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.7 }}>

@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage3Copy } from '../../core/Copywriter';
+import { getPage2Copy } from '../../core/Copywriter';
 
 interface Props {
   stats: CalculatedStats;
 }
 
 export const Page2_Fleet: React.FC<Props> = ({ stats }) => {
-  const fleetCopy = getPage3Copy(stats);
+  const fleetCopy = getPage2Copy(stats);
 
   return (
     <motion.div 
