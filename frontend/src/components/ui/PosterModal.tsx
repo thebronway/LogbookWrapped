@@ -22,8 +22,8 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
     
     let isMounted = true;
     const generateHighResBlob = async () => {
-      // Give the DOM a tiny fraction of a second to render the hidden node first
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Give the DOM and external assets (like Map tiles) time to fully render
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       const node = document.getElementById('hidden-poster-node');
       if (!node) return;
@@ -33,6 +33,7 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
           quality: 1.0,
           pixelRatio: 1, // Native 1200x1800 is already high res enough
           skipFonts: false,
+          useCORS: true, // Critical for rendering external map tiles or images
         });
 
         if (isMounted && blob) {
@@ -83,40 +84,44 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
     URL.revokeObjectURL(url);
   };
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-        
-        {/* Hidden High-Res Node for html-to-image */}
-        <div className="absolute top-0 left-0 pointer-events-none opacity-0 -z-50 overflow-hidden">
-          <div id="hidden-poster-node" className="w-[1200px] h-[1800px] bg-[#020617]">
-            <PosterPrintLayout stats={stats} />
-          </div>
-        </div>
-
+      {isOpen && (
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto"
         >
-          {/* Header */}
-          <div className="flex justify-between items-center p-5 border-b border-slate-800">
-            <h3 className="font-bold text-white text-lg flex items-center gap-2">
-              <ShoppingCart size={20} className="text-indigo-400" />
-              Order Poster
-            </h3>
-            <button 
-              onClick={onClose}
-              className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-full transition-colors"
-            >
-              <X size={20} />
-            </button>
+          {/* Solid Immersive Background */}
+          <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-3xl z-[2]" />
+
+          {/* Hidden High-Res Node for html-to-image */}
+          <div className="absolute top-0 left-0 pointer-events-none opacity-0 -z-50 overflow-hidden">
+            <div id="hidden-poster-node" className="w-[1200px] h-[1800px] bg-[#020617]">
+              <PosterPrintLayout stats={stats} />
+            </div>
           </div>
 
-          <div className="p-6 overflow-y-auto flex-1 flex flex-col items-center gap-5">
+          {/* Foreground Content */}
+          <div className="relative z-[10] flex flex-col h-full w-full p-4 sm:p-8">
+            
+            {/* Header */}
+            <div className="flex justify-between items-center w-full max-w-2xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                <ShoppingCart size={28} className="text-indigo-400" />
+                Order Poster
+              </h2>
+              <button 
+                onClick={onClose}
+                className="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shrink-0 ml-4"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Scrollable Body Container */}
+            <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto pr-2 pb-24 flex flex-col items-center gap-5">
             
             {/* 1. Primary Action: Order Print */}
             <button 
@@ -133,8 +138,8 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
             </p>
 
             {/* 3. Scaled Down Preview */}
-            <div className="w-full aspect-[2/3] max-h-[40vh] bg-black rounded-lg border border-slate-700 shadow-inner overflow-hidden relative flex items-center justify-center">
-               <div className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 transform scale-[0.20] sm:scale-[0.25] pointer-events-none w-[1200px] h-[1800px]">
+            <div className="w-full max-w-[300px] sm:max-w-[360px] aspect-[2/3] bg-black rounded-xl border border-slate-700 shadow-inner overflow-hidden relative flex items-center justify-center shrink-0">
+               <div className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 transform scale-[0.25] sm:scale-[0.30] pointer-events-none w-[1200px] h-[1800px]">
                   <PosterPrintLayout stats={stats} />
                </div>
                {isGenerating && (
@@ -171,8 +176,9 @@ export const PosterModal: React.FC<Props> = ({ isOpen, onClose, stats }) => {
             </button>
 
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
+      )}
     </AnimatePresence>
   );
 };

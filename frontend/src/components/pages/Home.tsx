@@ -102,20 +102,24 @@ export const Home = () => {
           <div className="absolute -inset-1 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
           
           {/* The Phone Frame - Adjusted to aspect-[9/16] */}
-          <div className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-[3rem] border-[8px] border-slate-800 bg-slate-900 overflow-hidden shadow-2xl ring-1 ring-slate-700">
-            {SCREENSHOTS.map((src, index) => (
-              <img
-                key={index}
-                src={src}
-                alt={`App Preview ${index + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                  index === currentImage ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-            ))}
+          <div className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-[3rem] border-[10px] border-slate-800 bg-slate-900 shadow-2xl ring-1 ring-slate-700">
+            
+            {/* Inner Padding/Screen Area */}
+            <div className="absolute inset-1.5 md:inset-2 bg-black rounded-[2.25rem] overflow-hidden">
+              {SCREENSHOTS.map((src, index) => (
+                <img
+                  key={index}
+                  src={src}
+                  alt={`App Preview ${index + 1}`}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                    index === currentImage ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+            </div>
             
             {/* The Notch/Dynamic Island - Narrowed to look more modern */}
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-5 bg-slate-900 rounded-full border border-slate-800/50"></div>
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 rounded-full z-10 shadow-sm border border-slate-800/50"></div>
           </div>
         </div>
       </section>
@@ -129,7 +133,8 @@ export const Home = () => {
           <h2 className="text-4xl font-bold text-white tracking-tight">Ready to make your wrapped?</h2>
           <p className="text-lg text-slate-400">
             1. Select a timeframe (Year, Any Range, All Time). <br />
-            2. Export your entire logbook as a <span className="text-white font-mono">.csv</span> from your EFB and upload it below.
+            2. Export your entire logbook as a <span className="text-white font-mono">.csv</span> from your EFB and upload it below. <br />
+            <span className="text-sm mt-2 block font-medium">Not sure how? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link></span>
           </p>
           <p className="text-sm text-slate-500 pt-2">
             Curious how we patch missing data? Read about our{' '}

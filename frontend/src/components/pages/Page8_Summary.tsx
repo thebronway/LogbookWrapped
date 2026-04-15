@@ -114,13 +114,15 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
           </button>
 
           {/* 5. Report Issue */}
-          <button 
-            onClick={() => console.log('Open Report Modal')}
+          <a 
+            href="/contact"
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-full bg-transparent hover:bg-slate-800/50 text-slate-400 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-transparent hover:border-slate-800"
           >
             <Bug size={18} />
             Report an Issue
-          </button>
+          </a>
 
         </div>
       )}
