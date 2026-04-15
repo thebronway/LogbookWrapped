@@ -17,16 +17,32 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
 
   useEffect(() => {
     Promise.all([
-      // 1. Reverted to 50m because 10m does not exist and breaks the app
+      // Dropping ONLY the world map to 50m stops D3 from drawing Canada inside-out and flooding the ocean
       fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()), 
-      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json())
-    ]).then(([worldTopo, usTopo]) => {
+      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json()),
+      fetch('https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson').then(r => r.json()),
+      // Fetch a dedicated dataset just for the lakes (from Natural Earth) to cleanly overlay them
+      fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_lakes.geojson').then(r => r.json())
+    ]).then(([worldTopo, usTopo, canadaGeo, lakesGeo]) => {
       
       const allCountries = topojson.feature(worldTopo, worldTopo.objects.countries).features;
       
+      // Geographic IDs for the Americas and the complete Caribbean
+      const neighborIds = new Set([
+        "124", "484", // Canada, Mexico
+        "084", "320", "222", "340", "558", "188", "591", // Central America
+        "032", "068", "076", "152", "170", "218", "328", "600", "604", "740", "858", "862", "254", "238", // South America
+        // The Complete Caribbean (Nations & Territories)
+        "044", "192", "388", "332", "214", "630", "136", "796", "028", "052", "092", "780", 
+        "212", "308", "659", "662", "670", "850", "660", "500", "312", "474", "652", "663", 
+        "534", "533", "531", "535", "060" 
+      ]);
+
       setGeoData({
-        // Specifically grab Canada (124) and Mexico (484) to frame the US without blobs
-        neighbors: allCountries.filter((c: any) => c.id === "124" || c.id === "484"),
+        // Now it checks our list to draw all of these neighbors!
+        neighbors: allCountries.filter((c: any) => neighborIds.has(c.id)),
+        canadaProvinces: canadaGeo.features,
+        lakes: lakesGeo.features, // Store the newly fetched lakes
         stateBorders: topojson.mesh(usTopo, usTopo.objects.states),
         stateFeatures: topojson.feature(usTopo, usTopo.objects.states).features,
         countryFeatures: allCountries
@@ -67,7 +83,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       .attr("fill", "#000000") 
       .attr("rx", 16); 
 
-    // 1. Draw Canada and Mexico (Neighbor context)
+    // 1a. Draw Neighbors (Mexico AND Canada out of world-atlas so they don't bleed into the water)
     svg.selectAll(".neighbor-country")
       .data(geoData.neighbors || [])
       .enter().append("path")
@@ -76,7 +92,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       .attr("stroke", "#1e293b") 
       .attr("stroke-width", 1);
 
-    // 1b. Draw High-Res US states (This guarantees the Great Lakes are clean water)
+    // 1b. (TEMPORARILY REMOVED the Canadian Provinces block. It was flooding our ocean!)
+
+    // 1c. Draw High-Res US states
     svg.selectAll(".base-state")
       .data(geoData.stateFeatures)
       .enter().append("path")
@@ -102,7 +120,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       .attr("fill", "#1e293b") 
       .attr("stroke", "none");
 
-    // 4. Color in visited US States (Your Rich Blue with thick borders)
+    // 4. Color in visited US States (Rich Blue)
     svg.selectAll(".visited-state")
       .data(visitedStates)
       .enter().append("path")
@@ -120,6 +138,15 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       .attr("stroke", "#475569") 
       .attr("stroke-width", 0.75)
       .attr("stroke-dasharray", "3,3");
+
+    // 6. Draw Lakes ON TOP of the land. This acts as a mask to punch out the lakes in pure black.
+    svg.selectAll(".lake-overlay")
+      .data(geoData.lakes || [])
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#000000") // Matches ocean exactly
+      .attr("stroke", "#000000") // Hides any state borders underneath it
+      .attr("stroke-width", 1);
 
     stats.mapData.edges.forEach(edge => {
       const routePath = pathGenerator({
@@ -191,8 +218,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         </div>
 
         {/* Middle Area: Map */}
-        <div className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden p-4">
-            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full rounded-2xl bg-slate-950/50 shadow-xl border border-slate-800" />
+        <div className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden">
+            {/* Removed padding, borders, and rounded corners so it perfectly touches the sides */}
+            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full bg-black" />
         </div>
 
         {/* Bottom Area: Compact Stats Grid */}

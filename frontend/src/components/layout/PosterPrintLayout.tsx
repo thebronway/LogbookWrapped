@@ -16,16 +16,31 @@ export const PosterPrintLayout: React.FC<Props> = ({ id, stats }) => {
   // Pull the dateFilter directly from your Zustand store
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
-  // Option 1: Fetch High-Res World AND US States boundaries
   useEffect(() => {
     Promise.all([
       fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()),
-      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json()) // Fixed: us-atlas uses 10m resolution
-    ]).then(([worldTopo, usTopo]) => {
+      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json()),
+      fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_lakes.geojson').then(r => r.json())
+    ]).then(([worldTopo, usTopo, lakesGeo]) => {
+      
+      const allCountries = topojson.feature(worldTopo, worldTopo.objects.countries).features;
+      
+      // Geographic IDs for the Americas and the complete Caribbean (Matched to Page 7)
+      const neighborIds = new Set([
+        "124", "484", // Canada, Mexico
+        "084", "320", "222", "340", "558", "188", "591", // Central America
+        "032", "068", "076", "152", "170", "218", "328", "600", "604", "740", "858", "862", "254", "238", // South America
+        "044", "192", "388", "332", "214", "630", "136", "796", "028", "052", "092", "780", 
+        "212", "308", "659", "662", "670", "850", "660", "500", "312", "474", "652", "663", 
+        "534", "533", "531", "535", "060" // Caribbean
+      ]);
+
       setGeoData({
-        world: topojson.feature(worldTopo, worldTopo.objects.land),
-        // Removed the (a !== b) filter so the outer edges of Texas/Northern states don't disappear
-        stateBorders: topojson.mesh(usTopo, usTopo.objects.states) 
+        neighbors: allCountries.filter((c: any) => neighborIds.has(c.id)),
+        lakes: lakesGeo.features,
+        stateBorders: topojson.mesh(usTopo, usTopo.objects.states),
+        stateFeatures: topojson.feature(usTopo, usTopo.objects.states).features,
+        countryFeatures: allCountries
       });
     });
   }, []);
@@ -61,31 +76,80 @@ export const PosterPrintLayout: React.FC<Props> = ({ id, stats }) => {
 
     const pathGenerator = d3.geoPath().projection(projection);
 
-    // 2. Draw Landmasses (High-Res World)
-    svg.append("path")
-      .datum(geoData.world)
+    // 0. Draw the Ocean / Water base layer (Pitch Black)
+    svg.append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#000000") 
+      .attr("rx", 32); // Matches rounded corners of the container
+
+    // 1. Draw Neighbors FIRST (Canada, Mexico, South/Central America, Caribbean)
+    svg.selectAll(".neighbor-country")
+      .data(geoData.neighbors || [])
+      .enter().append("path")
       .attr("d", pathGenerator as any)
-      .attr("fill", "#0f172a") // Tailwind slate-900
-      .attr("stroke", "#1e293b") // Tailwind slate-800
+      .attr("fill", "#0f172a") 
+      .attr("stroke", "#1e293b") 
       .attr("stroke-width", 1);
 
-    // 2b. Draw US State Lines (Subtle Overlay)
-    svg.append("path")
-      .datum(geoData.stateBorders)
+    // 2. Draw High-Res US states ON TOP of neighbors
+    svg.selectAll(".base-state")
+      .data(geoData.stateFeatures || [])
+      .enter().append("path")
       .attr("d", pathGenerator as any)
-      .attr("fill", "none")
-      .attr("stroke", "#334155") // Tailwind slate-700
-      .attr("stroke-width", 0.75)
-      .attr("stroke-dasharray", "3,3"); // Dashed lines for that "aeronautical chart" look
+      .attr("fill", "#0f172a") 
+      .attr("stroke", "#1e293b") 
+      .attr("stroke-width", 1);
 
-    // 3. Draw Flight Paths (Edges)
-    const lineGenerator = d3.line<[number, number]>()
-      .x(d => projection(d)![0])
-      .y(d => projection(d)![1])
-      .curve(d3.curveBasis); // Smooth arcs
+    // 3. Identify Visited Territories
+    const visitedCountries = geoData.countryFeatures?.filter((feature: any) => 
+      stats.mapData.nodes.some(node => d3.geoContains(feature, node))
+    ) || [];
+    
+    const visitedStates = geoData.stateFeatures?.filter((feature: any) => 
+      stats.mapData.nodes.some(node => d3.geoContains(feature, node))
+    ) || [];
 
+    // 4. Color in visited Countries
+    svg.selectAll(".visited-country")
+      .data(visitedCountries)
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#1e293b") 
+      .attr("stroke", "none");
+
+    // 5. Color in visited US States (Rich Blue)
+    svg.selectAll(".visited-state")
+      .data(visitedStates)
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#1e3a8a") 
+      .attr("stroke", "#60a5fa") 
+      .attr("stroke-width", 3) 
+      .attr("stroke-opacity", 1.0);
+
+    // 6. Draw state borders over everything
+    if (geoData.stateBorders) {
+      svg.append("path")
+        .datum(geoData.stateBorders)
+        .attr("d", pathGenerator as any)
+        .attr("fill", "none")
+        .attr("stroke", "#475569") 
+        .attr("stroke-width", 0.75)
+        .attr("stroke-dasharray", "3,3");
+    }
+
+    // 7. Draw Lakes ON TOP of the land to cleanly punch them out
+    svg.selectAll(".lake-overlay")
+      .data(geoData.lakes || [])
+      .enter().append("path")
+      .attr("d", pathGenerator as any)
+      .attr("fill", "#000000") 
+      .attr("stroke", "#000000") 
+      .attr("stroke-width", 1);
+
+    // 8. Draw Flight Paths (Edges)
     stats.mapData.edges.forEach(edge => {
-      // Create a GeoJSON LineString for each edge to wrap around correctly
       const routePath = pathGenerator({
         type: "LineString",
         coordinates: edge
@@ -94,39 +158,39 @@ export const PosterPrintLayout: React.FC<Props> = ({ id, stats }) => {
       svg.append("path")
         .attr("d", routePath as string)
         .attr("fill", "none")
-        .attr("stroke", "#3b82f6") // Tailwind blue-500
-        .attr("stroke-width", 6) // Increased thickness for the printed poster!
-        .attr("stroke-opacity", 0.7) // Bumped opacity slightly so they pop more
+        .attr("stroke", "#fbbf24") // Matched Page 7 (Amber)
+        .attr("stroke-width", 5) // Matched Page 7
+        .attr("stroke-opacity", 0.8) 
         .attr("stroke-linecap", "round");
     });
 
-    // 4. Draw Airport Nodes
+    // 9. Draw Airport Nodes
     stats.mapData.nodes.forEach(node => {
       const coords = projection(node);
       if (coords) {
         svg.append("circle")
           .attr("cx", coords[0])
           .attr("cy", coords[1])
-          .attr("r", 8)
-          .attr("fill", "#22d3ee") // Cyan-400
-          .attr("opacity", 0.9)
-          .attr("stroke", "#000000") // Black stroke
-          .attr("stroke-width", 1);
+          .attr("r", 6) // Matched Page 7
+          .attr("fill", "#ffffff") // Matched Page 7 (White)
+          .attr("opacity", 1.0)
+          .attr("stroke", "#000000") 
+          .attr("stroke-width", 1.5);
       }
     });
 
-    // 5. Highlight Home Base
+    // 10. Highlight Home Base
     if (stats.mapData.homeBaseCoords) {
       const homeCoords = projection(stats.mapData.homeBaseCoords);
       if (homeCoords) {
         svg.append("circle")
           .attr("cx", homeCoords[0])
           .attr("cy", homeCoords[1])
-          .attr("r", 12) // Scaled up to stand out against bigger standard nodes
-          .attr("fill", "#fbbf24") // Amber-400
+          .attr("r", 12) // Matched Page 7
+          .attr("fill", "#10b981") // Matched Page 7 (Emerald Green)
           .attr("opacity", 1.0)
-          .attr("stroke", "#000000")
-          .attr("stroke-width", 2);
+          .attr("stroke", "#ffffff")
+          .attr("stroke-width", 3);
       }
     }
   }, [geoData, stats]);
