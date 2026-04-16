@@ -12,8 +12,19 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   let titleText = "My Time";
-  if (dateFilter.type === 'this_year') titleText = `My ${new Date().getFullYear()}`;
-  if (dateFilter.type === 'last_year') titleText = `My ${new Date().getFullYear() - 1}`;
+  if (dateFilter.type === 'this_year') {
+    titleText = `My ${new Date().getFullYear()}`;
+  } else if (dateFilter.type === 'last_year') {
+    titleText = `My ${new Date().getFullYear() - 1}`;
+  } else if (dateFilter.type === 'custom' && dateFilter.start && dateFilter.end) {
+    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
+      const startYear = dateFilter.start.substring(0, 4);
+      const endYear = dateFilter.end.substring(0, 4);
+      if (startYear === endYear) {
+        titleText = `My ${startYear}`;
+      }
+    }
+  }
 
   return (
     <motion.div 

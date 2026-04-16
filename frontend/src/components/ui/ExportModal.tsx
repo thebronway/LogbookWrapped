@@ -12,31 +12,62 @@ import { Page4_Extremes } from '../pages/Page4_Extremes';
 import { Page5_Superlatives } from '../pages/Page5_Superlatives';
 import { Page6_Elements } from '../pages/Page6_Elements';
 import { Page7_Passport } from '../pages/Page7_Passport';
-import { PosterPrintLayout } from '../layout/PosterPrintLayout';
+import { Page8_Stats } from '../pages/Page8_Stats';
 
 interface Props {
   stats: CalculatedStats;
   onClose: () => void;
-  onOpenPoster: () => void;
 }
 
-export const ExportModal: React.FC<Props> = ({ stats, onClose, onOpenPoster }) => {
+// This dynamic component measures its own container width and mathematically scales 
+// the 450px preview to fit perfectly, completely eliminating black bars and zoom bugs.
+const PreviewCard = ({ page }: { page: any }) => {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [scale, setScale] = React.useState(0.3); // Start small to prevent flicker
+
+  React.useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      if (entries[0]) {
+        setScale(entries[0].contentRect.width / 450);
+      }
+    });
+    
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="w-full aspect-[9/16] bg-black rounded-xl overflow-hidden relative border border-slate-700 shadow-inner group">
+       <div 
+         className="absolute top-0 left-0 w-[450px] h-[800px] origin-top-left pointer-events-none"
+         style={{ transform: `scale(${scale})` }}
+       >
+          <ExportWrapper pageId={`${page.id}-preview`}>
+             {page.render()}
+          </ExportWrapper>
+       </div>
+       <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors pointer-events-none z-10" />
+    </div>
+  );
+};
+
+export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [readyBlobs, setReadyBlobs] = useState<Record<string, Blob>>({});
 
   const pages = [
+    { id: 'export-p7', name: 'Passport', isPoster: false, render: () => <Page7_Passport stats={stats} isExportMode={true} /> },
+    { id: 'export-p8', name: 'Stats', isPoster: false, render: () => <Page8_Stats stats={stats} isExportMode={true} /> },
     { id: 'export-p1', name: 'Cover', isPoster: false, render: () => <Page1_Cover stats={stats} /> },
     { id: 'export-p2', name: 'Fleet', isPoster: false, render: () => <Page2_Fleet stats={stats} /> },
     { id: 'export-p3', name: 'Big Picture', isPoster: false, render: () => <Page3_BigPicture stats={stats} /> },
     { id: 'export-p4', name: 'Extremes', isPoster: false, render: () => <Page4_Extremes stats={stats} /> },
     { id: 'export-p5', name: 'Superlatives', isPoster: false, render: () => <Page5_Superlatives stats={stats} /> },
     { id: 'export-p6', name: 'Elements', isPoster: false, render: () => <Page6_Elements stats={stats} /> },
-    { id: 'export-p7', name: 'Passport', isPoster: false, render: () => <Page7_Passport stats={stats} isExportMode={true} /> },
-    { id: 'export-p8', name: 'Poster (24x36)', isPoster: true, render: () => <PosterPrintLayout stats={stats} /> },
   ];
   
-  const normalPagesCount = pages.filter(p => !p.isPoster).length;
+  const normalPagesCount = pages.length;
 
   const generateBlob = async (elementId: string): Promise<Blob | null> => {
     const el = document.getElementById(elementId);
@@ -163,53 +194,35 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose, onOpenPoster }) =
 
         <div className="flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {pages.map((page, idx) => (
-              <div key={idx} className="flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors">
+            {pages.map((page, idx) => {
+              const isFeatured = page.id === 'export-p7' || page.id === 'export-p8';
+              
+              return (
+              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors ${isFeatured ? 'md:col-span-2' : 'col-span-1'}`}>
                 <div className="text-sm font-medium text-slate-300 text-center">{page.name}</div>
                 
                 {/* Previews */}
-                <div className="w-full aspect-[9/16] bg-black rounded-xl overflow-hidden relative border border-slate-700 shadow-inner group">
-                   {page.isPoster ? (
-                     <div className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 transform scale-[0.12] sm:scale-[0.1425] md:scale-[0.1425] lg:scale-[0.16875] xl:scale-[0.195] pointer-events-none w-[1200px] h-[1800px]">
-                        {page.render()}
-                     </div>
-                   ) : (
-                     <div className="absolute top-0 left-0 w-[450px] h-[800px] origin-top-left transform scale-[0.32] sm:scale-[0.38] md:scale-[0.38] lg:scale-[0.45] xl:scale-[0.52] pointer-events-none">
-                        <ExportWrapper pageId={`${page.id}-preview`}>
-                           {page.render()}
-                        </ExportWrapper>
-                     </div>
-                   )}
-                   <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors pointer-events-none" />
-                </div>
+                <PreviewCard page={page} />
 
                 {/* Buttons */}
-                {page.isPoster ? (
-                  <button 
-                    onClick={onOpenPoster}
-                    className="w-full flex justify-center items-center gap-2 py-2.5 rounded-lg transition-colors text-sm font-bold mt-auto text-slate-900 bg-amber-400 hover:bg-amber-300 shadow-lg shadow-amber-900/20"
-                  >
-                    <Printer size={16} /> Print / High-Res
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => handleShare(page.id, page.name)}
-                    disabled={isExporting || !readyBlobs[page.id]}
-                    className={`w-full flex justify-center items-center gap-2 py-2.5 rounded-lg transition-colors text-sm font-medium mt-auto text-white ${
-                      readyBlobs[page.id] 
-                        ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20' 
-                        : 'bg-slate-700 cursor-not-allowed opacity-70'
-                    }`}
-                  >
-                    {!readyBlobs[page.id] ? (
-                      <><Loader2 size={16} className="animate-spin" /> Generating...</>
-                    ) : (
-                      <><Share2 size={16} /> Share / Save</>
-                    )}
-                  </button>
-                )}
+                <button 
+                  onClick={() => handleShare(page.id, page.name)}
+                  disabled={isExporting || !readyBlobs[page.id]}
+                  className={`w-full flex justify-center items-center gap-2 py-2.5 rounded-lg transition-colors text-sm font-medium mt-auto text-white ${
+                    readyBlobs[page.id] 
+                      ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20' 
+                      : 'bg-slate-700 cursor-not-allowed opacity-70'
+                  }`}
+                >
+                  {!readyBlobs[page.id] ? (
+                    <><Loader2 size={16} className="animate-spin" /> Generating...</>
+                  ) : (
+                    <><Share2 size={16} /> Share / Save</>
+                  )}
+                </button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

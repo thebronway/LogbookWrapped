@@ -33,8 +33,11 @@ export const getPage3Copy = (stats: CalculatedStats) => {
   else if (dist < 500) distCopy = "Enough to drive across the state... but way cooler, and without the traffic.";
   else if (dist < 750) distCopy = "A solid regional tour. You're definitely getting use out of that autopilot.";
   else if (dist < 1500) distCopy = "Serious mileage. That's roughly a road trip from LA to Chicago, as the crow flies.";
-  else if (dist < 2500) distCopy = "You're racking up the miles and traversing time zones on the regular.";
-  else if (dist < 10800) distCopy = `That’s enough to fly coast-to-coast across the US ${Math.floor(dist/2500)} times.`;
+ else if (dist < 2500) distCopy = "You're racking up the miles and traversing time zones on the regular.";
+  else if (dist < 10800) {
+    const trips = Math.floor(dist / 2500);
+    distCopy = `That’s enough to fly coast-to-coast across the US ${trips} time${trips === 1 ? '' : 's'}.`;
+  }
   else if (dist < 21600) distCopy = "That's more than halfway around the entire Earth!";
 
   const days = Math.floor(stats.totalHours / 24);

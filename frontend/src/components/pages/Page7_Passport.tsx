@@ -202,31 +202,49 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
     titleX = `${new Date().getFullYear() - 1} `;
   } else if (dateFilter?.type === 'all_time') {
     titleX = 'All-Time ';
+  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
+    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
+      const startYear = dateFilter.start.substring(0, 4);
+      const endYear = dateFilter.end.substring(0, 4);
+      if (startYear === endYear) {
+        titleX = `${startYear} `;
+      }
+    }
   }
 
   return (
     <motion.div 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 1 }} 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className="flex flex-col h-full w-full text-white overflow-hidden"
       style={{ background: 'linear-gradient(135deg, #0f172a 0%, #2e1065 35%, #0c4a6e 75%, #020617 100%)' }}
     >
         
         {/* Top Area */}
-        <div className="w-full shrink-0 pt-16 pb-12 px-8 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20">
+        <motion.div 
+          initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
+          className="w-full shrink-0 pt-16 pb-12 px-8 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20"
+        >
             <h2 className="text-4xl font-black text-white m-0 tracking-tight">
               My {titleX}Logbook Passport.
             </h2>
-        </div>
+        </motion.div>
 
         {/* Middle Area: Map */}
-        <div className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}
+          className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden"
+        >
             {/* Removed padding, borders, and rounded corners so it perfectly touches the sides */}
             <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full bg-black" />
-        </div>
+        </motion.div>
 
         {/* Bottom Area: Compact Stats Grid */}
-        <div className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-8 pb-20' : 'pt-8 pb-12'}`}>
+        <motion.div 
+          initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
+          className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-8 pb-20' : 'pt-8 pb-12'}`}
+        >
             <div className="grid grid-cols-3 gap-y-6 max-w-sm mx-auto text-center">
                 <div className="flex flex-col items-center justify-center">
                     <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Hours</span>
@@ -253,7 +271,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
                     <span className="text-2xl font-black text-white leading-none">{stats.homeBase}</span>
                 </div>
             </div>
-        </div>
+        </motion.div>
     </motion.div>
   );
 };

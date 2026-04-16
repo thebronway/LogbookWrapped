@@ -8,9 +8,9 @@ import { Page4_Extremes } from '../pages/Page4_Extremes';
 import { Page5_Superlatives } from '../pages/Page5_Superlatives';
 import { Page6_Elements } from '../pages/Page6_Elements';
 import { Page7_Passport } from '../pages/Page7_Passport';
-import { Page8_Summary } from '../pages/Page8_Summary';
+import { Page8_Stats } from '../pages/Page8_Stats';
+import { Page9_Export } from '../pages/Page9_Export';
 import { ExportModal } from '../ui/ExportModal';
-import { PosterModal } from '../ui/PosterModal';
 import { DonationModal } from '../ui/DonationModal';
 
 interface Props {
@@ -22,7 +22,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [isPosterModalOpen, setIsPosterModalOpen] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   // Listen for screen resizes to switch between Story Mode and Dashboard Mode
@@ -42,12 +41,12 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     <Page5_Superlatives stats={stats} key="p5" />,
     <Page6_Elements stats={stats} key="p6" />,
     <Page7_Passport stats={stats} key="p7" />,
-    <Page8_Summary 
+    <Page8_Stats stats={stats} key="p8" />,
+    <Page9_Export 
       stats={stats} 
-      key="p8" 
+      key="p9" 
       onOpenExport={() => setIsExportModalOpen(true)} 
       onOpenDonation={() => setIsDonationModalOpen(true)}
-      onOpenPoster={() => setIsPosterModalOpen(true)}
     />
   ];
 
@@ -81,9 +80,8 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   if (isDesktop) {
     return (
       <>
-        {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} onOpenPoster={() => setIsPosterModalOpen(true)} />}
-        {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
-        {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
+        {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
+      {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
         
         <div className="w-full max-w-[1600px] mx-auto py-8 animate-in fade-in duration-500">
         <div className="flex justify-between items-center mb-8 px-4">
@@ -122,9 +120,13 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             {pages[5]}
           </div>
 
-          {/* Bottom: Summary (pages[7]) */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-4 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+          {/* Bottom Row: Stats (Left) & Export (Right) */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[7]}
+          </div>
+          
+          <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+            {pages[8]}
           </div>
         </div>
       </div>
@@ -137,8 +139,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   // ==========================================
   return (
     <>
-      {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} onOpenPoster={() => setIsPosterModalOpen(true)} />}
-      {isPosterModalOpen && <PosterModal isOpen={isPosterModalOpen} onClose={() => setIsPosterModalOpen(false)} stats={stats} />}
+      {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       
       <div className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none">
@@ -178,13 +179,13 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       </button>
 
       {/* Invisible Touch Zones (Better UX than tiny buttons) */}
-      {/* On the last page, we shrink the height so they don't block your call-to-action buttons! */}
+      {/* On the last page, we shrink the touch zones to the top/sides so they don't block the CTA buttons in the middle */}
       <div 
-        className={`absolute left-0 top-0 w-1/3 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'h-[25%]' : 'h-full'}`} 
+        className={`absolute left-0 top-0 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'w-1/4 h-[75%]' : 'w-1/3 h-full'}`} 
         onClick={handlePrev} 
       />
       <div 
-        className={`absolute right-0 top-0 w-2/3 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'h-[25%]' : 'h-full'}`} 
+        className={`absolute right-0 top-0 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'w-1/4 h-[75%]' : 'w-2/3 h-full'}`} 
         onClick={handleNext} 
       />
 

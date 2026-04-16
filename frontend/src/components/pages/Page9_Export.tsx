@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Printer, Heart, Share, Bug, Check } from 'lucide-react';
+import { Download, Heart, Share, Bug, Check } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
@@ -8,18 +8,16 @@ interface Props {
   stats: CalculatedStats;
   onOpenExport?: () => void;
   onOpenDonation?: () => void;
-  onOpenPoster?: () => void;
   isExportMode?: boolean;
 }
 
-export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, onOpenPoster, isExportMode }) => {
+export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
   const [copied, setCopied] = useState(false);
 
   const handleShareApp = async () => {
     const shareUrl = 'https://logbookwrapped.conway.im';
     
-    // 1. Try Native Mobile Share Sheet
     if (navigator.share) {
       try {
         await navigator.share({
@@ -28,14 +26,9 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
           url: shareUrl
         });
       } catch (err: any) {
-        // If the user closed the share sheet without sharing, do nothing. 
-        // Otherwise, fall back to clipboard.
-        if (err.name !== 'AbortError') {
-          copyToClipboard(shareUrl);
-        }
+        if (err.name !== 'AbortError') copyToClipboard(shareUrl);
       }
     } else {
-      // 2. Fallback to Clipboard (Desktop)
       copyToClipboard(shareUrl);
     }
   };
@@ -44,7 +37,7 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+      setTimeout(() => setCopied(false), 2000); 
     } catch (err) {
       console.error('Failed to copy link', err);
     }
@@ -58,6 +51,14 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
     titleX = `${new Date().getFullYear() - 1} `;
   } else if (dateFilter?.type === 'all_time') {
     titleX = 'All-Time ';
+  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
+    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
+      const startYear = dateFilter.start.substring(0, 4);
+      const endYear = dateFilter.end.substring(0, 4);
+      if (startYear === endYear) {
+        titleX = `${startYear} `;
+      }
+    }
   }
 
   return (
@@ -68,11 +69,9 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
         And that's your {titleX}LogbookWrapped.
       </h2>
 
-      {/* THE CALLS TO ACTION */}
       {!isExportMode && (
         <div className="flex flex-col items-center gap-3 pb-12 w-full max-w-md mx-auto">
           
-          {/* 1. Export (Primary CTA) */}
           <button 
             onClick={onOpenExport}
             className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
@@ -81,30 +80,14 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
             Share your Wrapped to Social Media
           </button>
 
-          {/* 2. Order Poster */}
-          <div className="flex flex-col items-center gap-1.5 w-full mt-2">
-            <button 
-              onClick={onOpenPoster}
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-indigo-900/20"
-            >
-              <Printer size={18} />
-              Order as a 24x36 Poster *
-            </button>
-            <span className="text-[11px] text-slate-500 text-center mb-2">
-              * Your data will be sent to a 3rd-party service to print.
-            </span>
-          </div>
-
-          {/* 3. Donate */}
           <button 
             onClick={onOpenDonation}
-            className="w-full bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-yellow-500/20"
+            className="w-full bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-yellow-500/20 mt-2"
           >
             <Heart size={18} />
             Donate to Cover Server Costs
           </button>
 
-          {/* 4. Share App Link (Secondary) */}
           <button 
             onClick={handleShareApp}
             className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
@@ -113,7 +96,6 @@ export const Page8_Summary: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
             {copied ? 'Link Copied!' : 'Send App Link to a Pilot'}
           </button>
 
-          {/* 5. Report Issue */}
           <a 
             href="/contact"
             target="_blank"
