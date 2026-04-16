@@ -38,9 +38,13 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto pr-2 pb-24">
               <div className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl mb-8">
                 <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-                  LogbookWrapped is built by a fellow pilot and is 100% free and open-source. 
-                  If you enjoyed your logbook wrapped, consider chipping in! Your support directly covers 
-                  <strong className="text-white"> API fees</strong>, <strong className="text-white">server hosting</strong>, and keeps this tool ad-free for everyone.
+                  LogbookWrapped is a labor of love built by a fellow pilot.
+                  It's 100% free and open-source.
+                  If you enjoyed the app, consider helping out by
+                  <strong className="text-white"> fueling the mission. </strong>
+                  Your support goes directly toward API and hosting costs, keeping this tool
+                  <strong className="text-white"> airborne and ad-free </strong>
+                  for everyone.
                 </p>
               </div>
 

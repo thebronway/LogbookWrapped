@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage1Copy } from '../../core/Copywriter';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
 interface Props {
@@ -13,15 +12,15 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
 
   let titleText = "My Time";
   if (dateFilter.type === 'this_year') {
-    titleText = `My ${new Date().getFullYear()}`;
+    titleText = `My ${new Date().getFullYear()} Logbook`;
   } else if (dateFilter.type === 'last_year') {
-    titleText = `My ${new Date().getFullYear() - 1}`;
+    titleText = `My ${new Date().getFullYear() - 1} Logbook`;
   } else if (dateFilter.type === 'custom' && dateFilter.start && dateFilter.end) {
     if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
       const startYear = dateFilter.start.substring(0, 4);
       const endYear = dateFilter.end.substring(0, 4);
       if (startYear === endYear) {
-        titleText = `My ${startYear}`;
+        titleText = `My ${startYear} Logbook`;
       }
     }
   }
@@ -33,7 +32,7 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white"
     >
-      <h2 className="text-4xl md:text-5xl font-black mb-8 md:mb-12 tracking-tight text-sky-400">
+      <h2 className="text-4xl md:text-4xl font-black mb-8 md:mb-12 tracking-tight text-sky-400">
         {titleText}<br/>In The Sky.
       </h2>
 

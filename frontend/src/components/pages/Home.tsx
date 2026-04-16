@@ -6,7 +6,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 import { Dropzone } from '../ui/Dropzone';
 import { StoryContainer } from '../layout/StoryContainer';
 
-const SCREENSHOTS = Array.from({ length: 7 }, (_, i) => `/screenshots/page${i + 1}.webp`);
+const SCREENSHOTS = Array.from({ length: 8 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
 export const Home = () => {
   const { status, stats, errorMessage, resetStore } = useLogbookStore();

@@ -38,7 +38,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         "534", "533", "531", "535", "060" 
       ]);
 
-      setGeoData({
+      const parsedData = {
         // Now it checks our list to draw all of these neighbors!
         neighbors: allCountries.filter((c: any) => neighborIds.has(c.id)),
         canadaProvinces: canadaGeo.features,
@@ -46,9 +46,18 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         stateBorders: topojson.mesh(usTopo, usTopo.objects.states),
         stateFeatures: topojson.feature(usTopo, usTopo.objects.states).features,
         countryFeatures: allCountries
-      });
+      };
+
+      if (isExportMode) {
+        setGeoData(parsedData);
+      } else {
+        // Hold short! Delay D3 rendering by 1.2s so Framer Motion can complete its slide-in animation smoothly
+        setTimeout(() => {
+          setGeoData(parsedData);
+        }, 1200);
+      }
     });
-  }, []);
+  }, [isExportMode]);
 
   useEffect(() => {
     if (!geoData || !mapRef.current) return;
@@ -224,9 +233,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         {/* Top Area */}
         <motion.div 
           initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-          className="w-full shrink-0 pt-16 pb-12 px-8 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20"
+          className={`w-full shrink-0 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20 ${isExportMode ? 'pt-8 pb-6 px-6' : 'pt-10 pb-6 px-5 sm:px-6'}`}
         >
-            <h2 className="text-4xl font-black text-white m-0 tracking-tight">
+            <h2 className="text-3xl font-black text-white m-0 tracking-tight leading-tight">
               My {titleX}Logbook Passport.
             </h2>
         </motion.div>
@@ -234,42 +243,64 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         {/* Middle Area: Map */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}
-          className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden"
+          className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden bg-black"
         >
-            {/* Removed padding, borders, and rounded corners so it perfectly touches the sides */}
-            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full bg-black" />
+            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full bg-black z-0" />
+            
+            {/* Radar Sweep Loading State */}
+            {!geoData && !isExportMode && (
+              <motion.div 
+                initial={{ opacity: 1 }} 
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm"
+              >
+                 <div className="relative w-40 h-40 rounded-full border border-emerald-900/40 flex items-center justify-center bg-black overflow-hidden shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                    {/* Inner rings */}
+                    <div className="absolute w-24 h-24 rounded-full border border-emerald-900/30"></div>
+                    <div className="absolute w-8 h-8 rounded-full border border-emerald-900/20"></div>
+                    <div className="absolute w-full h-px bg-emerald-900/30"></div>
+                    <div className="absolute h-full w-px bg-emerald-900/30"></div>
+
+                    {/* The sweeping radar beam */}
+                    <div className="absolute inset-0 rounded-full animate-[spin_2s_linear_infinite]" 
+                         style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(16, 185, 129, 0.1) 320deg, rgba(16, 185, 129, 0.6) 360deg)' }}>
+                    </div>
+
+                    {/* Simulated aircraft blips */}
+                    <div className="absolute top-10 right-10 w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_6px_2px_rgba(16,185,129,0.8)] animate-pulse"></div>
+                    <div className="absolute bottom-12 left-12 w-1 h-1 bg-emerald-400/80 rounded-full shadow-[0_0_4px_1px_rgba(16,185,129,0.5)] animate-pulse" style={{ animationDelay: '0.7s'}}></div>
+                 </div>
+                 <div className="mt-8 text-emerald-500/80 font-mono text-[10px] uppercase tracking-[0.3em] animate-pulse">
+                    Parsing Route Data...
+                 </div>
+              </motion.div>
+            )}
         </motion.div>
 
-        {/* Bottom Area: Compact Stats Grid */}
+        {/* Bottom Area: 3-Gauge Floating Pack */}
         <motion.div 
           initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
-          className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-8 pb-20' : 'pt-8 pb-12'}`}
+          className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-6 pb-16' : 'pt-6 pb-10'}`}
         >
-            <div className="grid grid-cols-3 gap-y-6 max-w-sm mx-auto text-center">
-                <div className="flex flex-col items-center justify-center">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Hours</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.totalHours}</span>
-                </div>
-                <div className="flex flex-col items-center justify-center border-l border-r border-slate-700">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Flights</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.totalFlights || 0}</span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Distance (NM)</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.totalDistanceNm?.toLocaleString()}</span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Airports</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.uniqueAirports || 0}</span>
-                </div>
-                <div className="flex flex-col items-center justify-center border-l border-r border-slate-700">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Landings</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.totalLandings}</span>
-                </div>
-                <div className="flex flex-col items-center justify-center">
-                    <span className="text-sky-200/60 text-[10px] font-bold tracking-widest uppercase mb-0.5">Home Base</span>
-                    <span className="text-2xl font-black text-white leading-none">{stats.homeBase}</span>
-                </div>
+            <div className="flex justify-center gap-6 mx-auto text-center">
+                {[
+                    { label: 'Hours', value: stats.totalHours },
+                    { label: 'Flights', value: stats.totalFlights || 0 },
+                    { label: 'Dist(NM)', value: stats.totalDistanceNm?.toLocaleString(), isSmall: true }
+                ].map((stat, idx) => (
+                    <div key={idx} className="relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center">
+                        {/* Inner tick marks (using simple CSS dashed border) */}
+                        <div className="absolute inset-[3px] rounded-full border-[1.5px] border-white/20 border-dashed"></div>
+                        
+                        <span className={`z-10 ${stat.isSmall ? 'text-[12px]' : 'text-[15px]'} font-bold text-white leading-none tracking-tight mt-0.5`}>
+                            {stat.value}
+                        </span>
+                        <span className="z-10 text-[8px] text-sky-100/70 font-bold uppercase mt-1 tracking-widest">
+                            {stat.label}
+                        </span>
+                    </div>
+                ))}
             </div>
         </motion.div>
     </motion.div>

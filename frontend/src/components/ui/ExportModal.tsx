@@ -165,7 +165,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[200] overflow-hidden flex flex-col animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300">
       
       {/* LAYER 1: The Engine Sandbox. 
           Placed at 0,0 so Safari refuses to cull it, but securely at the absolute bottom of this modal's z-index stack */}
@@ -185,9 +185,9 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
 
       {/* LAYER 3: The Actual Modal UI */}
       <div className="relative z-[10] flex flex-col h-full w-full p-4 sm:p-8">
-        <div className="flex justify-between items-center w-full max-w-6xl mx-auto mb-8">
+        <div className="flex justify-between items-center w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0">
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Export to Social Media</h2>
-          <button onClick={onClose} disabled={isExporting} className="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50">
+          <button onClick={onClose} disabled={isExporting} className="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shrink-0 ml-4">
             <X size={20} />
           </button>
         </div>

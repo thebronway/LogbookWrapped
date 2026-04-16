@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Download, Heart, Share, Bug, Check } from 'lucide-react';
+import { Heart, Share2, Bug, Check, Forward, HandCoins } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
@@ -63,49 +63,65 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="flex flex-col h-full w-full p-6 bg-slate-950 text-white overflow-y-auto"
+      className="flex flex-col h-full w-full p-6 bg-slate-950 text-white overflow-y-auto justify-center items-center"
     >
-      <h2 className="text-4xl font-black mt-8 mb-12 text-center text-white">
-        And that's your {titleX}LogbookWrapped.
-      </h2>
-
       {!isExportMode && (
-        <div className="flex flex-col items-center gap-3 pb-12 w-full max-w-md mx-auto">
+        <div className="relative flex flex-col w-full max-w-sm sm:max-w-full h-auto sm:h-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden mb-12 sm:mb-0">
           
-          <button 
-            onClick={onOpenExport}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
-          >
-            <Download size={18} />
-            Share your Wrapped to Social Media
-          </button>
+          {/* Top Section: Boarding Pass Header */}
+          <div className="p-8 pb-8 text-center bg-slate-800/50 sm:pt-16">
+            <h2 className="text-3xl font-black text-white leading-tight tracking-tight">
+              Logbook Closed.<br />
+              <span className="text-sky-400">See you in the skies.</span>
+            </h2>
+            <p className="text-slate-400 text-[11px] mt-4 font-bold uppercase tracking-widest">
+              {titleX}Wrapped Complete
+            </p>
+          </div>
 
-          <button 
-            onClick={onOpenDonation}
-            className="w-full bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-yellow-500/20 mt-2"
-          >
-            <Heart size={18} />
-            Donate to Cover Server Costs
-          </button>
+          {/* The Tear-away Stub Line */}
+          <div className="relative flex items-center justify-between w-full h-0">
+            <div className="absolute -left-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_-2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
+            <div className="w-full border-t-2 border-dashed border-slate-700 z-0 mx-2"></div>
+            <div className="absolute -right-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
+          </div>
 
-          <button 
-            onClick={handleShareApp}
-            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
-          >
-            {copied ? <Check size={18} className="text-emerald-400" /> : <Share size={18} className="text-emerald-400" />}
-            {copied ? 'Link Copied!' : 'Send App Link to a Pilot'}
-          </button>
+          {/* Bottom Section: Uniform Actions */}
+          <div className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
+            <button 
+              onClick={onOpenExport}
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
+            >
+              <Share2 size={18} />
+              Share to Social Media
+            </button>
 
-          <a 
-            href="/contact"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full bg-transparent hover:bg-slate-800/50 text-slate-400 py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-transparent hover:border-slate-800"
-          >
-            <Bug size={18} />
-            Report an Issue
-          </a>
+            <button 
+              onClick={onOpenDonation}
+              className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
+            >
+              <HandCoins size={18} />
+              Help Keep the App Airbone
+            </button>
 
+            <button 
+              onClick={handleShareApp}
+              className="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
+            >
+              {copied ? <Check size={18} /> : <Forward size={18} />}
+              {copied ? 'Link Copied!' : 'Share App with a Wingman'}
+            </button>
+
+            <a 
+              href="/contact"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full mt-3 text-slate-500 hover:text-slate-300 py-2 font-bold text-[13px] flex items-center justify-center gap-2 transition-colors"
+            >
+              <Bug size={14} />
+              Report an Issue
+            </a>
+          </div>
         </div>
       )}
     </motion.div>

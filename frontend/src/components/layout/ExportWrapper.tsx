@@ -21,8 +21,10 @@ export const ExportWrapper: React.FC<Props> = ({ children, pageId }) => {
           {children}
         </div>
         
-        <div className="absolute bottom-4 right-4 z-[999] opacity-70">
-          <img src="/logo4.webp" alt="LogbookWrapped" className="w-[84px] h-auto" />
+        <div className="absolute bottom-3 left-0 w-full flex justify-center z-[999]">
+          <span className="text-white/50 text-[10px] font-bold tracking-widest uppercase drop-shadow-md">
+            logbookwrapped.com
+          </span>
         </div>
       </div>
   );

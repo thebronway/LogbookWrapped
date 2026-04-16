@@ -181,11 +181,11 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       {/* Invisible Touch Zones (Better UX than tiny buttons) */}
       {/* On the last page, we shrink the touch zones to the top/sides so they don't block the CTA buttons in the middle */}
       <div 
-        className={`absolute left-0 top-0 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'w-1/4 h-[75%]' : 'w-1/3 h-full'}`} 
+        className={`absolute left-0 top-0 z-40 cursor-pointer h-full ${currentIndex === pages.length - 1 ? 'w-1/4' : 'w-1/3'}`} 
         onClick={handlePrev} 
       />
       <div 
-        className={`absolute right-0 top-0 z-40 cursor-pointer ${currentIndex === pages.length - 1 ? 'w-1/4 h-[75%]' : 'w-2/3 h-full'}`} 
+        className={`absolute right-0 top-0 z-40 cursor-pointer h-full ${currentIndex === pages.length - 1 ? 'w-1/4' : 'w-2/3'}`} 
         onClick={handleNext} 
       />
 
