@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { AIRCRAFT_PROFILES } from '../../core/AircraftProfiles';
+import { Link } from 'react-router-dom';
+import { Mail } from 'lucide-react';
 
 // Grouping the known keys so we don't have to rewrite the core math database
 const SMALL_AIRCRAFT = new Set(["J3", "C150", "C152", "DA20", "AA5", "C172", "PA28", "M20T", "SR20", "DA40", "C177", "DA42", "C182", "SR22", "PA32", "BE36", "C206", "C210", "PA34", "PA44", "BE58", "C310"]);
@@ -57,6 +59,15 @@ export const AircraftProfilesTable = () => {
         <p className="text-lg text-slate-400 leading-relaxed">
           We use this database to estimate fuel burn and validate distances. Our parser will attempt to group your logged variants (e.g. C-172P) into these core profiles. If your aircraft isn't listed, we safely default to <strong className="text-white">120 KTAS</strong> and <strong className="text-white">10 GPH</strong>.
         </p>
+        <div className="pt-2">
+          <Link 
+            to="/contact" 
+            className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-blue-400 hover:bg-slate-700 hover:text-blue-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700"
+          >
+            <Mail size={16} />
+            Report a missing profile or incorrect data
+          </Link>
+        </div>
       </div>
 
       <div className="space-y-12">

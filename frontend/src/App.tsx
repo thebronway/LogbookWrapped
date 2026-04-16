@@ -12,11 +12,22 @@ import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable'
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950/30 text-slate-200 font-sans">
-      <Navbar />
+    <div className="min-h-screen flex flex-col bg-slate-900 text-slate-200 font-sans relative overflow-hidden">
+      
+      {/* Decorative Aurora Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-600/5 blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute top-[20%] right-[10%] w-[30vw] h-[30vw] rounded-full bg-purple-600/10 blur-[120px] pointer-events-none mix-blend-screen" />
 
-      {/* Main Content Area */}
-      <main className="flex-grow flex flex-col w-full">
+      {/* Faint Grid Overlay (On top of aurora, behind content) */}
+      <div className="absolute inset-0 bg-grid-pattern pointer-events-none" />
+
+      {/* App Content Container */}
+      <div className="relative z-10 flex flex-col flex-grow w-full">
+        <Navbar />
+
+        {/* Main Content Area */}
+        <main className="flex-grow flex flex-col w-full">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -31,7 +42,7 @@ function App() {
 
       <Footer />
     </div>
+  </div>
   );
 }
-
 export default App;

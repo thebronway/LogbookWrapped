@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Github } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const LogbookLogic = () => {
+  const [showCountries, setShowCountries] = useState(false);
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
       className="max-w-3xl mx-auto py-16 px-6 sm:px-8 space-y-12 text-slate-300"
@@ -108,7 +110,39 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">7. The Plausibility Envelope</h2>
+          <h2 className="text-2xl font-bold text-white">7. Supported Geographies</h2>
+          <p className="leading-relaxed">
+            To keep the application fast and lightweight, our airport script exclusively pulls in data for the US, Canada, Mexico, the Caribbean, and US territories. Airports outside these regions will not be plotted on the map.
+          </p>
+
+          <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg mt-3">
+            <p className="text-sm text-blue-200/90 font-mono">
+              <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
+              You log a flight to London Heathrow (EGLL). Because it falls outside our supported geographic boundary, it will not be used for calculations or mapping.
+            </p>
+          </div>
+
+          <div className="pt-2">
+            <button 
+              onClick={() => setShowCountries(!showCountries)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-blue-400 hover:bg-slate-700 hover:text-blue-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700"
+            >
+              {showCountries ? "Hide supported countries ▲" : "View full list of supported countries ▼"}
+            </button>
+          </div>
+
+          {showCountries && (
+            <div className="bg-slate-800/50 border border-slate-700/50 p-4 rounded-xl text-sm text-slate-400 leading-relaxed mt-2">
+              <strong className="text-white block mb-1">North America:</strong> United States, Canada, Mexico <br/>
+              <strong className="text-white block mt-2 mb-1">US Territories:</strong> Puerto Rico, U.S. Virgin Islands, Guam, American Samoa, Northern Mariana Islands <br/>
+              <strong className="text-white block mt-2 mb-1">Caribbean & Atlantic:</strong> Anguilla, Antigua and Barbuda, Aruba, Bahamas, Barbados, Bermuda, Bonaire Sint Eustatius and Saba, British Virgin Islands, Cayman Islands, Cuba, Curaçao, Dominica, Dominican Republic, Grenada, Haiti, Jamaica, Montserrat, Saint Barthélemy, Saint Kitts and Nevis, Saint Lucia, Saint Martin, Saint Vincent and the Grenadines, Sint Maarten, Trinidad and Tobago, Turks and Caicos Islands
+            </div>
+          )}
+
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">8. The Plausibility Envelope</h2>
           <p className="leading-relaxed">
             We calculate Earth-curvature distances. Based on your aircraft's known cruise speed, if reaching a waypoint would require you to fly Mach 3, we know it's a VOR masquerading as an airport and drop it from the map.
           </p>
@@ -121,7 +155,7 @@ export const LogbookLogic = () => {
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-2xl font-bold text-white">8. Missing Distances & Fuel Burn</h2>
+          <h2 className="text-2xl font-bold text-white">9. Missing Distances & Fuel Burn</h2>
           <p className="leading-relaxed">
             We use the Haversine Great Circle formula to calculate the exact distance of your flight path. For fuel, we look up your Aircraft Type in our database of over 50 performance profiles. Flying something experimental? We default to 120 knots and 10 GPH.
           </p>
@@ -140,15 +174,13 @@ export const LogbookLogic = () => {
           Pilots find crazy edge cases every day. Is a rule not working right? <br className="hidden sm:block" /> 
           Have a suggestion for a new fallback? Help us improve the parser!
         </p>
-        <a 
-          href="https://github.com/thebronway/LogbookWrapped/issues" 
-          target="_blank" 
-          rel="noopener noreferrer"
+        <Link 
+          to="/contact"
           className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-100 shadow-xl shadow-white/10"
         >
-          <Github size={24} />
-          Report an Issue or Suggestion
-        </a>
+          <Mail size={24} />
+          Contact Us
+        </Link>
       </section>
 
     </motion.div>

@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import { Github } from 'lucide-react'; // Assuming you use lucide-react, or replace with an SVG
+import { Github, Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const About = () => (
   <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
@@ -35,26 +36,33 @@ export const About = () => (
           </p>
           <p>
             When you drop your CSV into our platform, your browser processes the data locally. 
-            Your raw logbook entries are never shared or sent to our servers. The only exception 
-            is if you choose to use a 3rd party printing service; then only the specific data 
-            being printed is transmitted.
+            Your raw logbook entries are never shared or sent to our servers.
           </p>
         </div>
       </section>
 
-      <section className="flex flex-col items-center justify-center py-8 border-t border-slate-800">
+      <section className="flex flex-col items-center justify-center py-12 border-t border-slate-800">
         <p className="mb-6 text-center">
-          Transparency is key. You can verify our privacy architecture by auditing our 100% open-source code.
+          Transparency is key. You can verify our privacy architecture by auditing our 100% open-source code, or reach out to us with any questions.
         </p>
-        <a 
-          href="https://github.com/thebronway/LogbookWrapped" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-100 shadow-xl shadow-white/10"
-        >
-          <Github size={24} />
-          Verify Source on GitHub
-        </a>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <a 
+            href="https://github.com/thebronway/LogbookWrapped" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-slate-800 text-white font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-700 shadow-xl border border-slate-700"
+          >
+            <Github size={20} />
+            Verify Source
+          </a>
+          <Link 
+            to="/contact"
+            className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-white text-slate-900 font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-100 shadow-xl shadow-white/10"
+          >
+            <Mail size={20} />
+            Contact Us
+          </Link>
+        </div>
       </section>
     </div>
   </div>

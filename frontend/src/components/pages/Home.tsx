@@ -129,20 +129,40 @@ export const Home = () => {
         id="upload-section" 
         className="w-full flex flex-col items-center text-center gap-10 bg-slate-900/40 border border-slate-800/50 backdrop-blur-md px-4 py-10 md:p-20 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl scroll-mt-32"
       >
-        <div className="max-w-2xl space-y-4">
-          <h2 className="text-4xl font-bold text-white tracking-tight">Ready to make your wrapped?</h2>
-          <p className="text-lg text-slate-400">
-            1. Select a timeframe (Year, Any Range, All Time). <br />
-            2. Export your entire logbook as a <span className="text-white font-mono">.csv</span> from your EFB and upload it below. <br />
-            <span className="text-sm mt-2 block font-medium">Not sure how? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link></span>
-          </p>
-          <p className="text-sm text-slate-500 pt-2">
-            Curious how we patch missing data? Read about our{' '}
-            <Link to="/logbook" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">
-              parsing logic and assumptions
-            </Link>.
-          </p>
+        <div className="max-w-2xl w-full flex flex-col items-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">Ready to make your wrapped?</h2>
+          
+          <ul className="text-left text-slate-300 space-y-6 mb-8 w-full max-w-lg text-lg">
+            <li className="flex items-start gap-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">1</span>
+              <div>
+                <span className="block font-medium text-white">Select your timeframe.</span>
+                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                  Choose between This Year, Last Year, All Time, or set a Custom Date Range to generate any Year using the dropdown below.
+                </span>
+              </div>
+            </li>
+            <li className="flex items-start gap-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">2</span>
+              <div>
+                <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code>.</span>
+                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                  Download your raw data from ForeFlight, Garmin Pilot, LogTen, or MyFlightbook. Not sure where to find it? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link>
+                </span>
+              </div>
+            </li>
+            <li className="flex items-start gap-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">3</span>
+              <div>
+                <span className="block font-medium text-white">Upload the file to generate your story!</span>
+                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                  Drag and drop your file below. Everything is processed 100% locally in your browser. Curious how we calculate things? <Link to="/logbook" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
+                </span>
+              </div>
+            </li>
+          </ul>
         </div>
+
         
         {/* Borderless Dropzone Container */}
         <div className="w-full max-w-2xl">

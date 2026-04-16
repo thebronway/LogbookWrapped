@@ -100,7 +100,7 @@ export const Dropzone = () => {
         <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`} />
         <h3 className="text-xl font-bold mb-2 text-center text-white group-hover:text-blue-50 transition-colors">Drop your Logbook CSV here</h3>
         <p className="text-slate-400 text-center mb-6">
-          Supports ForeFlight, Garmin Pilot, and LogTen exports. <br/><br/>100% private. No data leaves your browser.
+          100% private. No data leaves your browser.
         </p>
         
         <span className="bg-blue-600/80 group-hover:bg-blue-500 text-white px-8 py-3 rounded-lg font-bold tracking-wide transition-colors">

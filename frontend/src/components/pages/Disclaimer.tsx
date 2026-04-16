@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
-import { AlertTriangle, Github, Scale, FileText } from 'lucide-react';
+import { AlertTriangle, Mail, Scale, FileText } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export const Disclaimer = () => {
-  const issuesUrl = "https://github.com/thebronway/LogbookWrapped/issues";
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
@@ -58,20 +58,18 @@ export const Disclaimer = () => {
           </section>
         </div>
 
-        {/* GitHub Link Section */}
+        {/* Contact Link Section */}
         <section className="mt-16 py-12 border-t border-slate-800 text-center">
           <p className="mb-6 text-slate-400">
             Notice a calculation error or an unsupported logbook format?
           </p>
-          <a 
-            href={issuesUrl}
-            target="_blank" 
-            rel="noopener noreferrer"
+          <Link 
+            to="/contact"
             className="inline-flex items-center gap-3 px-8 py-4 bg-white text-slate-900 font-bold rounded-full transition-all hover:scale-105 active:scale-95 hover:bg-slate-100 shadow-xl shadow-white/10"
           >
-            <Github size={20} />
-            Report Inaccuracy on GitHub
-          </a>
+            <Mail size={20} />
+            Contact Us to Report an Issue
+          </Link>
         </section>
       </div>
     </div>
