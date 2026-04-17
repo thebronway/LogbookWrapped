@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Heart, Share2, Bug, Check, Forward, HandCoins } from 'lucide-react';
+import { Share2, Bug, Check, Forward, HandCoins } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
@@ -93,7 +93,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
               className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
             >
               <Share2 size={18} />
-              Share to Social Media
+              Share or Downlaod
             </button>
 
             <button 

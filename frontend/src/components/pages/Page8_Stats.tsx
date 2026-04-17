@@ -61,8 +61,8 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
   const titleClass = `text-3xl font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
   const gapClass = `flex flex-col w-full flex-1 ${isExportMode ? "gap-4 pb-8" : "gap-3 sm:gap-4 pb-8"}`;
   const rowClass = `border-b border-slate-700/50 ${isExportMode ? "pb-2.5" : "pb-2 sm:pb-2.5"}`;
-  const leftPadClass = `flex flex-col justify-end border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
-  const rightPadClass = `flex flex-col justify-end ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
+ const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
+  const rightPadClass = `flex justify-between items-center gap-2 ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
 
   const labelClass = `text-slate-400 font-semibold uppercase tracking-widest shrink-0 ${isExportMode ? "text-xs" : "text-[10px] sm:text-xs"}`;
   const valClass = `font-bold text-white text-right truncate ${isExportMode ? "text-base" : "text-sm sm:text-base"}`;
@@ -95,20 +95,20 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
                 
                 {/* Left Side */}
                 <div className={leftPadClass}>
-                  <div className="flex justify-between items-end gap-2">
-                    <span className={labelClass}>{row.left.label}</span>
+                  <span className={labelClass}>{row.left.label}</span>
+                  <div className="flex flex-col items-end">
                     <span className={valClass}>{row.left.value}</span>
+                    {row.left.sub && <span className={subClass}>{row.left.sub}</span>}
                   </div>
-                  {row.left.sub && <span className={subClass}>{row.left.sub}</span>}
                 </div>
 
                 {/* Right Side */}
                 <div className={rightPadClass}>
-                  <div className="flex justify-between items-end gap-2">
-                    <span className={labelClass}>{row.right.label}</span>
+                  <span className={labelClass}>{row.right.label}</span>
+                  <div className="flex flex-col items-end">
                     <span className={valClass}>{row.right.value}</span>
+                    {row.right.sub && <span className={subClass}>{row.right.sub}</span>}
                   </div>
-                  {row.right.sub && <span className={subClass}>{row.right.sub}</span>}
                 </div>
 
               </motion.div>
@@ -121,13 +121,13 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
               initial={{ x: -40, opacity: 0 }} 
               animate={{ x: 0, opacity: 1 }} 
               transition={{ delay: staggerDelay, ease: "easeOut" }}
-              className={`flex flex-col ${rowClass}`}
+              className={`flex justify-between items-center gap-4 ${rowClass}`}
             >
-              <div className="flex justify-between items-end gap-4">
-                <span className={labelClass}>{row.label}</span>
+              <span className={labelClass}>{row.label}</span>
+              <div className="flex flex-col items-end">
                 <span className={valClass}>{row.value}</span>
+                {row.sub && <span className={subClass}>{row.sub}</span>}
               </div>
-              {row.sub && <span className={subClass}>{row.sub}</span>}
             </motion.div>
           );
         })}

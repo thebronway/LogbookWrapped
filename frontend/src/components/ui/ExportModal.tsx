@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Share2, Archive, Loader2, Printer } from 'lucide-react';
+import { X, Share2, Archive, Loader2, Download } from 'lucide-react';
 import JSZip from 'jszip';
 import { toBlob } from 'html-to-image';
 import { CalculatedStats } from '../../core/types';
@@ -120,7 +120,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
         setLoadingText(`Packaging ${pages[i].name}...`);
         const blob = readyBlobs[pages[i].id] || await generateBlob(pages[i].id);
         if (blob) {
-          zip.file(`LogbookWrapped_Page${i + 1}_${pages[i].name.replace(/\s+/g, '')}.png`, blob);
+          zip.file(`LogbookWrapped_${pages[i].name.replace(/\s+/g, '')}.png`, blob);
         }
       }
       setLoadingText('Compressing ZIP bundle...');
@@ -138,6 +138,20 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
     }
   };
 
+  const handleDownload = (id: string, name: string) => {
+    const blob = readyBlobs[id];
+    if (!blob) return;
+    
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `LogbookWrapped_${name.replace(/\s+/g, '')}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   const handleShare = async (id: string, name: string) => {
     const blob = readyBlobs[id];
     if (!blob) return;
@@ -150,14 +164,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
           files: [file]
         });
       } else {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
+        handleDownload(id, name);
       }
     } catch (err) {
       console.warn("Share cancelled or failed", err);
@@ -205,21 +212,40 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
                 <PreviewCard page={page} />
 
                 {/* Buttons */}
-                <button 
-                  onClick={() => handleShare(page.id, page.name)}
-                  disabled={isExporting || !readyBlobs[page.id]}
-                  className={`w-full flex justify-center items-center gap-2 py-2.5 rounded-lg transition-colors text-sm font-medium mt-auto text-white ${
-                    readyBlobs[page.id] 
-                      ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20' 
-                      : 'bg-slate-700 cursor-not-allowed opacity-70'
-                  }`}
-                >
-                  {!readyBlobs[page.id] ? (
-                    <><Loader2 size={16} className="animate-spin" /> Generating...</>
-                  ) : (
-                    <><Share2 size={16} /> Share / Save</>
-                  )}
-                </button>
+                <div className="flex gap-2 mt-auto w-full">
+                  <button 
+                    onClick={() => handleDownload(page.id, page.name)}
+                    disabled={isExporting || !readyBlobs[page.id]}
+                    title="Save to Device"
+                    className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg transition-colors text-sm font-medium text-white ${
+                      readyBlobs[page.id] 
+                        ? 'bg-slate-700 hover:bg-slate-600 shadow-lg' 
+                        : 'bg-slate-800 cursor-not-allowed opacity-70'
+                    }`}
+                  >
+                    {!readyBlobs[page.id] ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <><Download size={16} /> Save</>
+                    )}
+                  </button>
+                  <button 
+                    onClick={() => handleShare(page.id, page.name)}
+                    disabled={isExporting || !readyBlobs[page.id]}
+                    title="Share via Device"
+                    className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg transition-colors text-sm font-medium text-white ${
+                      readyBlobs[page.id] 
+                        ? 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-900/20' 
+                        : 'bg-slate-800 cursor-not-allowed opacity-70'
+                    }`}
+                  >
+                    {!readyBlobs[page.id] ? (
+                      <Loader2 size={16} className="animate-spin" />
+                    ) : (
+                      <><Share2 size={16} /> Share</>
+                    )}
+                  </button>
+                </div>
               </div>
               );
             })}

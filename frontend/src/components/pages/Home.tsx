@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Shield, Zap, Share2, ArrowDownCircle, Info } from 'lucide-react';
+import { Shield, Zap, Share2, ArrowDownCircle, Info, Calendar, Download, UploadCloud } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { Dropzone } from '../ui/Dropzone';
 import { StoryContainer } from '../layout/StoryContainer';
@@ -58,7 +58,7 @@ export const Home = () => {
           </div>
           
           <a 
-            href="#upload-section" 
+            href="#steps-list" 
             className="lg:hidden inline-flex items-center justify-center gap-3 bg-yellow-400 text-black font-bold py-4 px-10 rounded-2xl shadow-xl shadow-yellow-500/10 active:scale-95 transition-all w-full max-w-xs mx-auto"
           >
             Make Your Wrapped <ArrowDownCircle size={20} />
@@ -105,7 +105,14 @@ export const Home = () => {
           <div className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-[3rem] border-[10px] border-slate-800 bg-slate-900 shadow-2xl ring-1 ring-slate-700">
             
             {/* Inner Padding/Screen Area */}
-            <div className="absolute inset-1.5 md:inset-2 bg-black rounded-[2.25rem] overflow-hidden">
+            <div 
+              className="absolute inset-1.5 md:inset-2 bg-black rounded-[2.25rem] overflow-hidden"
+              style={{ 
+                transform: 'translateZ(0)', 
+                WebkitTransform: 'translateZ(0)',
+                WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+              }}
+            >
               {SCREENSHOTS.map((src, index) => (
                 <img
                   key={index}
@@ -114,6 +121,13 @@ export const Home = () => {
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                     index === currentImage ? 'opacity-100' : 'opacity-0'
                   }`}
+                  style={{ 
+                    transform: 'translateZ(0)', 
+                    WebkitTransform: 'translateZ(0)',
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
+                    willChange: 'opacity'
+                  }}
                 />
               ))}
             </div>
@@ -132,35 +146,50 @@ export const Home = () => {
         <div className="max-w-2xl w-full flex flex-col items-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">Ready to make your wrapped?</h2>
           
-          <ul className="text-left text-slate-300 space-y-6 mb-8 w-full max-w-lg text-lg">
-            <li className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">1</span>
-              <div>
-                <span className="block font-medium text-white">Select your timeframe.</span>
-                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                  Choose between This Year, Last Year, All Time, or set a Custom Date Range to generate any Year using the dropdown below.
+          <div className="relative text-left text-slate-300 mb-8 w-full max-w-lg">
+            <ul id="steps-list" className="text-lg relative z-10 scroll-mt-28">
+              <li className="relative flex items-start gap-4 pb-8">
+                {/* Segment 1: Stops exactly at the bottom of this item's padding */}
+                <div className="absolute left-4 top-8 bottom-0 w-0.5 border-l-2 border-dashed border-slate-700 -translate-x-1/2 z-0"></div>
+                
+                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-blue-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
+                  <Calendar size={16} />
                 </span>
-              </div>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">2</span>
-              <div>
-                <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code>.</span>
-                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                  Download your raw data from ForeFlight, Garmin Pilot, LogTen, or MyFlightbook. Not sure where to find it? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link>
+                <div>
+                  <span className="block font-medium text-white">Select your timeframe.</span>
+                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                    Choose between This Year, Last Year, All Time, or set a Custom Date Range to generate any Year using the dropdown below.
+                  </span>
+                </div>
+              </li>
+              <li className="relative flex items-start gap-4 pb-8">
+                {/* Segment 2: Stops exactly at the bottom of this item's padding */}
+                <div className="absolute left-4 top-8 bottom-0 w-0.5 border-l-2 border-dashed border-slate-700 -translate-x-1/2 z-0"></div>
+                
+                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-emerald-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
+                  <Download size={16} />
                 </span>
-              </div>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center text-sm font-bold border border-blue-500/20 mt-0.5">3</span>
-              <div>
-                <span className="block font-medium text-white">Upload the file to generate your story!</span>
-                <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                  Drag and drop your file below. Everything is processed 100% locally in your browser. Curious how we calculate things? <Link to="/logbook" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
+                <div>
+                  <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code>.</span>
+                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                    Download your raw data from ForeFlight (beta), Garmin Pilot (beta), LogTen (Coming Soon), or MyFlightbook (Coming Soon). Not sure where to find it? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link>
+                  </span>
+                </div>
+              </li>
+              <li className="relative flex items-start gap-4">
+                {/* No line segment here! It's physically impossible to bleed past this icon. */}
+                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-purple-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
+                  <UploadCloud size={16} />
                 </span>
-              </div>
-            </li>
-          </ul>
+                <div>
+                  <span className="block font-medium text-white">Upload the file to generate your story!</span>
+                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
+                    Drag and drop your file below. Everything is processed 100% locally in your browser. Curious how we calculate things? <Link to="/logbook" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
+                  </span>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
 
         

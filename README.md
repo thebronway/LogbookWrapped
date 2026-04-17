@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.8.1-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.8.2-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.

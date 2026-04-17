@@ -22,83 +22,51 @@ export const Contact = () => {
       </header>
 
       {/* Quick Action Grid */}
-      <div className="grid gap-6 md:grid-cols-2 mb-12">
-        {/* Bug Report Card */}
-        <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col">
-          <Bug className="text-orange-400 mb-4" size={28} />
-          <h3 className="text-white font-bold mb-2">Report a Bug or Issue</h3>
-          <div className="text-sm mb-6 flex-grow flex flex-col gap-4">
+      <div className="grid gap-8 md:grid-cols-2 mb-12">
+        {/* GitHub Card (Primary) */}
+        <div className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col shadow-xl">
+          <Github className="text-white mb-6" size={32} />
+          <h3 className="text-xl text-white font-bold mb-3">Open a GitHub Issue</h3>
+          <div className="text-sm text-slate-400 mb-8 flex-grow space-y-4 leading-relaxed">
             <p>
-              Did we get our math assumptions wrong? Are we missing an aircraft profile or an airport you flew into? Or maybe you found an issue parsing your specific CSV format? Let us know so we can fix it!
+              Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is open source, and our development is 100% transparent.
             </p>
-            <p className="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50 text-xs text-slate-400 leading-relaxed">
-              <strong className="text-slate-300 font-semibold">Quick Tip:</strong> (Optional) If you are experiencing a parsing error, emailing us a copy of your exported logbook CSV allows us to diagnose and resolve the issue much faster.
+            <p>
+              Check our public tracker to see if your idea has already been posted, or create a new issue for our team to tackle!
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-            <a 
-              href={issuesUrl}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium flex-1"
-            >
-              <Github size={16} />
-              Open GitHub Issue
-            </a>
-            <a 
-              href={`mailto:${email}?subject=LogbookWrapped%20Bug%20Report`}
-              className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 border border-indigo-500/20 rounded-lg transition-colors text-sm font-medium flex-1"
-            >
-              <Mail size={16} />
-              Email
-            </a>
-          </div>
+          <a 
+            href={issuesUrl}
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-4 bg-white text-slate-900 hover:bg-slate-200 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-white/10 mt-auto"
+          >
+            <Github size={18} />
+            Go to GitHub Tracker
+          </a>
         </div>
 
-        {/* Feature Request Card */}
-        <div className="p-6 rounded-2xl bg-slate-800/40 border border-slate-700/50 flex flex-col">
-          <MessageSquare className="text-blue-400 mb-4" size={28} />
-          <h3 className="text-white font-bold mb-2">Feature Requests & Feedback</h3>
-          <p className="text-sm mb-6 flex-grow">
-            Want to see new stats, charts, or visual elements? Have general feedback or just want to chat about aviation? We love building what pilots actually want to use.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 mt-auto">
-            <a 
-              href={issuesUrl}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm font-medium flex-1"
-            >
-              <Github size={16} />
-              Request on GitHub
-            </a>
-            <a 
-              href={`mailto:${email}?subject=LogbookWrapped%20Feature%20Request`}
-              className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 border border-indigo-500/20 rounded-lg transition-colors text-sm font-medium flex-1"
-            >
-              <Mail size={16} />
-              Email
-            </a>
+        {/* Email Card (Alternative) */}
+        <div className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col shadow-xl">
+          <Mail className="text-indigo-400 mb-6" size={32} />
+          <h3 className="text-xl text-white font-bold mb-3">Send us an Email</h3>
+          <div className="text-sm text-slate-400 mb-8 flex-grow space-y-5 leading-relaxed">
+            <p>
+              Don't have a GitHub account? No problem. You can reach out directly via email for bug reports, general feedback, or inquiries.
+            </p>
+            <div className="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50">
+              <strong className="text-slate-300 font-semibold block mb-1">Experiencing a parsing error?</strong> 
+              Emailing us a copy of your exported logbook CSV allows us to diagnose and resolve the issue much faster!
+            </div>
           </div>
+          <a 
+            href={`mailto:${email}?subject=LogbookWrapped%20Contact`}
+            className="flex items-center justify-center gap-2 w-full py-4 bg-slate-700/50 text-white hover:bg-slate-700 border border-slate-600 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95 mt-auto"
+          >
+            <Mail size={18} />
+            Email the Team
+          </a>
         </div>
-      </div>
-
-      {/* Main CTA Card */}
-      <div className="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl text-center">
-        <h2 className="text-2xl font-semibold text-white mb-4">Open Source & Transparent</h2>
-        <p className="mb-8 max-w-md mx-auto text-slate-400">
-          Our development is 100% transparent. You can view existing reports or create your own directly on our GitHub tracker.
-        </p>
-        
-        <a 
-          href={issuesUrl}
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 px-10 py-4 bg-white text-slate-900 font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-100 shadow-xl shadow-white/10"
-        >
-          <Github size={20} />
-          Go to GitHub Issues
-        </a>
       </div>
     </div>
   );

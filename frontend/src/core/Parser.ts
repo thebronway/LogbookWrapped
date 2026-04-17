@@ -10,6 +10,20 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
       const text = e.target?.result as string;
       if (!text) return reject(new Error("File is empty"));
 
+      // --- DEBUGGING: Detect EFB Format ---
+      let detectedEFB = "Unknown";
+      if (text.includes('ForeFlight')) {
+        detectedEFB = "ForeFlight";
+      } else if (text.includes('Garmin') || text.includes('flyGarmin')) {
+        detectedEFB = "Garmin Pilot";
+      } else if (text.includes('LogTen')) {
+        detectedEFB = "LogTen Pro";
+      } else if (text.includes('MyFlightbook') || text.includes('myflightbook')) {
+        detectedEFB = "MyFlightbook";
+      }
+      console.log(`[Parser] Detected EFB Format: ${detectedEFB}`);
+      // ------------------------------------
+
       let csvTextToParse = text;
       const preParsedAircraftMap: Record<string, string> = {};
 

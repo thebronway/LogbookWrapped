@@ -1,12 +1,19 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-17* 
-*Current Version: v0.8.1*
+*Current Version: v0.8.2*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.8.2
+- Vertically center items in cell on Page 8
+- Export page updates (Titles and Exports)
+- Homepage ui fixes and content updates
+- Contact page ui and content updates
+- Added EFB format detector to console logs
 
 ### Release v0.8.1
 - Max CSV 10MB upload
