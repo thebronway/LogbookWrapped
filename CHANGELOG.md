@@ -1,12 +1,19 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-17* 
-*Current Version: v0.8.3*
+*Current Version: v0.8.4*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.8.4
+- Page 1 ui, content, metric and color updates
+- Page 2 color updates to unify design
+- Page 7 export bug fix
+- Page 8 metrics and layout updates
+- Page 9 touch area updates
 
 ### Release v0.8.3
 - Screenshot Updates

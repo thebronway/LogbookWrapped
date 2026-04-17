@@ -43,6 +43,10 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     favoriteRouteCount: 0,
     mostVisitedState: 'Unknown',
     mostVisitedStateCount: 0,
+    averageFlightTime: 0,
+    flightsPerMonth: 0,
+    busiestMonth: '',
+    homeBaseLandings: 0,
     mapData: {
       nodes: [],
       edges: [],
@@ -61,6 +65,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const tailNumberCounts: Record<string, number> = {};
   const routeCounts: Record<string, number> = {};
   const stateCounts: Record<string, number> = {};
+  const monthStats: Record<string, { flights: number, hours: number }> = {};
 
   flights.forEach(f => {
     stats.totalHours += f.totalTime;
@@ -197,6 +202,14 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     aircraftTypes.add(f.aircraftType);
     tailNumbers.add(f.aircraftId);
     
+    // Track month stats
+    const monthKey = f.date ? f.date.substring(0, 7) : 'Unknown';
+    if (monthKey !== 'Unknown' && monthKey.length === 7) {
+      if (!monthStats[monthKey]) monthStats[monthKey] = { flights: 0, hours: 0 };
+      monthStats[monthKey].flights += 1;
+      monthStats[monthKey].hours += f.totalTime;
+    }
+
     // Track usage frequencies
     aircraftTypeCounts[f.aircraftType] = (aircraftTypeCounts[f.aircraftType] || 0) + 1;
     tailNumberCounts[f.aircraftId] = (tailNumberCounts[f.aircraftId] || 0) + 1;
@@ -263,6 +276,31 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.mapData.bounds = [minLon, minLat, maxLon, maxLat];
   }
 
+  // Calculate new Page 1 metrics
+  stats.averageFlightTime = stats.totalFlights > 0 ? stats.totalHours / stats.totalFlights : 0;
+  
+  const activeMonths = Object.keys(monthStats).length;
+  stats.flightsPerMonth = activeMonths > 0 ? stats.totalFlights / activeMonths : 0;
+  
+  const busiestMonthKey = Object.keys(monthStats).reduce((a, b) => {
+    if (!a) return b;
+    const statA = monthStats[a];
+    const statB = monthStats[b];
+    if (statA.flights > statB.flights) return a;
+    if (statB.flights > statA.flights) return b;
+    return statA.hours > statB.hours ? a : b;
+  }, "");
+
+  if (busiestMonthKey) {
+    const [year, month] = busiestMonthKey.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1);
+    stats.busiestMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }
+
+  stats.homeBaseLandings = flights.reduce((sum, f) => {
+    return (f.destination.toUpperCase() === stats.homeBase) ? sum + (f.landings || 0) : sum;
+  }, 0);
+
   // Fix shortest flight init value if no flights
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;
 
@@ -277,6 +315,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.totalDistanceNm = Number(stats.totalDistanceNm.toFixed(0)); // Whole numbers for distance
   stats.shortestFlight = Number(stats.shortestFlight.toFixed(1));
   stats.longestFlight = Number(stats.longestFlight.toFixed(0));
+  stats.averageFlightTime = Number(stats.averageFlightTime.toFixed(1));
+  stats.flightsPerMonth = Number(stats.flightsPerMonth.toFixed(1));
 
   return stats;
 };

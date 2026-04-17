@@ -17,20 +17,20 @@ export const Page2_BigPicture: React.FC<Props> = ({ stats }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-tr from-orange-950 via-slate-900 to-slate-900 text-white"
     >
-      <h2 className="text-4xl font-black mb-12 tracking-tight text-orange-500">
+      <h2 className="text-4xl font-black mb-12 tracking-tight text-orange-400">
         My Logbook <br /> Big Picture.
       </h2>
 
       <div className="space-y-12">
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-          <p className="text-orange-400 text-sm font-bold uppercase tracking-widest mb-1">Total Distance</p>
+          <p className="text-orange-500 text-sm font-bold uppercase tracking-widest mb-1">Total Distance</p>
           <p className="text-5xl font-black mb-4">{stats.totalDistanceNm.toLocaleString()} NM</p>
           <p className="text-slate-300 text-lg leading-relaxed"></p>
-          <p className="text-orange-300/75 text-sm font-mono mb-2">{distCopy}</p>
+          <p className="text-orange-200/50 text-sm font-mono mb-2">{distCopy}</p>
         </motion.div>
 
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.7 }}>
-          <p className="text-amber-400 text-sm font-bold uppercase tracking-widest mb-1">Time in the Seat</p>
+          <p className="text-orange-400 text-sm font-bold uppercase tracking-widest mb-1">Time in the Seat</p>
           <p className="text-slate-300 text-lg leading-relaxed">
             You logged {stats.totalHours} total hours. That means you spent exactly...
           </p>

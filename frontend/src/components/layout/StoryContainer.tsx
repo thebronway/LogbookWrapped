@@ -179,15 +179,22 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       </button>
 
       {/* Invisible Touch Zones (Better UX than tiny buttons) */}
-      {/* On the last page, we shrink the touch zones to the top/sides so they don't block the CTA buttons in the middle */}
-      <div 
-        className={`absolute left-0 top-0 z-40 cursor-pointer h-full ${currentIndex === pages.length - 1 ? 'w-1/4' : 'w-1/3'}`} 
-        onClick={handlePrev} 
-      />
-      <div 
-        className={`absolute right-0 top-0 z-40 cursor-pointer h-full ${currentIndex === pages.length - 1 ? 'w-1/4' : 'w-2/3'}`} 
-        onClick={handleNext} 
-      />
+      {currentIndex === pages.length - 1 ? (
+        <>
+          {/* Last Page: Touch zones only at the top (33%) and very bottom (15%) so middle buttons are clickable */}
+          <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handlePrev} />
+          <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handleNext} />
+          
+          <div className="absolute left-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handlePrev} />
+          <div className="absolute right-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handleNext} />
+        </>
+      ) : (
+        <>
+          {/* Normal Pages: Full height, Left 1/3 and Right 2/3 */}
+          <div className="absolute left-0 top-0 z-40 cursor-pointer h-full w-1/3" onClick={handlePrev} />
+          <div className="absolute right-0 top-0 z-40 cursor-pointer h-full w-2/3" onClick={handleNext} />
+        </>
+      )}
 
       {/* Current Page Content */}
       <div className="w-full h-full relative z-10">

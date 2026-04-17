@@ -30,29 +30,25 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
   }
 
   const statRows = [
-    { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}` },
+    { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`, sub: [`${stats.averageFlightTime} Hrs/Flight`, `${stats.totalNight} Hrs Night`] },
+    { type: 'single', label: 'Total Flights', value: `${stats.totalFlights} Flights`, sub: [`${stats.flightsPerMonth} Flights/Month`, `Busiest: ${stats.busiestMonth}`] },
     { type: 'single', label: 'Distance Flown', value: `${stats.totalDistanceNm?.toLocaleString()} NM` },
-    { type: 'double', 
-      left: { label: 'Flights', value: stats.totalFlights },
-      right: { label: 'Landings', value: stats.totalLandings }
-    },
     { type: 'double', 
       left: { label: 'Actual IMC', value: `${stats.totalIMC} Hrs` },
       right: { label: 'Sim IMC', value: `${stats.totalSimulated} Hrs` }
     },
     { type: 'double', 
-      left: { label: 'Night', value: `${stats.totalNight} Hrs` },
+      left: { label: 'Landings', value: stats.totalLandings },
       right: { label: 'Aircraft', value: stats.uniqueTailNumbers, sub: `${stats.uniqueAircraftTypes} Type${stats.uniqueAircraftTypes === 1 ? '' : 's'}` }
     },
     { type: 'double', 
-      left: { label: 'Type', value: stats.mostUsedAirframe, sub: `${stats.mostUsedAirframeCount} Flt${stats.mostUsedAirframeCount === 1 ? '' : 's'}` },
-      right: { label: 'Tail', value: stats.mostUsedTailNumber, sub: `${stats.mostUsedTailNumberCount} Flt${stats.mostUsedTailNumberCount === 1 ? '' : 's'}` }
+      left: { label: 'Type', value: stats.mostUsedAirframe, sub: `${stats.mostUsedAirframeCount} Flight${stats.mostUsedAirframeCount === 1 ? '' : 's'}` },
+      right: { label: 'Tail', value: stats.mostUsedTailNumber, sub: `${stats.mostUsedTailNumberCount} Flight${stats.mostUsedTailNumberCount === 1 ? '' : 's'}` }
     },
     { type: 'double', 
       left: { label: 'Airports', value: stats.uniqueAirports, sub: `Home Base: ${stats.homeBase}` },
       right: { label: 'Top State', value: stats.mostVisitedState, sub: `${stats.mostVisitedStateCount} time${stats.mostVisitedStateCount === 1 ? '' : 's'}` }
     },
-    { type: 'single', label: 'Favorite Route', value: stats.favoriteRoute, sub: `${stats.favoriteRouteCount} time${stats.favoriteRouteCount === 1 ? '' : 's'}` },
     { type: 'single', label: 'Shortest Flight', value: `${stats.shortestFlight} Hour${stats.shortestFlight === 1 ? '' : 's'}`, sub: `${stats.shortestFlightRoute} on ${stats.shortestFlightDate}` },
     { type: 'single', label: 'Longest Flight', value: `${stats.longestFlight} NM`, sub: `${stats.longestFlightRoute} on ${stats.longestFlightDate}` },
   ];
@@ -98,7 +94,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
                   <span className={labelClass}>{row.left.label}</span>
                   <div className="flex flex-col items-end">
                     <span className={valClass}>{row.left.value}</span>
-                    {row.left.sub && <span className={subClass}>{row.left.sub}</span>}
+                    {row.left.sub && (Array.isArray(row.left.sub) ? row.left.sub.map((s: string, idx: number) => <span key={idx} className={subClass}>{s}</span>) : <span className={subClass}>{row.left.sub}</span>)}
                   </div>
                 </div>
 
@@ -107,7 +103,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
                   <span className={labelClass}>{row.right.label}</span>
                   <div className="flex flex-col items-end">
                     <span className={valClass}>{row.right.value}</span>
-                    {row.right.sub && <span className={subClass}>{row.right.sub}</span>}
+                    {row.right.sub && (Array.isArray(row.right.sub) ? row.right.sub.map((s: string, idx: number) => <span key={idx} className={subClass}>{s}</span>) : <span className={subClass}>{row.right.sub}</span>)}
                   </div>
                 </div>
 
@@ -126,7 +122,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
               <span className={labelClass}>{row.label}</span>
               <div className="flex flex-col items-end">
                 <span className={valClass}>{row.value}</span>
-                {row.sub && <span className={subClass}>{row.sub}</span>}
+                {row.sub && (Array.isArray(row.sub) ? row.sub.map((s: string, idx: number) => <span key={idx} className={subClass}>{s}</span>) : <span className={subClass}>{row.sub}</span>)}
               </div>
             </motion.div>
           );

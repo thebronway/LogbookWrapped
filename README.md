@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.8.3-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.8.4-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -64,6 +64,8 @@
 
 ## Support & Feedback
 
-If a logbook isn't parsing right or an aircraft profile is missing, please [open a GitHub issue](https://github.com/thebronway/LogbookWrapped/issues) with the details so we can improve the parser.
-
+* If a logbook isn't parsing right or an aircraft profile is missing, please [open a GitHub issue](https://github.com/thebronway/LogbookWrapped/issues) with the details so we can improve the parser.
 * **AvGas Tip Jar:** Support the project via our integrated micro-transaction gateway.
+
+## Acknowledgments
+- **Note:** This project was coded with AI assistance, but fully reviewed, tested, and approved by hand. See [AIACKNOWLEDGMENT.md](AIACKNOWLEDGMENT.md) for details.

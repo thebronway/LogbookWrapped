@@ -289,7 +289,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
                     { label: 'Flights', value: stats.totalFlights || 0 },
                     { label: 'Dist(NM)', value: stats.totalDistanceNm?.toLocaleString(), isSmall: true }
                 ].map((stat, idx) => (
-                    <div key={idx} className="relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)] flex flex-col items-center justify-center">
+                    <div key={idx} className={`relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 flex flex-col items-center justify-center overflow-hidden ${isExportMode ? '' : 'shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)]'}`}>
                         {/* Inner tick marks (using simple CSS dashed border) */}
                         <div className="absolute inset-[3px] rounded-full border-[1.5px] border-white/20 border-dashed"></div>
                         

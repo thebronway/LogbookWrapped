@@ -45,6 +45,10 @@ export interface CalculatedStats {
   favoriteRouteCount: number;
   mostVisitedState: string;
   mostVisitedStateCount: number;
+  averageFlightTime: number;
+  flightsPerMonth: number;
+  busiestMonth: string;
+  homeBaseLandings: number;
   mapData: {
     nodes: [number, number][]; // [longitude, latitude]
     edges: [[number, number], [number, number]][]; // [[lon1, lat1], [lon2, lat2]]
