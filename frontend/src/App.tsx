@@ -34,7 +34,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/logbook" element={<LogbookLogic />} />
+          <Route path="/methodology" element={<LogbookLogic />} />
           <Route path="/export" element={<Export />} />
           <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
         </Routes>

@@ -57,7 +57,7 @@ export const AircraftProfilesTable = () => {
       <div className="space-y-4">
         <h1 className="text-4xl font-black text-white tracking-tight">Supported Aircraft Profiles</h1>
         <p className="text-lg text-slate-400 leading-relaxed">
-          We use this database to estimate fuel burn and validate distances. Our parser will attempt to group your logged variants (e.g. C-172P) into these core profiles. If your aircraft isn't listed, we safely default to <strong className="text-white">120 KTAS</strong> and <strong className="text-white">10 GPH</strong>.
+          We use this database to estimate fuel burn and validate distances. Our parser will attempt to group your logged variants into these core profiles (e.g. C172N C-172P 172 &gt; C172). If your aircraft isn't listed, we default to <strong className="text-white">120 KTAS</strong> and <strong className="text-white">10 GPH</strong>.
         </p>
         <div className="pt-2">
           <Link 

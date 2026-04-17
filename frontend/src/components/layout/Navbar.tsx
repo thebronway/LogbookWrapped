@@ -25,7 +25,7 @@ export const Navbar = () => {
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 text-sm font-medium items-center">
           <Link to="/about" className="hover:text-white transition-colors">About</Link>
-          <Link to="/logbook" className="hover:text-white transition-colors">Methodology</Link>
+          <Link to="/methodology" className="hover:text-white transition-colors">Methodology</Link>
           <Link to="/export" className="hover:text-white transition-colors">Export</Link>
           <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
         </div>
@@ -43,7 +43,7 @@ export const Navbar = () => {
         {isMobileMenuOpen && (
           <div className="absolute top-full left-0 w-full bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 flex flex-col p-4 gap-4 text-base font-medium shadow-xl md:hidden z-40">
             <Link to="/about" onClick={closeMenu} className="block py-3 border-b border-slate-800 hover:text-white transition-colors">About</Link>
-            <Link to="/logbook" onClick={closeMenu} className="block py-3 border-b border-slate-800 hover:text-white transition-colors">Methodology</Link>
+            <Link to="/methodology" onClick={closeMenu} className="block py-3 border-b border-slate-800 hover:text-white transition-colors">Methodology</Link>
             <Link to="/export" onClick={closeMenu} className="block py-3 border-b border-slate-800 hover:text-white transition-colors">Export</Link>
             <Link to="/contact" onClick={closeMenu} className="block py-3 hover:text-white transition-colors">Contact</Link>
           </div>

@@ -1,11 +1,11 @@
 {
   "name": "logbook-wrapped-client",
   "private": true,
-  "version": "0.7.8",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "dev": "node scripts/buildAirports.js && vite",
-    "build": "node scripts/buildAirports.js && tsc && vite build",
+    "build": "node scripts/buildAirports.js && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

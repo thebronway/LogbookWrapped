@@ -1,6 +1,6 @@
 # Logbook Wrapped
 
-![Version](https://img.shields.io/badge/version-v0.7.8-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.8.0-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -25,6 +25,7 @@
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page5.webp?raw=true" width="200" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page6.webp?raw=true" width="200" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page7.webp?raw=true" width="200" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page8.webp?raw=true" width="200" />
 </p>
 </details>
 
