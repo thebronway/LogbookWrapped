@@ -28,6 +28,12 @@ export const Dropzone = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
+      
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size exceeds 10MB limit. Please upload a smaller file.');
+        return;
+      }
+
       if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
         processFile(file);
       } else {
@@ -38,7 +44,15 @@ export const Dropzone = () => {
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      processFile(e.target.files[0]);
+      const file = e.target.files[0];
+      
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size exceeds 10MB limit. Please upload a smaller file.');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        return;
+      }
+
+      processFile(file);
     }
   }, [processFile]);
 

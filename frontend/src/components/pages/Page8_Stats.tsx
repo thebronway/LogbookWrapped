@@ -30,7 +30,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
   }
 
   const statRows = [
-    { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hours` },
+    { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}` },
     { type: 'single', label: 'Distance Flown', value: `${stats.totalDistanceNm?.toLocaleString()} NM` },
     { type: 'double', 
       left: { label: 'Flights', value: stats.totalFlights },
@@ -42,20 +42,19 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
     },
     { type: 'double', 
       left: { label: 'Night', value: `${stats.totalNight} Hrs` },
-      right: { label: 'Airframe', value: stats.mostUsedAirframe }
+      right: { label: 'Aircraft', value: stats.uniqueTailNumbers, sub: `${stats.uniqueAircraftTypes} Type${stats.uniqueAircraftTypes === 1 ? '' : 's'}` }
     },
     { type: 'double', 
-      left: { label: 'Aircraft', value: stats.uniqueAircraftTypes },
-      right: { label: 'Tails', value: stats.uniqueTailNumbers }
+      left: { label: 'Type', value: stats.mostUsedAirframe, sub: `${stats.mostUsedAirframeCount} Flt${stats.mostUsedAirframeCount === 1 ? '' : 's'}` },
+      right: { label: 'Tail', value: stats.mostUsedTailNumber, sub: `${stats.mostUsedTailNumberCount} Flt${stats.mostUsedTailNumberCount === 1 ? '' : 's'}` }
     },
     { type: 'double', 
       left: { label: 'Airports', value: stats.uniqueAirports, sub: `Home Base: ${stats.homeBase}` },
-      right: { label: 'Top State', value: stats.mostVisitedState, sub: `${stats.mostVisitedStateCount} times` }
+      right: { label: 'Top State', value: stats.mostVisitedState, sub: `${stats.mostVisitedStateCount} time${stats.mostVisitedStateCount === 1 ? '' : 's'}` }
     },
-    { type: 'single', label: 'Favorite Route', value: stats.favoriteRoute, sub: `${stats.favoriteRouteCount} times` },
-    { type: 'single', label: 'Shortest Flight', value: `${stats.shortestFlight} Hours`, sub: `${stats.shortestFlightRoute} on ${stats.shortestFlightDate}` },
+    { type: 'single', label: 'Favorite Route', value: stats.favoriteRoute, sub: `${stats.favoriteRouteCount} time${stats.favoriteRouteCount === 1 ? '' : 's'}` },
+    { type: 'single', label: 'Shortest Flight', value: `${stats.shortestFlight} Hour${stats.shortestFlight === 1 ? '' : 's'}`, sub: `${stats.shortestFlightRoute} on ${stats.shortestFlightDate}` },
     { type: 'single', label: 'Longest Flight', value: `${stats.longestFlight} NM`, sub: `${stats.longestFlightRoute} on ${stats.longestFlightDate}` },
-    { type: 'single', label: 'Estimated Fuel Burn', value: `${stats.estimatedFuelBurn?.toLocaleString()} Gallons` },
   ];
 
   const paddingClass = `flex flex-col h-full w-full bg-gradient-to-br from-slate-800 to-slate-950 text-white overflow-hidden ${isExportMode ? "p-6" : "p-5 sm:p-6"}`;

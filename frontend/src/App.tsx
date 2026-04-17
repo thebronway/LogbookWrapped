@@ -9,6 +9,7 @@ import { Contact } from './components/pages/Contact';
 import { LogbookLogic } from './components/pages/LogbookLogic';
 import { Export } from './components/pages/Export';
 import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable';
+import { NotFound } from './components/pages/NotFound';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/methodology" element={<LogbookLogic />} />
           <Route path="/export" element={<Export />} />
           <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
 

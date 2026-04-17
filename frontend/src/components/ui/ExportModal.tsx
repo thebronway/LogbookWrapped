@@ -91,7 +91,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
   useEffect(() => {
     let isMounted = true;
     const generateAll = async () => {
-      // Increased to 2 seconds to guarantee Mapbox WebGL has fully downloaded and painted
+      // Increased to 2 seconds to guarantee D3 maps and geographical data have fully rendered
       await new Promise(r => setTimeout(r, 2000));
       
       for (const page of pages) {

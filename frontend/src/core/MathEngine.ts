@@ -36,6 +36,9 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     estimatedFuelBurn: 0,
     hasInternational: false,
     mostUsedAirframe: 'Unknown',
+    mostUsedAirframeCount: 0,
+    mostUsedTailNumber: 'Unknown',
+    mostUsedTailNumberCount: 0,
     favoriteRoute: 'None',
     favoriteRouteCount: 0,
     mostVisitedState: 'Unknown',
@@ -55,6 +58,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const tailNumbers = new Set<string>();
   const departureCounts: Record<string, number> = {};
   const aircraftTypeCounts: Record<string, number> = {};
+  const tailNumberCounts: Record<string, number> = {};
   const routeCounts: Record<string, number> = {};
   const stateCounts: Record<string, number> = {};
 
@@ -195,6 +199,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     
     // Track usage frequencies
     aircraftTypeCounts[f.aircraftType] = (aircraftTypeCounts[f.aircraftType] || 0) + 1;
+    tailNumberCounts[f.aircraftId] = (tailNumberCounts[f.aircraftId] || 0) + 1;
     if (f.departure && f.destination) {
       const routeStr = `${f.departure} to ${f.destination}`;
       routeCounts[routeStr] = (routeCounts[routeStr] || 0) + 1;
@@ -216,8 +221,14 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.mostUsedAirframe = Object.keys(aircraftTypeCounts).reduce((a, b) => 
     aircraftTypeCounts[a] > aircraftTypeCounts[b] ? a : b
   , "Unknown");
+  stats.mostUsedAirframeCount = aircraftTypeCounts[stats.mostUsedAirframe] || 0;
 
-  const favRoute = Object.keys(routeCounts).reduce((a, b) => 
+  stats.mostUsedTailNumber = Object.keys(tailNumberCounts).reduce((a, b) => 
+    tailNumberCounts[a] > tailNumberCounts[b] ? a : b
+  , "Unknown");
+  stats.mostUsedTailNumberCount = tailNumberCounts[stats.mostUsedTailNumber] || 0;
+
+  const favRoute = Object.keys(routeCounts).reduce((a, b) =>
     routeCounts[a] > routeCounts[b] ? a : b
   , "None");
   stats.favoriteRoute = favRoute;

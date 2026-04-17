@@ -38,6 +38,9 @@ export interface CalculatedStats {
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
   hasInternational: boolean;
   mostUsedAirframe: string;
+  mostUsedAirframeCount: number;
+  mostUsedTailNumber: string;
+  mostUsedTailNumberCount: number;
   favoriteRoute: string;
   favoriteRouteCount: number;
   mostVisitedState: string;
