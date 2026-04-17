@@ -7,7 +7,7 @@ interface Props {
   stats: CalculatedStats;
 }
 
-export const Page3_BigPicture: React.FC<Props> = ({ stats }) => {
+export const Page2_BigPicture: React.FC<Props> = ({ stats }) => {
   const { distCopy, days, hours } = getPage3Copy(stats);
 
   return (

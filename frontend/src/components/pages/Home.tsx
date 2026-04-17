@@ -6,7 +6,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 import { Dropzone } from '../ui/Dropzone';
 import { StoryContainer } from '../layout/StoryContainer';
 
-const SCREENSHOTS = Array.from({ length: 8 }, (_, i) => `/screenshots/page${i + 1}.webp`);
+const SCREENSHOTS = Array.from({ length: 9 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
 export const Home = () => {
   const { status, stats, errorMessage, resetStore } = useLogbookStore();
@@ -170,7 +170,7 @@ export const Home = () => {
                   <Download size={16} />
                 </span>
                 <div>
-                  <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code>.</span>
+                  <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code> or <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.txt</code>.</span>
                   <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
                     Download your raw data from ForeFlight (beta), Garmin Pilot (beta), LogTen (Coming Soon), or MyFlightbook (Coming Soon). Not sure where to find it? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link>
                   </span>

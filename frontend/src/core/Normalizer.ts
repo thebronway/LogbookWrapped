@@ -35,8 +35,16 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
   if (!rawRows || rawRows.length === 0) return [];
 
   const headers = Object.keys(rawRows[0]);
-  const isForeFlight = headers.includes('AircraftID') || headers.includes('TotalTime'); 
-  const profile = isForeFlight ? PROFILES.FOREFLIGHT : PROFILES.GARMIN;
+  let profile = PROFILES.FOREFLIGHT; // Default
+
+  // Determine which EFB exported this CSV based on unique column names
+  if (headers.includes('Aircraft ID') && headers.includes('Total Duration')) {
+    profile = PROFILES.GARMIN;
+  } else if (headers.includes('Tail Number') && headers.includes('Total Flight Time')) {
+    profile = PROFILES.MYFLIGHTBOOK;
+  } else if (headers.includes('Aircraft ID') && headers.includes('Total Time') && headers.includes('Type')) {
+    profile = PROFILES.LOGTEN;
+  }
 
   // 2a. Build the Self-Healing Aircraft Type Dictionary
   const tailToTypeMap: Record<string, string> = preParsedAircraftMap || {};
@@ -124,7 +132,12 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
       totalTime = Math.round(totalTime * 10) / 10;
     }
 
-    const distance = parseFloat(row[profile.distance]) || 0;
+    let distance = parseFloat(row[profile.distance]) || 0;
+
+    // Garmin exports distance in meters, so we must convert it to Nautical Miles
+    if (profile === PROFILES.GARMIN && distance > 0) {
+      distance = distance / 1852;
+    }
 
     // 1. The "Ghost Landing" Fix
     // If a pilot flew to a different airport and logged time, they had to land.

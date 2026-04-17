@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.8.2-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.8.3-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -27,13 +27,16 @@
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page6.webp?raw=true" width="200" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page7.webp?raw=true" width="200" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page8.webp?raw=true" width="200" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/page9.webp?raw=true" width="200" />
 </p>
 </details>
 
 <details>
 <summary><strong>Desktop (Dashboard)</strong></summary>
 <br>
-  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop.webp?raw=true" width="800" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop1.webp?raw=true" width="800" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop2.webp?raw=true" width="800" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop3.webp?raw=true" width="800" />
 </details>
 
 ## Features

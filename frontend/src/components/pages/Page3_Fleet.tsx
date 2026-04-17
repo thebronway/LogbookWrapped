@@ -6,7 +6,7 @@ interface Props {
   stats: CalculatedStats;
 }
 
-export const Page2_Fleet: React.FC<Props> = ({ stats }) => {
+export const Page3_Fleet: React.FC<Props> = ({ stats }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, x: 50 }}

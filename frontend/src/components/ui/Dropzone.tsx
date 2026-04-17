@@ -34,10 +34,11 @@ export const Dropzone = () => {
         return;
       }
 
-      if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+      const validExtensions = ['.csv', '.txt', '.tsv'];
+      if (file.type === 'text/csv' || validExtensions.some(ext => file.name.toLowerCase().endsWith(ext))) {
         processFile(file);
       } else {
-        alert('Please upload a valid CSV file.');
+        alert('Please upload a valid CSV, TXT, or TSV file.');
       }
     }
   }, [processFile]);
@@ -112,7 +113,7 @@ export const Dropzone = () => {
         onClick={() => fileInputRef.current?.click()}
       >
         <UploadCloud className={`w-16 h-16 mb-4 transition-colors ${isDragging ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`} />
-        <h3 className="text-xl font-bold mb-2 text-center text-white group-hover:text-blue-50 transition-colors">Drop your Logbook CSV here</h3>
+        <h3 className="text-xl font-bold mb-2 text-center text-white group-hover:text-blue-50 transition-colors">Drop your Logbook file here</h3>
         <p className="text-slate-400 text-center mb-6">
           100% private. No data leaves your browser.
         </p>
@@ -123,7 +124,7 @@ export const Dropzone = () => {
         <input 
           type="file" 
           className="hidden" 
-          accept=".csv" 
+          accept=".csv, .txt, .tsv" 
           onChange={handleFileInput}
           ref={fileInputRef}
         />

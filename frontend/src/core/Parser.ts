@@ -12,14 +12,17 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
 
       // --- DEBUGGING: Detect EFB Format ---
       let detectedEFB = "Unknown";
-      if (text.includes('ForeFlight')) {
+      // Grab the first chunk of the file to check headers
+      const headerScan = text.substring(0, 1000); 
+      
+      if (headerScan.includes('ForeFlight')) {
         detectedEFB = "ForeFlight";
-      } else if (text.includes('Garmin') || text.includes('flyGarmin')) {
+      } else if (headerScan.includes('Aircraft ID') && headerScan.includes('Total Duration')) {
         detectedEFB = "Garmin Pilot";
-      } else if (text.includes('LogTen')) {
-        detectedEFB = "LogTen Pro";
-      } else if (text.includes('MyFlightbook') || text.includes('myflightbook')) {
+      } else if (headerScan.includes('Tail Number') && headerScan.includes('Total Flight Time')) {
         detectedEFB = "MyFlightbook";
+      } else if (headerScan.includes('Aircraft ID') && headerScan.includes('Total Time') && headerScan.includes('Type')) {
+        detectedEFB = "LogTen Pro";
       }
       console.log(`[Parser] Detected EFB Format: ${detectedEFB}`);
       // ------------------------------------

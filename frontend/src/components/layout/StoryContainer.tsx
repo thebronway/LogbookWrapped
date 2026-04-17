@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { Page1_Cover } from '../pages/Page1_Cover';
-import { Page2_Fleet } from '../pages/Page2_Fleet';
-import { Page3_BigPicture } from '../pages/Page3_BigPicture';
+import { Page2_BigPicture } from '../pages/Page2_BigPicture';
+import { Page3_Fleet } from '../pages/Page3_Fleet';
 import { Page4_Extremes } from '../pages/Page4_Extremes';
 import { Page5_Superlatives } from '../pages/Page5_Superlatives';
 import { Page6_Elements } from '../pages/Page6_Elements';
@@ -35,8 +35,8 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
   const pages = [
     <Page1_Cover stats={stats} key="p1" />,
-    <Page2_Fleet stats={stats} key="p2" />,
-    <Page3_BigPicture stats={stats} key="p3" />,
+    <Page2_BigPicture stats={stats} key="p2" />,
+    <Page3_Fleet stats={stats} key="p3" />,
     <Page4_Extremes stats={stats} key="p4" />,
     <Page5_Superlatives stats={stats} key="p5" />,
     <Page6_Elements stats={stats} key="p6" />,
@@ -93,7 +93,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
         {/* CSS Grid dynamically mapping the 8 pages */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(380px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
-          {/* Row 1: Cover (pages[0]), Fleet (pages[1]), Big Picture (pages[2]) */}
+          {/* Row 1: Cover (pages[0]), Big Picture (pages[1]), Fleet (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[0]}
           </div>

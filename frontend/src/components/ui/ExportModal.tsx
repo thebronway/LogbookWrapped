@@ -6,8 +6,8 @@ import { CalculatedStats } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
 
 import { Page1_Cover } from '../pages/Page1_Cover';
-import { Page2_Fleet } from '../pages/Page2_Fleet';
-import { Page3_BigPicture } from '../pages/Page3_BigPicture';
+import { Page2_BigPicture } from '../pages/Page2_BigPicture';
+import { Page3_Fleet } from '../pages/Page3_Fleet';
 import { Page4_Extremes } from '../pages/Page4_Extremes';
 import { Page5_Superlatives } from '../pages/Page5_Superlatives';
 import { Page6_Elements } from '../pages/Page6_Elements';
@@ -60,8 +60,8 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
     { id: 'export-p7', name: 'Passport', isPoster: false, render: () => <Page7_Passport stats={stats} isExportMode={true} /> },
     { id: 'export-p8', name: 'Stats', isPoster: false, render: () => <Page8_Stats stats={stats} isExportMode={true} /> },
     { id: 'export-p1', name: 'Cover', isPoster: false, render: () => <Page1_Cover stats={stats} /> },
-    { id: 'export-p2', name: 'Fleet', isPoster: false, render: () => <Page2_Fleet stats={stats} /> },
-    { id: 'export-p3', name: 'Big Picture', isPoster: false, render: () => <Page3_BigPicture stats={stats} /> },
+    { id: 'export-p2', name: 'Big Picture', isPoster: false, render: () => <Page2_BigPicture stats={stats} /> },
+    { id: 'export-p3', name: 'Fleet', isPoster: false, render: () => <Page3_Fleet stats={stats} /> },
     { id: 'export-p4', name: 'Extremes', isPoster: false, render: () => <Page4_Extremes stats={stats} /> },
     { id: 'export-p5', name: 'Superlatives', isPoster: false, render: () => <Page5_Superlatives stats={stats} /> },
     { id: 'export-p6', name: 'Elements', isPoster: false, render: () => <Page6_Elements stats={stats} /> },
@@ -226,7 +226,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
                     {!readyBlobs[page.id] ? (
                       <Loader2 size={16} className="animate-spin" />
                     ) : (
-                      <><Download size={16} /> Save</>
+                      <><Download size={16} /> <span className="hidden sm:inline">Save</span></>
                     )}
                   </button>
                   <button 
@@ -242,7 +242,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
                     {!readyBlobs[page.id] ? (
                       <Loader2 size={16} className="animate-spin" />
                     ) : (
-                      <><Share2 size={16} /> Share</>
+                      <><Share2 size={16} /> <span className="hidden sm:inline">Share</span></>
                     )}
                   </button>
                 </div>
