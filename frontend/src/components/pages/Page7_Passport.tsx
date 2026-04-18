@@ -18,12 +18,10 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
 
   useEffect(() => {
     Promise.all([
-      // Dropping ONLY the world map to 50m stops D3 from drawing Canada inside-out and flooding the ocean
-      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json').then(r => r.json()), 
-      fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(r => r.json()),
-      fetch('https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/canada.geojson').then(r => r.json()),
-      // Fetch a dedicated dataset just for the lakes (from Natural Earth) to cleanly overlay them
-      fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_lakes.geojson').then(r => r.json())
+      fetch('/assets/maps/countries-50m.json').then(r => r.json()), 
+      fetch('/assets/maps/states-10m.json').then(r => r.json()),
+      fetch('/assets/maps/canada.geojson').then(r => r.json()),
+      fetch('/assets/maps/ne_10m_lakes.geojson').then(r => r.json())
     ]).then(([worldTopo, usTopo, canadaGeo, lakesGeo]) => {
       
       const allCountries = topojson.feature(worldTopo, worldTopo.objects.countries).features;
@@ -286,34 +284,11 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
             )}
         </motion.div>
 
-        {/* Bottom Area: 3-Gauge Floating Pack or Watermark Stripe */}
-        {exportFormat !== 'post' ? (
-          <motion.div 
-            initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
-            className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-6 pb-16' : 'pt-6 pb-10'}`}
-          >
-              <div className="flex justify-center gap-6 mx-auto text-center">
-                  {[
-                      { label: 'Hours', value: stats.totalHours },
-                      { label: 'Flights', value: stats.totalFlights || 0 },
-                      { label: 'Dist(NM)', value: stats.totalDistanceNm?.toLocaleString(), isSmall: true }
-                  ].map((stat, idx) => (
-                      <div key={idx} className={`relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 flex flex-col items-center justify-center overflow-hidden ${isExportMode ? '' : 'shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)]'}`}>
-                          {/* Inner tick marks (using simple CSS dashed border) */}
-                          <div className="absolute inset-[3px] rounded-full border-[1.5px] border-white/20 border-dashed"></div>
-                          
-                          <span className={`z-10 ${stat.isSmall ? 'text-[12px]' : 'text-[15px]'} font-bold text-white leading-none tracking-tight mt-0.5`}>
-                              {stat.value}
-                          </span>
-                          <span className="z-10 text-[8px] text-sky-100/70 font-bold uppercase mt-1 tracking-widest">
-                              {stat.label}
-                          </span>
-                      </div>
-                  ))}
-              </div>
-          </motion.div>
-        ) : (
-          <div className="w-full shrink-0 h-[38px] bg-black/30 border-t border-slate-800/50"></div>
+        {/* Empty Watermark Stripe */}
+        {isExportMode && (
+          <div className={`w-full shrink-0 bg-black/30 border-t border-slate-800/50 ${
+            exportFormat === 'post' ? 'h-[30px]' : 'h-[36px]'
+          }`}></div>
         )}
     </motion.div>
   );

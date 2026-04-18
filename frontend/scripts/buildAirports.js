@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 const CSV_URL = 'https://davidmegginson.github.io/ourairports-data/airports.csv';
-const OUTPUT_PATH = './public/airports-min.json';
+const OUTPUT_PATH = './public/data/airports-min.json';
 
 async function build() {
   console.log('[Frontend Build] Downloading airport data...');
@@ -58,7 +58,7 @@ async function build() {
 
   delete airports[''];
   
-  if (!fs.existsSync('./public')) fs.mkdirSync('./public');
+  if (!fs.existsSync('./public/data')) fs.mkdirSync('./public/data', { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(airports));
   console.log('[Frontend Build] ✅ airports-min.json generated successfully!');
 }

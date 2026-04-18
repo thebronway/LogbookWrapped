@@ -1,12 +1,18 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-17* 
-*Current Version: v0.8.5*
+*Last updated: 2026-04-18* 
+*Current Version: v0.8.6*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.8.6
+- Switch to local assets for map generation
+- Bigfix: Airport generation file
+- Post and Story Tweaks
+- Bugfix: Tiny black bar on the bottom of the export modal just on mobile
 
 ### Release v0.8.5
 - Created two versions of the export in different aspect ratios for posts and stories

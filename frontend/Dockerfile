@@ -14,6 +14,8 @@ COPY package*.json ./
 RUN npm install
 # Copy the rest of the source code into the image
 COPY . .
+ADD https://davidmegginson.github.io/ourairports-data/airports.csv /tmp/airports_cache_buster.csv
+
 # Run the Vite build command to generate static files in /app/dist
 RUN npm run build
 

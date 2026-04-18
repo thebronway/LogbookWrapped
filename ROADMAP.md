@@ -1,24 +1,24 @@
 # LogbookWrapped Roadmap
 
-*Last updated: 2026-04-17* 
-*Current Version: v0.8.5*
+*Last updated: 2026-04-18* 
+*Current Version: v0.8.6*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
 
-### Release v0.8.6
-- Post and Story Tweaks
-- Black Bar on Preview on Mobile
-- Page 1 is boring
-    - Plane silhouette fly in behind text, fly into the middle (consider mobile and desktop) (file is public/aircraft/plane.webp). The idea is, if this looks good, to have several cells of different types of airplanes and depend depending on what the most flown is a different silhouette will fly. But I don't know. Do you have any other ideas? No code just thoughts.
-
 ### Relase v0.8.7
+- Bigfix: Page 7 map zoom on mobile
+- Page 8: Remove bottom table line on export (its a differnt line on post and story)
+- Different Font for titles?
+- Page 1 is boring
+    - Plane silhouette fly in behind text, fly into the middle (consider mobile and desktop) (file is public/assets/aircraft/plane.webp). The idea is, if this looks good, to have several cells of different types of airplanes and depend depending on what the most flown is a different silhouette will fly. But I don't know. Do you have any other ideas? No code just thoughts.
+
+### Relase v0.8.8
 - Refine support for all EFBs
 - Add unknown profile
 - Better offline support
-
 
 ### Release v0.8.9
 - Umami Tracking

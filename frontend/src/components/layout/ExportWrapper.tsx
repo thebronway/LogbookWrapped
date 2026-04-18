@@ -9,8 +9,8 @@ interface Props {
 export const ExportWrapper: React.FC<Props> = ({ children, pageId, format = 'story' }) => {
   const isPost = format === 'post';
   const width = '450px';
-  // 562px height perfectly creates a 4:5 aspect ratio with a 450px width
-  const height = isPost ? '562px' : '800px';
+  // 562.5px height perfectly creates a 4:5 aspect ratio with a 450px width
+  const height = isPost ? '562.5px' : '800px';
 
   return (
     <div 
