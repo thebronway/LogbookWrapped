@@ -4,17 +4,18 @@ import { CalculatedStats } from '../../core/types';
 
 interface Props {
   stats: CalculatedStats;
+  exportFormat?: 'story' | 'post';
 }
 
-export const Page3_Fleet: React.FC<Props> = ({ stats }) => {
+export const Page3_Fleet: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
   return (
     <motion.div 
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
-      className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white"
+      className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className="text-4xl font-black mb-10 tracking-tight text-indigo-400">
+      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl mb-10'} font-black tracking-tight text-indigo-400`}>
         My Logbook <br /> Fleet.
       </h2>
 

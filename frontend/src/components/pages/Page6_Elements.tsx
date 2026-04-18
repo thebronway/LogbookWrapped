@@ -3,14 +3,19 @@ import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { getPage6Copy } from '../../core/Copywriter';
 
-export const Page6_Elements: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
+interface Props {
+  stats: CalculatedStats;
+  exportFormat?: 'story' | 'post';
+}
+
+export const Page6_Elements: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
   const { nightCopy } = getPage6Copy(stats);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-b from-cyan-950 via-slate-900 to-slate-900 text-white"
+      className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-cyan-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className="text-4xl font-black mb-8 text-cyan-400">My Logbook <br />In The Elements.</h2>
+      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl mb-8'} font-black text-cyan-400`}>My Logbook <br />In The Elements.</h2>
       <div className="space-y-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-cyan-500 text-sm font-bold uppercase tracking-widest mb-1">The Night Owl</p>

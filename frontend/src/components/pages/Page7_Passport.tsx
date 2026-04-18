@@ -8,9 +8,10 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 interface Props {
   stats: CalculatedStats;
   isExportMode?: boolean;
+  exportFormat?: 'story' | 'post';
 }
 
-export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
+export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFormat = 'story' }) => {
   const mapRef = useRef<SVGSVGElement>(null);
   const [geoData, setGeoData] = useState<any>(null);
   const dateFilter = useLogbookStore((state) => state.dateFilter);
@@ -69,6 +70,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
 
     const projection = d3.geoMercator();
 
+    // Uniform padding for all formats to keep airports comfortably away from the cropped edges
+    const padding = 70;
+
     if (stats.mapData.nodes.length > 0) {
       const flightBounds = {
         type: "MultiPoint",
@@ -76,7 +80,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
       };
 
       projection.fitExtent(
-        [[40, 40], [width - 40, height - 40]], 
+        [[padding, padding], [width - padding, height - padding]], 
         flightBounds as any
       );
     } else {
@@ -201,7 +205,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
           .attr("stroke-width", 3); 
       }
     }
-  }, [geoData, stats]);
+  }, [geoData, stats, exportFormat]);
 
   // Dynamic Title Logic
   let titleX = '';
@@ -233,9 +237,13 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         {/* Top Area */}
         <motion.div 
           initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-          className={`w-full shrink-0 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20 ${isExportMode ? 'pt-8 pb-6 px-6' : 'pt-10 pb-6 px-5 sm:px-6'}`}
+          className={`w-full shrink-0 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20 ${
+            isExportMode 
+              ? (exportFormat === 'story' ? 'pt-16 pb-6 px-6' : 'pt-8 pb-4 px-6') 
+              : 'pt-10 pb-6 px-5 sm:px-6'
+          }`}
         >
-            <h2 className="text-3xl font-black text-white m-0 tracking-tight leading-tight">
+            <h2 className={`${exportFormat === 'post' ? 'text-2xl' : 'text-3xl'} font-black text-white m-0 tracking-tight leading-tight`}>
               My {titleX}Logbook Passport.
             </h2>
         </motion.div>
@@ -243,9 +251,9 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
         {/* Middle Area: Map */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}
-          className="flex-grow w-full relative border-b border-slate-800/50 flex justify-center items-center overflow-hidden bg-black"
+          className="flex-grow w-full relative flex justify-center items-center overflow-hidden bg-black"
         >
-            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid meet" className="w-full h-full max-h-full bg-black z-0" />
+            <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid slice" className="w-full h-full max-h-full bg-black z-0" />
             
             {/* Radar Sweep Loading State */}
             {!geoData && !isExportMode && (
@@ -278,31 +286,35 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode }) => {
             )}
         </motion.div>
 
-        {/* Bottom Area: 3-Gauge Floating Pack */}
-        <motion.div 
-          initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
-          className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-6 pb-16' : 'pt-6 pb-10'}`}
-        >
-            <div className="flex justify-center gap-6 mx-auto text-center">
-                {[
-                    { label: 'Hours', value: stats.totalHours },
-                    { label: 'Flights', value: stats.totalFlights || 0 },
-                    { label: 'Dist(NM)', value: stats.totalDistanceNm?.toLocaleString(), isSmall: true }
-                ].map((stat, idx) => (
-                    <div key={idx} className={`relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 flex flex-col items-center justify-center overflow-hidden ${isExportMode ? '' : 'shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)]'}`}>
-                        {/* Inner tick marks (using simple CSS dashed border) */}
-                        <div className="absolute inset-[3px] rounded-full border-[1.5px] border-white/20 border-dashed"></div>
-                        
-                        <span className={`z-10 ${stat.isSmall ? 'text-[12px]' : 'text-[15px]'} font-bold text-white leading-none tracking-tight mt-0.5`}>
-                            {stat.value}
-                        </span>
-                        <span className="z-10 text-[8px] text-sky-100/70 font-bold uppercase mt-1 tracking-widest">
-                            {stat.label}
-                        </span>
-                    </div>
-                ))}
-            </div>
-        </motion.div>
+        {/* Bottom Area: 3-Gauge Floating Pack or Watermark Stripe */}
+        {exportFormat !== 'post' ? (
+          <motion.div 
+            initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}
+            className={`w-full shrink-0 px-4 bg-black/30 ${isExportMode ? 'pt-6 pb-16' : 'pt-6 pb-10'}`}
+          >
+              <div className="flex justify-center gap-6 mx-auto text-center">
+                  {[
+                      { label: 'Hours', value: stats.totalHours },
+                      { label: 'Flights', value: stats.totalFlights || 0 },
+                      { label: 'Dist(NM)', value: stats.totalDistanceNm?.toLocaleString(), isSmall: true }
+                  ].map((stat, idx) => (
+                      <div key={idx} className={`relative w-[84px] h-[84px] shrink-0 bg-black rounded-full border-[3px] border-slate-700 flex flex-col items-center justify-center overflow-hidden ${isExportMode ? '' : 'shadow-[inset_0_3px_6px_rgba(0,0,0,0.8),_0_2px_6px_rgba(0,0,0,0.6)]'}`}>
+                          {/* Inner tick marks (using simple CSS dashed border) */}
+                          <div className="absolute inset-[3px] rounded-full border-[1.5px] border-white/20 border-dashed"></div>
+                          
+                          <span className={`z-10 ${stat.isSmall ? 'text-[12px]' : 'text-[15px]'} font-bold text-white leading-none tracking-tight mt-0.5`}>
+                              {stat.value}
+                          </span>
+                          <span className="z-10 text-[8px] text-sky-100/70 font-bold uppercase mt-1 tracking-widest">
+                              {stat.label}
+                          </span>
+                      </div>
+                  ))}
+              </div>
+          </motion.div>
+        ) : (
+          <div className="w-full shrink-0 h-[38px] bg-black/30 border-t border-slate-800/50"></div>
+        )}
     </motion.div>
   );
 };

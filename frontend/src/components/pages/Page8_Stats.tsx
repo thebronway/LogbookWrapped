@@ -6,9 +6,10 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 interface Props {
   stats: CalculatedStats;
   isExportMode?: boolean;
+  exportFormat?: 'story' | 'post';
 }
 
-export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
+export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat = 'story' }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   // Dynamic Title Logic
@@ -29,7 +30,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
     }
   }
 
-  const statRows = [
+  let statRows = [
     { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`, sub: [`${stats.averageFlightTime} Hrs/Flight`, `${stats.totalNight} Hrs Night`] },
     { type: 'single', label: 'Total Flights', value: `${stats.totalFlights} Flights`, sub: [`${stats.flightsPerMonth} Flights/Month`, `Busiest: ${stats.busiestMonth}`] },
     { type: 'single', label: 'Distance Flown', value: `${stats.totalDistanceNm?.toLocaleString()} NM` },
@@ -53,16 +54,24 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode }) => {
     { type: 'single', label: 'Longest Flight', value: `${stats.longestFlight} NM`, sub: `${stats.longestFlightRoute} on ${stats.longestFlightDate}` },
   ];
 
-  const paddingClass = `flex flex-col h-full w-full bg-gradient-to-br from-slate-800 to-slate-950 text-white overflow-hidden ${isExportMode ? "p-6" : "p-5 sm:p-6"}`;
-  const titleClass = `text-3xl font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
+  if (exportFormat === 'post') {
+    statRows = statRows.filter(row => row.label !== 'Shortest Flight' && row.label !== 'Longest Flight');
+  }
+
+  const paddingClass = `flex flex-col h-full w-full bg-gradient-to-br from-slate-800 to-slate-950 text-white overflow-hidden ${
+    isExportMode 
+      ? (exportFormat === 'story' ? 'p-6 pt-16' : 'p-5 pt-6') 
+      : 'p-5 sm:p-6'
+  }`;
+  const titleClass = `${exportFormat === 'post' ? 'text-2xl' : 'text-3xl'} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
   const gapClass = `flex flex-col w-full flex-1 ${isExportMode ? "gap-4 pb-8" : "gap-3 sm:gap-4 pb-8"}`;
-  const rowClass = `border-b border-slate-700/50 ${isExportMode ? "pb-2.5" : "pb-2 sm:pb-2.5"}`;
- const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
+  const rowClass = `border-b border-slate-700/50 ${isExportMode ? (exportFormat === 'post' ? "pb-2" : "pb-2.5") : "pb-2 sm:pb-2.5"}`;
+  const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
   const rightPadClass = `flex justify-between items-center gap-2 ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
 
-  const labelClass = `text-slate-400 font-semibold uppercase tracking-widest shrink-0 ${isExportMode ? "text-xs" : "text-[10px] sm:text-xs"}`;
-  const valClass = `font-bold text-white text-right truncate ${isExportMode ? "text-base" : "text-sm sm:text-base"}`;
-  const subClass = `text-sky-200/60 mt-0.5 text-right ${isExportMode ? "text-[10px]" : "text-[9px] sm:text-[10px]"}`;
+  const labelClass = `text-slate-400 font-semibold uppercase tracking-widest shrink-0 ${isExportMode ? (exportFormat === 'post' ? "text-[10px]" : "text-xs") : "text-[10px] sm:text-xs"}`;
+  const valClass = `font-bold text-white text-right truncate ${isExportMode ? (exportFormat === 'post' ? "text-sm" : "text-base") : "text-sm sm:text-base"}`;
+  const subClass = `text-sky-200/60 mt-0.5 text-right ${isExportMode ? (exportFormat === 'post' ? "text-[8px]" : "text-[10px]") : "text-[9px] sm:text-[10px]"}`;
 
   return (
     <motion.div 

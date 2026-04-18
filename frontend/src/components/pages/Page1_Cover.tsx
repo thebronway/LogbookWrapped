@@ -5,9 +5,10 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 
 interface Props {
   stats: CalculatedStats;
+  exportFormat?: 'story' | 'post';
 }
 
-export const Page1_Cover: React.FC<Props> = ({ stats }) => {
+export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   let titleText = "My Time";
@@ -30,9 +31,9 @@ export const Page1_Cover: React.FC<Props> = ({ stats }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white"
+      className={`flex flex-col justify-center h-full w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className="text-4xl md:text-4xl font-black mb-8 md:mb-12 tracking-tight text-blue-400">
+      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl md:text-4xl mb-8 md:mb-12'} font-black tracking-tight text-blue-400`}>
         {titleText}<br/>In The Sky.
       </h2>
 

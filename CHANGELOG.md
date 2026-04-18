@@ -1,12 +1,17 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-17* 
-*Current Version: v0.8.4*
+*Current Version: v0.8.5*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.8.5
+- Created two versions of the export in different aspect ratios for posts and stories
+- Math Engine refactor into Map Builder, Navigation, and Superlatives 
+- Export Modal Refactor into Export Engine, Preview Card and Export Pages
 
 ### Release v0.8.4
 - Page 1 ui, content, metric and color updates

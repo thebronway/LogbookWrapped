@@ -2,14 +2,19 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 
-export const Page5_Superlatives: React.FC<{stats: CalculatedStats}> = ({ stats }) => {
+interface Props {
+  stats: CalculatedStats;
+  exportFormat?: 'story' | 'post';
+}
+
+export const Page5_Superlatives: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
   const ratio = stats.totalHours > 0 ? (stats.totalLandings / stats.totalHours).toFixed(1) : "0.0";
   
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="flex flex-col justify-center h-full w-full p-8 bg-gradient-to-tl from-fuchsia-950 via-slate-900 to-slate-900 text-white"
+      className={`flex flex-col justify-center h-full w-full bg-gradient-to-tl from-fuchsia-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className="text-4xl font-black mb-10 text-fuchsia-400">My Logbook Superlatives.</h2>
+      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl mb-10'} font-black text-fuchsia-400`}>My Logbook Superlatives.</h2>
       <div className="space-y-10">
         <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-fuchsia-500 text-sm font-bold uppercase tracking-widest mb-1">The Bounce Rate</p>
