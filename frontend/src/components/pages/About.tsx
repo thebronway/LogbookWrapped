@@ -1,9 +1,14 @@
 import { Helmet } from 'react-helmet-async';
 import { Github, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const About = () => (
-  <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }} 
+    animate={{ opacity: 1, y: 0 }} 
+    className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
+  >
     <Helmet>
       <title>About LogbookWrapped | Your Aviation Story</title>
       <meta name="description" content="Learn more about LogbookWrapped, the privacy-first tool built for pilots to visualize their flight history." />
@@ -65,5 +70,5 @@ export const About = () => (
         </div>
       </section>
     </div>
-  </div>
+  </motion.div>
 );

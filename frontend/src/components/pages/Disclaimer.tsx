@@ -1,11 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import { AlertTriangle, Mail, Scale, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const Disclaimer = () => {
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
+    >
       <Helmet>
         <title>Disclaimer | LogbookWrapped</title>
         <meta name="description" content="Legal and liability disclaimer for the Logbook Wrapped platform." />
@@ -20,7 +25,7 @@ export const Disclaimer = () => {
       </header>
 
       <div className="space-y-10">
-        {/* Critical Regulatory Warning */}
+        {/* Regulatory Warning */}
         <section className="bg-orange-500/10 border border-orange-500/20 p-8 rounded-2xl flex gap-6 items-start">
           <div className="hidden sm:block mt-1">
             <AlertTriangle className="text-orange-500" size={32} />
@@ -72,6 +77,6 @@ export const Disclaimer = () => {
           </Link>
         </section>
       </div>
-    </div>
+    </motion.div>
   );
 };

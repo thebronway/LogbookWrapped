@@ -4,28 +4,29 @@ import { Helmet } from 'react-helmet-async';
 import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export const LogbookLogic = () => {
+export const Methodology = () => {
   const [showCountries, setShowCountries] = useState(false);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
-      className="max-w-3xl mx-auto py-16 px-6 sm:px-8 space-y-12 text-slate-300"
+      className="max-w-4xl mx-auto py-16 px-6 sm:px-8 text-slate-300"
     >
       <Helmet>
         <title>How It Works | LogbookWrapped</title>
         <meta name="description" content="Discover how LogbookWrapped cleans, patches, and interprets your pilot logbook data to calculate your aviation stats." />
       </Helmet>
-      <div className="space-y-4">
-        <h1 className="text-4xl font-black text-white tracking-tight">How We Crunch The Numbers</h1>
-        <p className="text-lg text-slate-400">
+      
+      <header className="mb-12 space-y-4">
+        <h1 className="text-4xl font-bold text-white tracking-tight">How We Crunch The Numbers</h1>
+        <p className="text-xl text-slate-300 leading-relaxed">
           Pilots log things differently. Some are meticulous; others leave half the columns blank. 
           Here is how our engine automatically cleans, patches, and interprets your data before doing the math.
         </p>
-      </div>
+      </header>
 
-      <div className="space-y-10">
+      <div className="bg-slate-800/40 border border-slate-700 p-6 sm:p-10 rounded-2xl space-y-10 text-lg leading-relaxed">
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white">1. No Landings Logged</h2>
           <p className="leading-relaxed">
@@ -78,7 +79,7 @@ export const LogbookLogic = () => {
           <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
             <p className="text-sm text-blue-200/90 font-mono">
               <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
-              You forget to enter your Total Time, but you did log your Engine Hobbs meters or Clock Times (Time Out/Time In). So we do some basic math to calcualte the Total Time.
+              You forget to enter your Total Time, but you did log your Engine Hobbs meters or Clock Times (Time Out/Time In). So we do some basic math to calculate the Total Time.
             </p>
           </div>
         </section>
@@ -169,7 +170,7 @@ export const LogbookLogic = () => {
       </div>
 
       {/* Call to Action */}
-      <section className="flex flex-col items-center justify-center pt-12 mt-12 border-t border-slate-800">
+      <section className="flex flex-col items-center justify-center pt-8 mt-16">
         <p className="mb-6 text-center text-lg text-slate-300">
           Pilots find crazy edge cases every day. Is a rule not working right? <br className="hidden sm:block" /> 
           Have a suggestion for a new fallback? Help us improve the parser!

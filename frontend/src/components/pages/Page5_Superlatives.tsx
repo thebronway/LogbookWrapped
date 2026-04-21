@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
+import { AnimatedCounter } from '../ui/AnimatedCounter';
 
 interface Props {
   stats: CalculatedStats;
@@ -18,7 +19,7 @@ export const Page5_Superlatives: React.FC<Props> = ({ stats, exportFormat = 'sto
       <div className="space-y-10">
         <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-fuchsia-500 text-sm font-bold uppercase tracking-widest mb-1">The Bounce Rate</p>
-          <p className="text-4xl font-bold mb-2">{stats.totalLandings} Landing{stats.totalLandings === 1 ? '' : 's'}</p>
+          <p className="text-4xl font-bold mb-2"><AnimatedCounter value={stats.totalLandings} /> Landing{stats.totalLandings === 1 ? '' : 's'}</p>
           <p className="text-fuchsia-200/50 text-sm font-mono mb-2">Ratio: {ratio} Ldg/Hr</p>
         </motion.div>
         

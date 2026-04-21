@@ -65,7 +65,6 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
   }`;
   const titleClass = `${exportFormat === 'post' ? 'text-2xl' : 'text-3xl'} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
   const gapClass = `flex flex-col w-full flex-1 ${isExportMode ? "gap-4 pb-8" : "gap-3 sm:gap-4 pb-8"}`;
-  const rowClass = `border-b border-slate-700/50 ${isExportMode ? (exportFormat === 'post' ? "pb-2" : "pb-2.5") : "pb-2 sm:pb-2.5"}`;
   const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
   const rightPadClass = `flex justify-between items-center gap-2 ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
 
@@ -87,6 +86,8 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
         {statRows.map((row: any, i) => {
           
           const staggerDelay = 0.2 + (i * 0.08);
+          const isLastRow = i === statRows.length - 1;
+          const dynamicRowClass = `${isExportMode && isLastRow ? 'border-b-0' : 'border-b border-slate-700/50'} ${isExportMode ? (exportFormat === 'post' ? "pb-2" : "pb-2.5") : "pb-2 sm:pb-2.5"}`;
 
           if (row.type === 'double') {
             return (
@@ -95,7 +96,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
                 initial={{ x: -40, opacity: 0 }} 
                 animate={{ x: 0, opacity: 1 }} 
                 transition={{ delay: staggerDelay, ease: "easeOut" }}
-                className={`grid grid-cols-2 ${rowClass}`}
+                className={`grid grid-cols-2 ${dynamicRowClass}`}
               >
                 
                 {/* Left Side */}
@@ -126,7 +127,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
               initial={{ x: -40, opacity: 0 }} 
               animate={{ x: 0, opacity: 1 }} 
               transition={{ delay: staggerDelay, ease: "easeOut" }}
-              className={`flex justify-between items-center gap-4 ${rowClass}`}
+              className={`flex justify-between items-center gap-4 ${dynamicRowClass}`}
             >
               <span className={labelClass}>{row.label}</span>
               <div className="flex flex-col items-end">

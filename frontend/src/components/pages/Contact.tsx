@@ -1,12 +1,26 @@
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Github, MessageSquare, Bug, Mail } from 'lucide-react';
+import { Github, MessageSquare, Bug, Mail, Copy, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const Contact = () => {
+  const [copied, setCopied] = useState(false);
   const issuesUrl = "https://github.com/thebronway/LogbookWrapped/issues";
-  const email = "brian@conway.im";
+  const email = "contact@logbookwrapped.com";
+
+  const handleCopy = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
+    >
       <Helmet>
         <title>Contact Us | LogbookWrapped</title>
         <meta name="description" content="Get in touch with the team behind Logbook Wrapped. We welcome bug reports, feature requests, and general feedback." />
@@ -29,10 +43,10 @@ export const Contact = () => {
           <h3 className="text-xl text-white font-bold mb-3">Open a GitHub Issue</h3>
           <div className="text-sm text-slate-400 mb-8 flex-grow space-y-4 leading-relaxed">
             <p>
-              Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is open source, and our development is 100% transparent.
+              Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is open source, and our development is 100% transparent and open-source.
             </p>
             <p>
-              Check our public tracker to see if your idea has already been posted, or create a new issue for our team to tackle!
+              Check our public tracker to see if your idea has already been posted, or create a new issue for our team to look at.
             </p>
           </div>
           <a 
@@ -46,7 +60,7 @@ export const Contact = () => {
           </a>
         </div>
 
-        {/* Email Card (Alternative) */}
+        {/* Email Card */}
         <div className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col shadow-xl">
           <Mail className="text-indigo-400 mb-6" size={32} />
           <h3 className="text-xl text-white font-bold mb-3">Send us an Email</h3>
@@ -59,15 +73,28 @@ export const Contact = () => {
               Emailing us a copy of your exported logbook CSV allows us to diagnose and resolve the issue much faster!
             </div>
           </div>
-          <a 
-            href={`mailto:${email}?subject=LogbookWrapped%20Contact`}
-            className="flex items-center justify-center gap-2 w-full py-4 bg-slate-700/50 text-white hover:bg-slate-700 border border-slate-600 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95 mt-auto"
-          >
-            <Mail size={18} />
-            Email the Team
-          </a>
+          <div className="mt-auto flex flex-col gap-3 w-full">
+            {/* Clickable email display to copy */}
+            <button
+              onClick={handleCopy}
+              className="group flex items-center justify-between w-full bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 hover:border-slate-600/80 rounded-xl p-3 sm:p-4 transition-all active:scale-[0.98] text-left"
+              title="Click to copy email address"
+              aria-label="Copy email address"
+            >
+              <span className="text-slate-300 group-hover:text-white font-mono text-sm sm:text-base tracking-tight truncate mr-2 transition-colors">
+                {email}
+              </span>
+              <div className="text-slate-400 group-hover:text-white transition-colors flex-shrink-0">
+                {copied ? (
+                  <Check className="w-[18px] h-[18px] text-green-400" />
+                ) : (
+                  <Copy className="w-[18px] h-[18px]" />
+                )}
+              </div>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

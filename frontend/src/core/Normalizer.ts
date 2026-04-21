@@ -35,15 +35,56 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
   if (!rawRows || rawRows.length === 0) return [];
 
   const headers = Object.keys(rawRows[0]);
-  let profile = PROFILES.FOREFLIGHT; // Default
+  let profile = PROFILES.FOREFLIGHT; // Default fallback
+  let isKnownProfile = false;
 
   // Determine which EFB exported this CSV based on unique column names
-  if (headers.includes('Aircraft ID') && headers.includes('Total Duration')) {
+  if (headers.includes('AircraftID') || headers.includes('TypeCode')) {
+    profile = PROFILES.FOREFLIGHT;
+    isKnownProfile = true;
+  } else if (headers.includes('Aircraft ID') && headers.includes('Total Duration')) {
     profile = PROFILES.GARMIN;
+    isKnownProfile = true;
   } else if (headers.includes('Tail Number') && headers.includes('Total Flight Time')) {
     profile = PROFILES.MYFLIGHTBOOK;
+    isKnownProfile = true;
   } else if (headers.includes('Aircraft ID') && headers.includes('Total Time') && headers.includes('Type')) {
     profile = PROFILES.LOGTEN;
+    isKnownProfile = true;
+  }
+
+  // --- FUZZY MATCHER FOR CUSTOM SPREADSHEETS ---
+  if (!isKnownProfile) {
+    console.log("[Normalizer] Unknown format detected. Running Fuzzy Matcher...");
+    
+    // Helper function to search headers for common column names (case-insensitive)
+    const findCol = (aliases: string[]) => {
+      const lowerHeaders = headers.map(h => h.toLowerCase().trim());
+      for (const alias of aliases) {
+        // Look for exact matches or partial matches (e.g., "flight time" includes "time")
+        const idx = lowerHeaders.findIndex(h => h === alias.toLowerCase() || h.includes(alias.toLowerCase()));
+        if (idx !== -1) return headers[idx];
+      }
+      return ''; // Return empty string if no column matches so the parser doesn't crash
+    };
+
+    // Dynamically build a custom profile based on what we found
+    profile = {
+      date: findCol(['Date', 'Date Flown', 'Flight Date', 'Day']),
+      route: findCol(['Route', 'Flight Routing', 'Routing']),
+      departure: findCol(['Departure', 'From', 'Dep']),
+      destination: findCol(['Destination', 'To', 'Dest']),
+      distance: findCol(['Distance', 'Dist', 'NM']),
+      aircraftId: findCol(['Tail', 'Aircraft ID', 'AircraftID', 'N-Number', 'Registration', 'Id']),
+      aircraftType: findCol(['Aircraft Type', 'Type', 'Model', 'ICAO', 'TypeCode']),
+      totalTime: findCol(['Total Time', 'Total Flight Time', 'Total Duration', 'Duration', 'Flight Time', 'Total', 'TT']),
+      pic: findCol(['PIC', 'Pilot In Command', 'P1']),
+      night: findCol(['Night']),
+      landings: findCol(['Landings', 'Ldg', 'Day Landings', 'Day Ldg']),
+      nightLandings: findCol(['Night Landings', 'Night Ldg']),
+      instrument: findCol(['Actual Instrument', 'IMC', 'Actual', 'Instrument']),
+      simulated: findCol(['Simulated', 'Simulated Instrument', 'Hood'])
+    };
   }
 
   // 2a. Build the Self-Healing Aircraft Type Dictionary

@@ -6,14 +6,16 @@ import { About } from './components/pages/About';
 import { Privacy } from './components/pages/Privacy';
 import { Disclaimer } from './components/pages/Disclaimer';
 import { Contact } from './components/pages/Contact';
-import { LogbookLogic } from './components/pages/LogbookLogic';
+import { Methodology } from './components/pages/Methodology';
 import { Export } from './components/pages/Export';
 import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable';
 import { NotFound } from './components/pages/NotFound';
+import { ScrollToTop } from './components/layout/ScrollToTop';
 
 function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-900 text-slate-200 font-sans relative overflow-hidden">
+      <ScrollToTop />
       
       {/* Decorative Aurora Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none mix-blend-screen" />
@@ -35,7 +37,7 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/methodology" element={<LogbookLogic />} />
+          <Route path="/methodology" element={<Methodology />} />
           <Route path="/export" element={<Export />} />
           <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
           <Route path="*" element={<NotFound />} />

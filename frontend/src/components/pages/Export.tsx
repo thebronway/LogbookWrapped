@@ -1,8 +1,13 @@
 import { Helmet } from 'react-helmet-async';
 import { Download, Smartphone } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const Export = () => (
-  <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }} 
+    animate={{ opacity: 1, y: 0 }} 
+    className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
+  >
     <Helmet>
       <title>How to Export Your Logbook | LogbookWrapped</title>
       <meta name="description" content="Learn how to export your aviation logbook from ForeFlight, Garmin Pilot, LogTen Pro, and more." />
@@ -100,5 +105,5 @@ export const Export = () => (
       </section>
 
     </div>
-  </div>
+  </motion.div>
 );

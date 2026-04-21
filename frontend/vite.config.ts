@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5297,
     host: true,
-    allowedHosts: ['logbookwrapped.conway.im'],
+    allowedHosts: ['logbookwrapped.com', 'localhost'],
     watch: {
       usePolling: true,
     }

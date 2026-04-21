@@ -29,7 +29,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalIMC += f.instrument;
     stats.totalSimulated += f.simulated;
 
-    const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || { gph: 10, speed: 120 };
+    const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || AIRCRAFT_PROFILES['UNKNOWN'];
     stats.estimatedFuelBurn += (f.totalTime * profile.gph);
     
     // Delegation: Route & Geographic Validation
@@ -68,8 +68,17 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     const dep = flightLegs.length > 0 ? flightLegs[0] : f.departure;
     supTracker.departureCounts[dep] = (supTracker.departureCounts[dep] || 0) + 1;
 
-    const monthKey = f.date ? f.date.substring(0, 7) : 'Unknown';
-    if (monthKey !== 'Unknown' && monthKey.length === 7) {
+    let monthKey = 'Unknown';
+    if (f.date) {
+      const d = new Date(f.date);
+      if (!isNaN(d.getTime())) {
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        monthKey = `${yyyy}-${mm}`;
+      }
+    }
+
+    if (monthKey !== 'Unknown') {
       if (!supTracker.monthStats[monthKey]) supTracker.monthStats[monthKey] = { flights: 0, hours: 0 };
       supTracker.monthStats[monthKey].flights += 1;
       supTracker.monthStats[monthKey].hours += f.totalTime;

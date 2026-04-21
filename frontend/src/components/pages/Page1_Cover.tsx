@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
+import { AnimatedCounter } from '../ui/AnimatedCounter';
 
 interface Props {
   stats: CalculatedStats;
@@ -12,18 +13,29 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
   let titleText = "My Time";
+  let isSingleYear = false;
+
   if (dateFilter.type === 'this_year') {
     titleText = `My ${new Date().getFullYear()} Logbook`;
+    isSingleYear = true;
   } else if (dateFilter.type === 'last_year') {
     titleText = `My ${new Date().getFullYear() - 1} Logbook`;
+    isSingleYear = true;
   } else if (dateFilter.type === 'custom' && dateFilter.start && dateFilter.end) {
     if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
       const startYear = dateFilter.start.substring(0, 4);
       const endYear = dateFilter.end.substring(0, 4);
       if (startYear === endYear) {
         titleText = `My ${startYear} Logbook`;
+        isSingleYear = true;
       }
     }
+  }
+
+  // Strip the year from the busiest month if we are already viewing a single-year logbook
+  let displayBusiestMonth = stats.busiestMonth;
+  if (isSingleYear && displayBusiestMonth && displayBusiestMonth !== 'Unknown') {
+    displayBusiestMonth = displayBusiestMonth.split(' ')[0];
   }
 
   return (
@@ -40,15 +52,15 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
       <div className="space-y-5 md:space-y-10">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-blue-500 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Total Time</p>
-          <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2">{stats.totalHours} Hours</p>
+          <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2"><AnimatedCounter value={stats.totalHours} decimals={1} /> Hours</p>
           <p className="text-blue-200/50 text-sm font-mono mb-2">{stats.averageFlightTime} Hrs/Flight</p>
         </motion.div>
 
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-blue-400 text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Sorties</p>
-          <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2">{stats.totalFlights} Flights</p>
+          <p className="text-3xl md:text-4xl font-bold mb-1 md:mb-2"><AnimatedCounter value={stats.totalFlights} decimals={0} /> Flights</p>
           <p className="text-blue-200/50 text-sm font-mono">{stats.flightsPerMonth} Flights/Month</p>
-          <p className="text-blue-200/50 text-sm font-mono mb-2">Busiest: {stats.busiestMonth}</p>
+          <p className="text-blue-200/50 text-sm font-mono mb-2">Busiest Month: {displayBusiestMonth}</p>
         </motion.div>
 
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.9 }}>

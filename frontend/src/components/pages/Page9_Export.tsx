@@ -16,7 +16,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
   const [copied, setCopied] = useState(false);
 
   const handleShareApp = async () => {
-    const shareUrl = 'https://logbookwrapped.conway.im';
+    const shareUrl = 'https://logbookwrapped.com';
     
     if (navigator.share) {
       try {
@@ -93,7 +93,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
               className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
             >
               <Share2 size={18} />
-              Share or Downlaod
+              Share or Download
             </button>
 
             <button 

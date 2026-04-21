@@ -1,23 +1,12 @@
-import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
-import { Shield, Zap, Share2, ArrowDownCircle, Info, Calendar, Download, UploadCloud } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useLogbookStore } from '../../store/useLogbookStore';
-import { Dropzone } from '../ui/Dropzone';
 import { StoryContainer } from '../layout/StoryContainer';
-
-const SCREENSHOTS = Array.from({ length: 9 }, (_, i) => `/screenshots/page${i + 1}.webp`);
+import { HeroSection } from '../ui/HeroSection';
+import { UploadSection } from '../ui/UploadSection';
 
 export const Home = () => {
-  const { status, stats, errorMessage, resetStore } = useLogbookStore();
-  const [currentImage, setCurrentImage] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % SCREENSHOTS.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
+  const { status, stats, resetStore } = useLogbookStore();
 
   if (status === 'success' && stats) {
     return (
@@ -33,186 +22,18 @@ export const Home = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-full max-w-6xl mx-auto px-4 md:px-6 py-12 gap-20">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="flex flex-col items-center w-full max-w-6xl mx-auto px-4 md:px-6 py-12 gap-20"
+    >
       <Helmet>
         <title>LogbookWrapped | Your Aviation Year in Review</title>
         <meta name="description" content="A privacy-first web app that transforms EFB logbook exports into shareable aviation stories." />
       </Helmet>
 
-      {/* Hero Section - Borders Removed */}
-      <section className="flex flex-col lg:flex-row items-center justify-between gap-16 w-full">
-        <div className="flex-1 flex flex-col items-center lg:items-center gap-8 text-center lg:text-center">
-          <img 
-            src="/logo3.webp" 
-            alt="Logbook Wrapped Logo" 
-            className="h-28 w-auto md:h-52 md:w-auto object-contain" 
-          />
-          
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-              Your Year in <span className="text-yellow-400">Aviation</span>, Visualized.
-            </h1>
-            <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-              LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> <br />Turn your logbook data into a stunning visual journey.
-            </p>
-          </div>
-          
-          <a 
-            href="#steps-list" 
-            className="lg:hidden inline-flex items-center justify-center gap-3 bg-yellow-400 text-black font-bold py-4 px-10 rounded-2xl shadow-xl shadow-yellow-500/10 active:scale-95 transition-all w-full max-w-xs mx-auto"
-          >
-            Make Your Wrapped <ArrowDownCircle size={20} />
-          </a>
-
-          <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4 w-full">
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
-              <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
-                <Shield size={24} />
-              </div>
-              <div className="text-left">
-                <p className="text-white font-semibold">100% Private</p>
-                <p className="text-sm text-slate-400">100% client-side in-browser processing.</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
-              <div className="p-2 bg-blue-500/10 rounded-lg text-blue-400">
-                <Zap size={24} />
-              </div>
-              <div className="text-left">
-                <p className="text-white font-semibold">Instant Insights</p>
-                <p className="text-sm text-slate-400">Auto-detects EFB formats automatically.</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
-              <div className="p-2 bg-purple-500/10 rounded-lg text-purple-400">
-                <Share2 size={24} />
-              </div>
-              <div className="text-left">
-                <p className="text-white font-semibold">Social Ready</p>
-                <p className="text-sm text-slate-400">Export 9:16 vertical infographics for social media.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative group">
-          {/* The Glow/Shadow behind the phone */}
-          <div className="absolute -inset-1 bg-gradient-to-b from-yellow-400 to-orange-500 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-          
-          {/* The Phone Frame - Adjusted to aspect-[9/16] */}
-          <div className="relative w-[280px] md:w-[320px] aspect-[9/16] rounded-[3rem] border-[10px] border-slate-800 bg-slate-900 shadow-2xl ring-1 ring-slate-700">
-            
-            {/* Inner Padding/Screen Area */}
-            <div 
-              className="absolute inset-1.5 md:inset-2 bg-black rounded-[2.25rem] overflow-hidden"
-              style={{ 
-                transform: 'translateZ(0)', 
-                WebkitTransform: 'translateZ(0)',
-                WebkitMaskImage: '-webkit-radial-gradient(white, black)'
-              }}
-            >
-              {SCREENSHOTS.map((src, index) => (
-                <img
-                  key={index}
-                  src={src}
-                  alt={`App Preview ${index + 1}`}
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-                    index === currentImage ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{ 
-                    transform: 'translateZ(0)', 
-                    WebkitTransform: 'translateZ(0)',
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                    willChange: 'opacity'
-                  }}
-                />
-              ))}
-            </div>
-            
-            {/* The Notch/Dynamic Island - Narrowed to look more modern */}
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-6 bg-slate-900 rounded-full z-10 shadow-sm border border-slate-800/50"></div>
-          </div>
-        </div>
-      </section>
-
-      {/* Upload Section */}
-      <section 
-        id="upload-section" 
-        className="w-full flex flex-col items-center text-center gap-10 bg-slate-900/40 border border-slate-800/50 backdrop-blur-md px-4 py-10 md:p-20 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl scroll-mt-32"
-      >
-        <div className="max-w-2xl w-full flex flex-col items-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-8">Ready to make your wrapped?</h2>
-          
-          <div className="relative text-left text-slate-300 mb-8 w-full max-w-lg">
-            <ul id="steps-list" className="text-lg relative z-10 scroll-mt-28">
-              <li className="relative flex items-start gap-4 pb-8">
-                {/* Segment 1: Stops exactly at the bottom of this item's padding */}
-                <div className="absolute left-4 top-8 bottom-0 w-0.5 border-l-2 border-dashed border-slate-700 -translate-x-1/2 z-0"></div>
-                
-                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-blue-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
-                  <Calendar size={16} />
-                </span>
-                <div>
-                  <span className="block font-medium text-white">Select your timeframe.</span>
-                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                    Choose between This Year, Last Year, All Time, or set a Custom Date Range to generate any Year using the dropdown below.
-                  </span>
-                </div>
-              </li>
-              <li className="relative flex items-start gap-4 pb-8">
-                {/* Segment 2: Stops exactly at the bottom of this item's padding */}
-                <div className="absolute left-4 top-8 bottom-0 w-0.5 border-l-2 border-dashed border-slate-700 -translate-x-1/2 z-0"></div>
-                
-                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-emerald-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
-                  <Download size={16} />
-                </span>
-                <div>
-                  <span className="block font-medium text-white">Export your logbook as a <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.csv</code> or <code className="text-slate-300 bg-slate-800 border border-slate-700 px-1.5 py-0.5 rounded text-sm font-mono">.txt</code>.</span>
-                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                    Download your raw data from ForeFlight (beta), Garmin Pilot (beta), LogTen (Coming Soon), or MyFlightbook (Coming Soon). Not sure where to find it? <Link to="/export" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">Read our export guide.</Link>
-                  </span>
-                </div>
-              </li>
-              <li className="relative flex items-start gap-4">
-                {/* No line segment here! It's physically impossible to bleed past this icon. */}
-                <span className="relative z-10 flex-shrink-0 w-8 h-8 rounded-full bg-slate-900 text-purple-400 flex items-center justify-center border border-slate-700 shadow-sm mt-0.5">
-                  <UploadCloud size={16} />
-                </span>
-                <div>
-                  <span className="block font-medium text-white">Upload the file to generate your story!</span>
-                  <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                    Drag and drop your file below. Everything is processed 100% locally in your browser. Curious how we calculate things? <Link to="/logbook" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
-                  </span>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        
-        {/* Borderless Dropzone Container */}
-        <div className="w-full max-w-2xl">
-          {status === 'error' ? (
-            <div className="p-8 text-center space-y-4">
-              <div className="inline-flex p-3 bg-red-500/10 rounded-full text-red-500 mb-2">
-                <Info size={32} />
-              </div>
-              <p className="text-red-200 font-medium">{errorMessage}</p>
-              <button 
-                onClick={resetStore} 
-                className="px-6 py-2 bg-white text-black rounded-full hover:bg-slate-200 transition-colors font-bold text-sm"
-              >
-                Try Another File
-              </button>
-            </div>
-          ) : (
-            <Dropzone />
-          )}
-        </div>
-      </section>
-    </div>
+      <HeroSection />
+      <UploadSection />
+    </motion.div>
   );
 };

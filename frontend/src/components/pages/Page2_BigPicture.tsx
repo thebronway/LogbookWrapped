@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { getPage3Copy } from '../../core/Copywriter';
+import { AnimatedCounter } from '../ui/AnimatedCounter';
 
 interface Props {
   stats: CalculatedStats;
@@ -25,7 +26,7 @@ export const Page2_BigPicture: React.FC<Props> = ({ stats, exportFormat = 'story
       <div className={`${exportFormat === 'post' ? 'space-y-8' : 'space-y-12'}`}>
         <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-orange-500 text-sm font-bold uppercase tracking-widest mb-1">Total Distance</p>
-          <p className={`${exportFormat === 'post' ? 'text-4xl' : 'text-5xl'} font-black mb-4`}>{stats.totalDistanceNm.toLocaleString()} NM</p>
+          <p className={`${exportFormat === 'post' ? 'text-4xl' : 'text-5xl'} font-black mb-4`}><AnimatedCounter value={stats.totalDistanceNm} format={true} /> NM</p>
           <p className="text-slate-300 text-lg leading-relaxed"></p>
           <p className="text-orange-200/50 text-sm font-mono mb-2">{distCopy}</p>
         </motion.div>

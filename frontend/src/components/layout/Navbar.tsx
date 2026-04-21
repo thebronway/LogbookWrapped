@@ -18,7 +18,7 @@ export const Navbar = () => {
     <header className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/50">
       <nav className="w-full p-4 flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/" onClick={handleLogoClick} className="flex items-center gap-3 hover:opacity-80 transition-opacity z-50">
-          <img src="/logo.webp" alt="LogbookWrapped Logo" className="w-20 h-20 object-contain" />
+          <img src="/logo/logo.webp" alt="LogbookWrapped Logo" className="w-20 h-20 object-contain" />
           <span className="text-2xl font-bold text-white tracking-tight block">LogbookWrapped</span>
         </Link>
         
@@ -30,7 +30,7 @@ export const Navbar = () => {
           <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
         </div>
 
-        {/* Mobile Hamburger Toggle */}
+        {/* Mobile Toggle */}
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden p-2 -mr-2 text-slate-300 hover:text-white z-50 transition-colors"

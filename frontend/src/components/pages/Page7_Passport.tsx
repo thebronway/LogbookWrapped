@@ -4,6 +4,7 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
+import { RadarLoader } from '../ui/RadarLoader';
 
 interface Props {
   stats: CalculatedStats;
@@ -31,7 +32,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
         "124", "484", // Canada, Mexico
         "084", "320", "222", "340", "558", "188", "591", // Central America
         "032", "068", "076", "152", "170", "218", "328", "600", "604", "740", "858", "862", "254", "238", // South America
-        // The Complete Caribbean (Nations & Territories)
+        // The Caribbean
         "044", "192", "388", "332", "214", "630", "136", "796", "028", "052", "092", "780", 
         "212", "308", "659", "662", "670", "850", "660", "500", "312", "474", "652", "663", 
         "534", "533", "531", "535", "060" 
@@ -68,8 +69,27 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
 
     const projection = d3.geoMercator();
 
-    // Uniform padding for all formats to keep airports comfortably away from the cropped edges
-    const padding = 70;
+    const basePadding = 70;
+    let paddingX = basePadding;
+    let paddingY = basePadding;
+
+    if (mapRef.current) {
+      const rect = mapRef.current.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const containerAspect = rect.width / rect.height;
+        const svgAspect = width / height;
+
+        if (containerAspect < svgAspect) {
+          const visibleSvgWidth = height * containerAspect;
+          const sliceAmountPerSide = (width - visibleSvgWidth) / 2;
+          paddingX = basePadding + sliceAmountPerSide;
+        } else {
+          const visibleSvgHeight = width / containerAspect;
+          const sliceAmountPerSide = (height - visibleSvgHeight) / 2;
+          paddingY = basePadding + sliceAmountPerSide;
+        }
+      }
+    }
 
     if (stats.mapData.nodes.length > 0) {
       const flightBounds = {
@@ -78,7 +98,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
       };
 
       projection.fitExtent(
-        [[padding, padding], [width - padding, height - padding]], 
+        [[paddingX, paddingY], [width - paddingX, height - paddingY]], 
         flightBounds as any
       );
     } else {
@@ -87,14 +107,14 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
 
     const pathGenerator = d3.geoPath().projection(projection);
 
-    // 0. Draw the Ocean / Water base layer (Pitch Black)
+    // 0. Draw the Ocean / Water base layer
     svg.append("rect")
       .attr("width", width)
       .attr("height", height)
       .attr("fill", "#000000") 
       .attr("rx", 16); 
 
-    // 1a. Draw Neighbors (Mexico AND Canada out of world-atlas so they don't bleed into the water)
+    // 1a. Draw Mexico and Canada
     svg.selectAll(".neighbor-country")
       .data(geoData.neighbors || [])
       .enter().append("path")
@@ -103,9 +123,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
       .attr("stroke", "#1e293b") 
       .attr("stroke-width", 1);
 
-    // 1b. (TEMPORARILY REMOVED the Canadian Provinces block. It was flooding our ocean!)
-
-    // 1c. Draw High-Res US states
+    // 1b. Draw High-Res US states
     svg.selectAll(".base-state")
       .data(geoData.stateFeatures)
       .enter().append("path")
@@ -152,7 +170,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
       .attr("stroke-width", 0.75)
       .attr("stroke-dasharray", "3,3");
 
-    // 6. Draw Lakes ON TOP of the land. This acts as a mask to punch out the lakes in pure black.
+    // 6. Draw Lakes on top of the land.
     svg.selectAll(".lake-overlay")
       .data(geoData.lakes || [])
       .enter().append("path")
@@ -254,34 +272,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
             <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid slice" className="w-full h-full max-h-full bg-black z-0" />
             
             {/* Radar Sweep Loading State */}
-            {!geoData && !isExportMode && (
-              <motion.div 
-                initial={{ opacity: 1 }} 
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm"
-              >
-                 <div className="relative w-40 h-40 rounded-full border border-emerald-900/40 flex items-center justify-center bg-black overflow-hidden shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                    {/* Inner rings */}
-                    <div className="absolute w-24 h-24 rounded-full border border-emerald-900/30"></div>
-                    <div className="absolute w-8 h-8 rounded-full border border-emerald-900/20"></div>
-                    <div className="absolute w-full h-px bg-emerald-900/30"></div>
-                    <div className="absolute h-full w-px bg-emerald-900/30"></div>
-
-                    {/* The sweeping radar beam */}
-                    <div className="absolute inset-0 rounded-full animate-[spin_2s_linear_infinite]" 
-                         style={{ background: 'conic-gradient(from 0deg, transparent 0deg, transparent 270deg, rgba(16, 185, 129, 0.1) 320deg, rgba(16, 185, 129, 0.6) 360deg)' }}>
-                    </div>
-
-                    {/* Simulated aircraft blips */}
-                    <div className="absolute top-10 right-10 w-1.5 h-1.5 bg-emerald-400 rounded-full shadow-[0_0_6px_2px_rgba(16,185,129,0.8)] animate-pulse"></div>
-                    <div className="absolute bottom-12 left-12 w-1 h-1 bg-emerald-400/80 rounded-full shadow-[0_0_4px_1px_rgba(16,185,129,0.5)] animate-pulse" style={{ animationDelay: '0.7s'}}></div>
-                 </div>
-                 <div className="mt-8 text-emerald-500/80 font-mono text-[10px] uppercase tracking-[0.3em] animate-pulse">
-                    Parsing Route Data...
-                 </div>
-              </motion.div>
-            )}
+            {!geoData && !isExportMode && <RadarLoader />}
         </motion.div>
 
         {/* Empty Watermark Stripe */}

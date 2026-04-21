@@ -46,11 +46,13 @@ export const getWinners = (tracker: SuperlativeTracker) => {
     return statA.hours > statB.hours ? a : b;
   }, "");
 
-  let busiestMonth = '';
-  if (busiestMonthKey) {
+  let busiestMonth = 'Unknown';
+  if (busiestMonthKey && busiestMonthKey.includes('-')) {
     const [year, month] = busiestMonthKey.split('-');
     const date = new Date(parseInt(year), parseInt(month) - 1);
-    busiestMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    if (!isNaN(date.getTime())) {
+      busiestMonth = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
   }
 
   return {

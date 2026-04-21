@@ -1,5 +1,9 @@
 import React from 'react';
 
+/**
+ * Wrapper component used to strictly constrain the dimensions of the final 
+ * generated canvas for both Story (9:16) and Social Post (4:5) exports.
+ */
 interface Props {
   children: React.ReactNode;
   pageId: string;
@@ -9,7 +13,7 @@ interface Props {
 export const ExportWrapper: React.FC<Props> = ({ children, pageId, format = 'story' }) => {
   const isPost = format === 'post';
   const width = '450px';
-  // 562.5px height perfectly creates a 4:5 aspect ratio with a 450px width
+  // 562.5px height creates a 4:5 aspect ratio with a 450px width
   const height = isPost ? '562.5px' : '800px';
 
   return (

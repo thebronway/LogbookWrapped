@@ -38,19 +38,18 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex-1 w-full max-w-2xl mx-auto overflow-y-auto pr-2 pb-24">
               <div className="bg-slate-900 border border-slate-800 p-6 sm:p-8 rounded-3xl shadow-xl mb-8">
                 <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-                  LogbookWrapped is a labor of love built by a fellow pilot.
-                  It's 100% free and open-source.
+                  LogbookWrapped is a labor of love built by a fellow pilot and it's 100% free with no ads.
                   If you enjoyed the app, consider helping out by
                   <strong className="text-white"> fueling the mission. </strong>
-                  Your support goes directly toward API and hosting costs, keeping this tool
-                  <strong className="text-white"> airborne and ad-free </strong>
+                  Your support goes directly toward hosting costs, keeping this tool
+                  <strong className="text-white"> airborne and ad free </strong>
                   for everyone.
                 </p>
               </div>
 
               <div className="flex flex-col gap-4">
                 <a 
-                  href="https://buymeacoffee.com/YOUR_BMC_LINK_HERE" 
+                  href="https://buymeacoffee.com/brianconway" 
                   target="_blank" 
                   rel="noreferrer"
                   className="w-full bg-[#FFDD00] hover:bg-[#FFEA4D] text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-lg"
@@ -60,7 +59,7 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </a>
                 
                 <a 
-                  href="https://paypal.me/YOUR_PAYPAL_LINK_HERE" 
+                  href="https://paypal.me/brconway" 
                   target="_blank" 
                   rel="noreferrer"
                   className="w-full bg-[#00457C] hover:bg-[#005a9e] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-lg"

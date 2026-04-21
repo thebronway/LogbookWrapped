@@ -1,12 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 import { ShieldCheck, BarChart3, Github, Lock, Trash2, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const Privacy = () => {
   const issuesUrl = "https://github.com/thebronway/LogbookWrapped";
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-16 text-slate-300">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
+    >
       <Helmet>
         <title>Privacy Policy | LogbookWrapped</title>
         <meta name="description" content="Read the privacy policy for Logbook Wrapped. We respect your data with 100% client-side processing." />
@@ -24,7 +29,6 @@ export const Privacy = () => {
       </header>
 
       <div className="space-y-8">
-        {/* The Big Guarantee */}
         <section className="bg-slate-800/40 border border-slate-700/50 p-8 rounded-3xl relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-4">
@@ -89,6 +93,6 @@ export const Privacy = () => {
           </div>
         </section>
       </div>
-    </div>
+    </motion.div>
   );
 };

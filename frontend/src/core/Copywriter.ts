@@ -25,7 +25,7 @@ export const getPage6Copy = (stats: CalculatedStats) => {
   let nightCopy = "Vampire mode: ON. You probably log more time under the stars than the sun.";
   if (n === 0) nightCopy = "Strictly a day-walker. Sun goes down, gear goes down.";
   else if (n <= 1) nightCopy = "The sun beat you home. Just a few minutes of twilight for the soul.";
-  else if (n <= 3) nightCopy = "Night currency: Secured. Just enough to keep the FAA happy.";
+  else if (n <= 3) nightCopy = "Night currency secured. Just enough to keep the FAA happy.";
   else if (n <= 15) nightCopy = "The Sunset Chaser. You’ve seen some incredible views while the world goes to sleep.";
   else if (n <= 25) nightCopy = "Moonlight Cruiser. You know exactly which airports have the best-lit runways.";
   else if (n > 25) nightCopy = "Vampire Mode: ON. You probably see better in the dark than during the day.";

@@ -24,9 +24,8 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
-  // Listen for screen resizes to switch between Story Mode and Dashboard Mode
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top when dashboard mounts
+    window.scrollTo(0, 0);
     
     const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
     window.addEventListener('resize', handleResize);
@@ -58,25 +57,20 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
   };
 
-  // Auto-advance timer (Mobile Only)
+  // Auto-advance timer
   useEffect(() => {
     if (isDesktop) return; // Don't auto-advance the desktop bento dashboard
     
-    // Stop auto-advancing if we are on the last page (Summary/Export)
     if (currentIndex === pages.length - 1) return;
 
     const timer = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
     }, 10000); // 8 seconds per slide
 
-    // If the user manually taps the screen, this cleanup clears the timer 
-    // so it doesn't double-skip!
     return () => clearTimeout(timer);
   }, [currentIndex, isDesktop, pages.length]);
 
-  // ==========================================
-  // DESKTOP LAYOUT: The Dashboard Bento Box
-  // ==========================================
+  {/* Desktop Layout */}
   if (isDesktop) {
     return (
       <>
@@ -91,7 +85,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           </button>
         </div>
 
-        {/* CSS Grid dynamically mapping the 8 pages */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(380px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
           {/* Row 1: Cover (pages[0]), Big Picture (pages[1]), Fleet (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
@@ -134,9 +127,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     );
   }
 
-  // ==========================================
-  // MOBILE LAYOUT: Immersive Full Screen Story
-  // ==========================================
+  {/* Mobile Layout */}
   return (
     <>
       {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
@@ -144,7 +135,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       
       <div className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none">
         
-        {/* Custom Animation for the 8-second progress bar fill */}
         <style>{`
           @keyframes fillProgress {
             0% { width: 0%; }
@@ -155,7 +145,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           }
         `}</style>
 
-        {/* Progress Bars */}
         <div className="absolute top-0 left-0 w-full z-50 flex gap-1 p-3 pt-4">
           {pages.map((_, idx) => (
             <div key={idx} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden bg-slate-800/50">
@@ -173,15 +162,14 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             </div>
           ))}
         </div>
-      {/* Close Button */}
       <button onClick={onClose} className="absolute top-8 right-4 z-[100] bg-black/50 p-2 rounded-full text-white/70 hover:text-white hover:bg-black/80 transition-all backdrop-blur-md">
         <X size={20} />
       </button>
 
-      {/* Invisible Touch Zones (Better UX than tiny buttons) */}
+      {/* Invisible Touch Zones */}
       {currentIndex === pages.length - 1 ? (
         <>
-          {/* Last Page: Touch zones only at the top (33%) and very bottom (15%) so middle buttons are clickable */}
+          {/* Last Page: Touch zones only at the top (33%) and at the bottom (15%) */}
           <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handlePrev} />
           <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handleNext} />
           
@@ -196,7 +184,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         </>
       )}
 
-      {/* Current Page Content */}
       <div className="w-full h-full relative z-10">
         {pages[currentIndex]}
       </div>
