@@ -75,7 +75,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
   processFile: async (file: File) => {
     set({ status: 'loading', errorMessage: null });
     try {
-      const res = await fetch('/data/airports-min.json');
+      const res = await fetch('/airports-min.json');
       if (!res.ok) throw new Error('Failed to load local airport database');
       const airportDB = await res.json();
 

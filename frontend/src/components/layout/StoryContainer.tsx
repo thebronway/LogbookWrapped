@@ -32,6 +32,17 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (isDesktop) {
+      // Desktop users see the dashboard all at once
+      (window as any).umami?.track('Dashboard Viewed', { device: 'desktop' });
+    } else {
+      // Mobile users progress through the story
+      const pageNames = ['Cover', 'BigPicture', 'Fleet', 'Extremes', 'Superlatives', 'Elements', 'Passport', 'Stats', 'Export'];
+      (window as any).umami?.track('Story Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
+    }
+  }, [currentIndex, isDesktop]);
+
   const pages = [
     <Page1_Cover stats={stats} key="p1" />,
     <Page2_BigPicture stats={stats} key="p2" />,

@@ -8,6 +8,8 @@ export const UploadSection = () => {
 
   const loadDemo = async (demoType: '2025' | 'allTime') => {
     try {
+      (window as any).umami?.track('Demo Loaded', { demo_version: demoType });
+      
       const filePath = demoType === '2025' ? '/assets/demo_files/demo1.csv' : '/assets/demo_files/demo2.csv';
       const response = await fetch(filePath);
       if (!response.ok) throw new Error('Failed to fetch demo file');

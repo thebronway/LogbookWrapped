@@ -30,14 +30,17 @@ export const Dropzone = () => {
       const file = e.dataTransfer.files[0];
       
       if (file.size > 10 * 1024 * 1024) {
+        (window as any).umami?.track('Upload Attempt', { status: 'error_size' });
         alert('File size exceeds 10MB limit. Please upload a smaller file.');
         return;
       }
 
       const validExtensions = ['.csv', '.txt', '.tsv'];
       if (file.type === 'text/csv' || validExtensions.some(ext => file.name.toLowerCase().endsWith(ext))) {
+        (window as any).umami?.track('Upload Attempt', { status: 'success' });
         processFile(file);
       } else {
+        (window as any).umami?.track('Upload Attempt', { status: 'error_invalid_extension' });
         alert('Please upload a valid CSV, TXT, or TSV file.');
       }
     }
@@ -48,11 +51,13 @@ export const Dropzone = () => {
       const file = e.target.files[0];
       
       if (file.size > 10 * 1024 * 1024) {
+        (window as any).umami?.track('Upload Attempt', { status: 'error_size' });
         alert('File size exceeds 10MB limit. Please upload a smaller file.');
         if (fileInputRef.current) fileInputRef.current.value = '';
         return;
       }
 
+      (window as any).umami?.track('Upload Attempt', { status: 'success' });
       processFile(file);
     }
   }, [processFile]);
@@ -69,7 +74,11 @@ export const Dropzone = () => {
         <div className="w-full flex-1 flex flex-col gap-3">
           <select 
             value={dateFilter.type}
-            onChange={(e) => setDateFilter({ ...dateFilter, type: e.target.value as DateFilterType })}
+            onChange={(e) => {
+              const newType = e.target.value as DateFilterType;
+              (window as any).umami?.track('Timeframe Selected', { filter: newType });
+              setDateFilter({ ...dateFilter, type: newType });
+            }}
             className="w-full bg-slate-900 border border-slate-600 text-white rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none font-medium appearance-none cursor-pointer"
           >
             <option value="this_year">This Year ({currentYear})</option>

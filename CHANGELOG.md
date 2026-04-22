@@ -1,12 +1,38 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-18* 
-*Current Version: v0.8.6*
+*Last updated: 2026-04-22* 
+*Current Version: v0.8.9*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.0
+- Added addtional umami tracking
+- Change airport db
+
+### Release v0.8.9
+- Added umami tracking
+- UI Updates and Tweaks
+- New URL
+- Updated Buy Me a Coffee / PayPal
+- Contact Page UI
+- Favicon
+
+### Release v0.8.8
+- Homepage demo files
+- Aircraft profiles updates
+- UI tweaks and bugfixes
+- Code Cleanup
+- Implemented a more consistent feel
+- Domain name update
+
+### Relase v0.8.7
+- Bigfix: Page 7 map zoom on mobile
+- Bugfix: Page 1 busiest month invalid date
+- Page 8: Remove bottom table line on export
+- Add unknown profile for logbook processing
 
 ### Release v0.8.6
 - Switch to local assets for map generation

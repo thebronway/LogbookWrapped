@@ -89,7 +89,10 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
           {/* Bottom Section: Uniform Actions */}
           <div className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
             <button 
-              onClick={onOpenExport}
+              onClick={() => {
+                (window as any).umami?.track('Export Modal Opened');
+                if (onOpenExport) onOpenExport();
+              }}
               className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
             >
               <Share2 size={18} />
@@ -97,7 +100,10 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
             </button>
 
             <button 
-              onClick={onOpenDonation}
+              onClick={() => {
+                (window as any).umami?.track('Donation Modal Opened', { source: 'page_9' });
+                if (onOpenDonation) onOpenDonation();
+              }}
               className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
             >
               <HandCoins size={18} />
@@ -105,7 +111,10 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
             </button>
 
             <button 
-              onClick={handleShareApp}
+              onClick={() => {
+                (window as any).umami?.track('App Shared');
+                handleShareApp();
+              }}
               className="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
             >
               {copied ? <Check size={18} /> : <Forward size={18} />}

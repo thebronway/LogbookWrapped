@@ -25,6 +25,8 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
         detectedEFB = "LogTen Pro";
       }
       console.log(`[Parser] Detected EFB Format: ${detectedEFB}`);
+      
+      (window as any).umami?.track('Logbook Parsed', { efb_type: detectedEFB });
       // ------------------------------------
 
       let csvTextToParse = text;

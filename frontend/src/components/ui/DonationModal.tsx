@@ -52,6 +52,7 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   href="https://buymeacoffee.com/brianconway" 
                   target="_blank" 
                   rel="noreferrer"
+                  onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'bmc' })}
                   className="w-full bg-[#FFDD00] hover:bg-[#FFEA4D] text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-lg"
                 >
                   <Coffee size={24} className="text-black" />
@@ -62,6 +63,7 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   href="https://paypal.me/brconway" 
                   target="_blank" 
                   rel="noreferrer"
+                  onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'paypal' })}
                   className="w-full bg-[#00457C] hover:bg-[#005a9e] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-lg"
                 >
                   <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
