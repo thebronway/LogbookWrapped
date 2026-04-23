@@ -43,7 +43,7 @@ export const DonationModal: React.FC<Props> = ({ isOpen, onClose }) => {
                   <strong className="text-white"> fueling the mission. </strong>
                   Your support goes directly toward hosting costs, keeping this tool
                   <strong className="text-white"> airborne and ad free </strong>
-                  for everyone.
+                  for everyone. Every dollar helps. 
                 </p>
               </div>
 

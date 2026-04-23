@@ -1,7 +1,7 @@
 # LogbookWrapped Roadmap
 
 *Last updated: 2026-04-22* 
-*Current Version: v0.9.0*
+*Current Version: v0.9.1*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.

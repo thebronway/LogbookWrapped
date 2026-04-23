@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.9.0-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.9.1-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -34,8 +34,8 @@
 <details>
 <summary><strong>Desktop (Dashboard)</strong></summary>
 <br>
-  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop1.webp?raw=true" width="800" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop2.webp?raw=true" width="800" />
+  <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop1.webp?raw=true" width="800" />
   <img src="https://github.com/thebronway/LogbookWrapped/blob/main/frontend/public/screenshots/desktop3.webp?raw=true" width="800" />
 </details>
 
@@ -47,9 +47,9 @@
 * **Fleet Diversity:** Analytical breakdown of used airframes, unique tail numbers, and aircraft normalization.
 * **Aviation Extremes:** Automatic identification of favorite routes, shortest flights, and longest distances.
 * **Methodology-Driven Logic:** Transparent [parsing methodology](https://logbookwrapped.com/logbook) and [supported aircraft profiles](https://logbookwrapped.com/aircraftprofiles).
-* **Privacy-First:** 100% client-side JavaScript parsing. No data ever touches a server.
+* **Privacy-First:** 100% client-side JavaScript parsing. No data ever touches a server. Read our [privacy policy](https://logbookwrapped.conway.im/privacy).
 * **Smart Mapping:** Normalization engine that auto-detects EFB providers and cleans aircraft inputs.
-* **One-Click Export:** HTML5 Canvas integration to generate 9:16 vertical infographics.
+* **One-Click Export:** HTML5 Canvas integration to generate 9:16 story and 4:5 post exports.
 
 ## The Passport Experience
 
@@ -64,8 +64,8 @@
 
 ## Support & Feedback
 
-* If a logbook isn't parsing right or an aircraft profile is missing, please [open a GitHub issue](https://github.com/thebronway/LogbookWrapped/issues) with the details so we can improve the parser.
-* **AvGas Tip Jar:** Support the project via our integrated micro-transaction gateway.
+* If a logbook isn't parsing right or an aircraft profile is missing, please [open a GitHub issue](https://github.com/thebronway/LogbookWrapped/issues) or [Contact Us](https://logbookwrapped.conway.im/contact) with the details so we can improve the parser.
+* Support the dev and project by helping keep the app airborne via our [Buy Me A Coffee](https://buymeacoffee.com/brianconway).
 
 ## Acknowledgments
 - **Note:** This project was coded with AI assistance, but fully reviewed, tested, and approved by hand. See [AIACKNOWLEDGMENT.md](AIACKNOWLEDGMENT.md) for details.

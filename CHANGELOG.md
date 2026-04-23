@@ -1,12 +1,18 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-22* 
-*Current Version: v0.8.9*
+*Current Version: v0.9.1*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.1
+- Added experimental aicraft
+- Updated asset manager
+- Readme updates
+- About us updates
 
 ### Release v0.9.0
 - Added addtional umami tracking
