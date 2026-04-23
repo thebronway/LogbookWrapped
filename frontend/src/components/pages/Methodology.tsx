@@ -167,6 +167,21 @@ export const Methodology = () => {
             </p>
           </div>
         </section>
+
+        <hr className="border-slate-700/50 my-8" />
+
+        <section className="space-y-4">
+          <h2 className="text-2xl font-bold text-white">Data Sources & Attribution</h2>
+          <p className="leading-relaxed text-sm">
+            LogbookWrapped relies on several incredible open-source projects to power our geographic and airport data. We want to extend a huge thank you to the maintainers of these datasets:
+          </p>
+          <ul className="list-disc list-inside space-y-2 text-sm text-slate-400 ml-2 mt-2">
+            <li><strong className="text-slate-300">Global Boundaries:</strong> Provided by <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">Natural Earth</a>, a public domain map dataset.</li>
+            <li><strong className="text-slate-300">Map Rendering Architecture:</strong> Powered by <a href="https://github.com/topojson/topojson" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">TopoJSON</a>, created by Mike Bostock.</li>
+            <li><strong className="text-slate-300">Canadian Geographies:</strong> Sourced via <a href="https://carto.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">CARTO</a> (formerly CartoDB) open datasets.</li>
+            <li><strong className="text-slate-300">Airport Database:</strong> A highly curated, locally-stored subset derived from <a href="https://ourairports.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">OurAirports</a> and FAA open data.</li>
+          </ul>
+        </section>
       </div>
 
       {/* Call to Action */}

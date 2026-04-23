@@ -83,7 +83,8 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
       landings: findCol(['Landings', 'Ldg', 'Day Landings', 'Day Ldg']),
       nightLandings: findCol(['Night Landings', 'Night Ldg']),
       instrument: findCol(['Actual Instrument', 'IMC', 'Actual', 'Instrument']),
-      simulated: findCol(['Simulated', 'Simulated Instrument', 'Hood'])
+      simulated: findCol(['Simulated', 'Simulated Instrument', 'Hood']),
+      approaches: findCol(['Approaches', 'Appr', 'Num Instrument Approaches', 'IAP'])
     };
   }
 
@@ -197,6 +198,28 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
     // Run the dynamic standardizer
     const aircraftType = standardizeAircraftType(rawAircraftType);
 
+    let totalApproaches = profile.approaches ? (parseInt(row[profile.approaches]) || 0) : 0;
+    
+    // Universal Multi-Column Approach Fallback (ForeFlight, custom spreadsheets, etc.)
+    // If the main column didn't catch anything, look for "Approach1", "Approach 1", etc.
+    if (totalApproaches === 0) {
+      for (let i = 1; i <= 10; i++) {
+        const appCol = row[`Approach${i}`] || row[`Approach ${i}`];
+        if (appCol) {
+          if (typeof appCol === 'string' && appCol.includes(';')) {
+            // ForeFlight format: "2;ILS OR LOC;..."
+            const countStr = appCol.split(';')[0];
+            const count = parseInt(countStr);
+            totalApproaches += !isNaN(count) ? count : 1;
+          } else {
+            // Standard format: might just be an integer "1" or a string name "ILS"
+            const count = parseInt(appCol);
+            totalApproaches += !isNaN(count) ? count : 1; // If it's just a text name, assume it means 1 approach
+          }
+        }
+      }
+    }
+
     return {
       date: row[profile.date] || 'Unknown Date',
       route: route,
@@ -211,6 +234,7 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
       landings: totalLandings,
       instrument: parseFloat(row[profile.instrument]) || 0,
       simulated: profile.simulated ? (parseFloat(row[profile.simulated]) || 0) : 0,
+      approaches: totalApproaches,
     };
   }).filter(flight => flight.totalTime > 0 && flight.date !== 'Unknown Date'); 
 };

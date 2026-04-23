@@ -1,12 +1,17 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-22* 
-*Current Version: v0.9.1*
+*Last updated: 2026-04-23* 
+*Current Version: v0.9.2*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.2
+- Added API endpoint and documentation
+- Added data sources
+- Added approach metrics
 
 ### Release v0.9.1
 - Added experimental aicraft

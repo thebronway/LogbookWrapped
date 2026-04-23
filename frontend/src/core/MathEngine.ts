@@ -10,7 +10,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     uniqueAircraftTypes: 0, uniqueTailNumbers: 0, shortestFlight: 9999,
     shortestFlightDate: '', shortestFlightRoute: '', longestFlight: 0,
     longestFlightRoute: '', longestFlightDate: '', totalLandings: 0, uniqueAirports: 0,
-    totalNight: 0, totalIMC: 0, totalSimulated: 0, totalActualAndSim: 0, estimatedFuelBurn: 0,
+    totalNight: 0, totalIMC: 0, totalSimulated: 0, totalActualAndSim: 0, totalApproaches: 0, estimatedFuelBurn: 0,
     hasInternational: false, mostUsedAirframe: 'Unknown', mostUsedAirframeCount: 0,
     mostUsedTailNumber: 'Unknown', mostUsedTailNumberCount: 0, favoriteRoute: 'None',
     favoriteRouteCount: 0, mostVisitedState: 'Unknown', mostVisitedStateCount: 0,
@@ -28,6 +28,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalNight += f.night;
     stats.totalIMC += f.instrument;
     stats.totalSimulated += f.simulated;
+    stats.totalApproaches += f.approaches || 0;
 
     const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || AIRCRAFT_PROFILES['UNKNOWN'];
     stats.estimatedFuelBurn += (f.totalTime * profile.gph);

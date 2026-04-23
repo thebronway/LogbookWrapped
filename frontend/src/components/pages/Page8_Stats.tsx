@@ -39,7 +39,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
       right: { label: 'Sim IMC', value: `${stats.totalSimulated} Hrs` }
     },
     { type: 'double', 
-      left: { label: 'Landings', value: stats.totalLandings },
+      left: { label: 'Landings', value: stats.totalLandings, sub: `${stats.totalApproaches} Approach${stats.totalApproaches === 1 ? '' : 'es'}` },
       right: { label: 'Aircraft', value: stats.uniqueTailNumbers, sub: `${stats.uniqueAircraftTypes} Type${stats.uniqueAircraftTypes === 1 ? '' : 's'}` }
     },
     { type: 'double', 

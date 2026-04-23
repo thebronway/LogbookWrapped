@@ -13,6 +13,7 @@ export interface EFBProfile {
   nightLandings: string | null;
   instrument: string;
   simulated: string | null;
+  approaches: string | null;
 }
 
 export const PROFILES: Record<string, EFBProfile> = {
@@ -31,6 +32,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     nightLandings: 'NightLandingsFullStop',
     instrument: 'ActualInstrument',
     simulated: 'SimulatedInstrument',
+    approaches: 'Approaches',
   },
   GARMIN: {
     date: 'Date',
@@ -47,6 +49,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     nightLandings: 'Night Landings',
     instrument: 'Actual Instrument Duration',
     simulated: 'Simulated Instrument Duration',
+    approaches: 'Num Instrument Approaches',
   },
   MYFLIGHTBOOK: {
     date: 'Date',
@@ -63,6 +66,7 @@ export const PROFILES: Record<string, EFBProfile> = {
     nightLandings: 'FS Night Landings',
     instrument: 'IMC',
     simulated: 'Simulated Instrument',
+    approaches: 'Approaches',
   },
   LOGTEN: {
     date: 'Date',
@@ -79,5 +83,6 @@ export const PROFILES: Record<string, EFBProfile> = {
     nightLandings: 'Night Ldg',
     instrument: 'Actual Instrument',
     simulated: 'Simulated Instrument',
+    approaches: 'Approaches',
   }
 };

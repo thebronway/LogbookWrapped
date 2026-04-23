@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { AlertTriangle, Mail, Scale, FileText } from 'lucide-react';
+import { AlertTriangle, Mail, Scale, FileText, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -62,6 +62,15 @@ export const Disclaimer = () => {
             </p>
           </section>
         </div>
+
+        {/* Third-Party Data Section */}
+        <section className="bg-slate-800/40 border border-slate-700/50 p-8 rounded-2xl">
+          <Globe className="text-indigo-400 mb-4" size={28} />
+          <h2 className="text-xl font-semibold text-white mb-3">Third-Party Data</h2>
+          <p className="leading-relaxed text-slate-400">
+            Airport coordinates and geographic boundaries are sourced from public and third-party datasets (including OurAirports, Natural Earth, and CARTO). This data is provided "as is" strictly for visualization purposes and <strong className="text-slate-300">must never be used for actual flight planning or real-world navigation</strong>.
+          </p>
+        </section>
 
         {/* Contact Link Section */}
         <section className="mt-16 py-12 border-t border-slate-800 text-center">

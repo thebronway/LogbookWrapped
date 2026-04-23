@@ -27,7 +27,8 @@ export const Page6_Elements: React.FC<Props> = ({ stats, exportFormat = 'story' 
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-1">In The Clouds</p>
           <p className="text-3xl font-bold mb-1"><AnimatedCounter value={stats.totalIMC} decimals={1} /> Hours Actual</p>
-          <p className="text-sky-200/50 text-sm font-mono mb-2">{stats.totalSimulated} Hours Simulated</p>
+          <p className="text-sky-200/50 text-sm font-mono">{stats.totalSimulated} Hours Simulated</p>
+          <p className="text-sky-200/50 text-sm font-mono mb-2">{stats.totalApproaches} IFR Approaches</p>
         </motion.div>
 
         <motion.div 

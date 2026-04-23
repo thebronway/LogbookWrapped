@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.9.1-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.9.2-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -50,6 +50,12 @@
 * **Privacy-First:** 100% client-side JavaScript parsing. No data ever touches a server. Read our [privacy policy](https://logbookwrapped.conway.im/privacy).
 * **Smart Mapping:** Normalization engine that auto-detects EFB providers and cleans aircraft inputs.
 * **One-Click Export:** HTML5 Canvas integration to generate 9:16 story and 4:5 post exports.
+
+## Partner API Integration
+
+LogbookWrapped offers a 100% serverless, client-side import API for third-party flight tracking apps and EFBs. Devs can easily add a "Generate End of Year or All-time LogbookWrapped" button to your platform that securely transmits a user's logbook data directly to LogbookWrapped via `window.postMessage()`. 
+
+For technical specifications, implementation examples, and allowlist requirements, please review our [Developer Integration Guide](https://logbookwrapped.com/howtoimport).
 
 ## The Passport Experience
 

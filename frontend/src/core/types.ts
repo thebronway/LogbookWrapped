@@ -14,6 +14,7 @@ export interface FlightRecord {
   landings: number;
   instrument: number; // Actual IMC
   simulated: number; // Simulated IMC
+  approaches: number;
 }
 
 export interface CalculatedStats {
@@ -35,6 +36,7 @@ export interface CalculatedStats {
   totalIMC: number;
   totalSimulated: number;
   totalActualAndSim: number;
+  totalApproaches: number;
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
   hasInternational: boolean;
   mostUsedAirframe: string;
