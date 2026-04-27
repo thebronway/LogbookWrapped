@@ -134,3 +134,44 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
 
   return stats;
 };
+
+export const calculateVersusStats = (statsA: CalculatedStats, statsB: CalculatedStats): VersusStats => {
+  const compare = (valA: number, valB: number, label: string, unit: string, isHigherBetter = true): VersusCategory => {
+    let winner: 'A' | 'B' | 'Tie' = 'Tie';
+    if (valA > valB) winner = isHigherBetter ? 'A' : 'B';
+    if (valB > valA) winner = isHigherBetter ? 'B' : 'A';
+    
+    return {
+      label,
+      valueA: valA,
+      valueB: valB,
+      winner,
+      delta: Number(Math.abs(valA - valB).toFixed(1)),
+      unit,
+      isHigherBetter
+    };
+  };
+
+  const hours = compare(statsA.totalHours, statsB.totalHours, 'Flight Time', 'hrs');
+  const landings = compare(statsA.totalLandings, statsB.totalLandings, 'Landings', '');
+  const distance = compare(statsA.totalDistanceNm, statsB.totalDistanceNm, 'Distance', 'NM');
+  const airports = compare(statsA.uniqueAirports, statsB.uniqueAirports, 'Unique Airports', '');
+  const night = compare(statsA.totalNight, statsB.totalNight, 'Night Hours', 'hrs');
+  const fuel = compare(statsA.estimatedFuelBurn, statsB.estimatedFuelBurn, 'Fuel Burned', 'gal', false); // Less fuel is "better" (eco-friendly)
+
+  const categories = [hours, landings, distance, airports, night];
+  const scoreA = categories.filter(c => c.winner === 'A').length;
+  const scoreB = categories.filter(c => c.winner === 'B').length;
+
+  return {
+    hours,
+    landings,
+    distance,
+    airports,
+    night,
+    fuel,
+    scoreA,
+    scoreB,
+    overallWinner: scoreA > scoreB ? 'A' : scoreB > scoreA ? 'B' : 'Tie'
+  };
+};

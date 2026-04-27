@@ -3,29 +3,43 @@ import { FlightRecord, CalculatedStats, AirportDB } from '../core/types';
 import { parseLogbookCSV } from '../core/Parser';
 import { calculateStats } from '../core/MathEngine';
 
-export type DateFilterType = 'this_year' | 'last_year' | 'all_time' | 'custom';
+export type DateFilterType = 'this_year' | 'last_year' | 'all_time' | 'custom' | 'milestone' | 'yoy';
 
 export interface DateFilter {
   type: DateFilterType;
   start?: string;
   end?: string;
+  label?: string; 
+  year1?: string; 
+  year2?: string; 
+}
+
+export interface LogbookDataset {
+  id: string;
+  fileName: string;
+  ownerName?: string;
+  rawFlights: FlightRecord[];
+  flights: FlightRecord[];
+  stats: CalculatedStats | null;
 }
 
 interface LogbookState {
+  datasets: LogbookDataset[];
   rawFlights: FlightRecord[];
   flights: FlightRecord[];
-  airportDB: AirportDB | null;
   stats: CalculatedStats | null;
+  airportDB: AirportDB | null;
   status: 'idle' | 'loading' | 'success' | 'error';
   errorMessage: string | null;
   dateFilter: DateFilter;
   setDateFilter: (filter: DateFilter) => void;
-  processFile: (file: File) => Promise<void>;
+  processFiles: (files: File[], bypassConfig?: boolean) => Promise<void>;
   resetStore: () => void;
   applyFilterAndCalculate: () => void;
 }
 
 export const useLogbookStore = create<LogbookState>((set, get) => ({
+  datasets: [],
   rawFlights: [],
   flights: [],
   airportDB: null,
@@ -36,57 +50,133 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
 
   setDateFilter: (filter) => {
     set({ dateFilter: filter });
-    if (get().rawFlights.length > 0) {
-      get().applyFilterAndCalculate();
-    }
   },
 
   applyFilterAndCalculate: () => {
-    const { rawFlights, dateFilter, airportDB } = get();
-    if (!airportDB) return;
+    const { datasets, dateFilter, airportDB } = get();
+    if (!airportDB || datasets.length === 0) return;
 
     const currentYear = new Date().getFullYear();
 
-    const filtered = rawFlights.filter(f => {
-      const d = new Date(f.date);
-      if (isNaN(d.getTime())) return false;
+    // SPECIAL CASE: User uploaded 1 dataset but wants YoY comparison
+    if (dateFilter.type === 'yoy' && datasets.length === 1) {
+      const ds = datasets[0];
+      const y1 = parseInt(dateFilter.year1 || currentYear.toString());
+      const y2 = parseInt(dateFilter.year2 || (currentYear - 1).toString());
 
-      if (dateFilter.type === 'this_year') return d.getFullYear() === currentYear;
-      if (dateFilter.type === 'last_year') return d.getFullYear() === currentYear - 1;
-      if (dateFilter.type === 'all_time') return true;
-      if (dateFilter.type === 'custom') {
-        const start = dateFilter.start ? new Date(dateFilter.start) : new Date(0);
-        const end = dateFilter.end ? new Date(dateFilter.end) : new Date();
-        end.setHours(23, 59, 59, 999); // Include the entire end day
-        return d >= start && d <= end;
+      const f1 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y1);
+      const f2 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y2);
+
+      const stats1 = f1.length > 0 ? calculateStats(f1, airportDB) : null;
+      const stats2 = f2.length > 0 ? calculateStats(f2, airportDB) : null;
+
+      if (!stats1 && !stats2) {
+        set({ status: 'error', errorMessage: `No flights found in ${y1} or ${y2}. A Growth Report requires flights logged in both years.` });
+        return;
+      } else if (!stats1) {
+        set({ status: 'error', errorMessage: `No flights found in ${y1}. A Growth Report requires flights logged in both years.` });
+        return;
+      } else if (!stats2) {
+        set({ status: 'error', errorMessage: `No flights found in ${y2}. A Growth Report requires flights logged in both years.` });
+        return;
       }
-      return true;
+
+      set({
+        datasets: [
+          { ...ds, id: 'yoy1', ownerName: y1.toString(), flights: f1, stats: stats1 },
+          { ...ds, id: 'yoy2', ownerName: y2.toString(), flights: f2, stats: stats2 }
+        ],
+        rawFlights: ds.rawFlights,
+        flights: f1,
+        stats: stats1,
+        status: 'success'
+      });
+      return;
+    }
+
+    // STANDARD CASE
+    const updatedDatasets = datasets.map(dataset => {
+      const filtered = dataset.rawFlights.filter(f => {
+        const d = new Date(f.date);
+        if (isNaN(d.getTime())) return false;
+
+        if (dateFilter.type === 'this_year') return d.getFullYear() === currentYear;
+        if (dateFilter.type === 'last_year') return d.getFullYear() === currentYear - 1;
+        if (dateFilter.type === 'all_time') return true;
+        if (dateFilter.type === 'custom' || dateFilter.type === 'milestone') {
+          const start = dateFilter.start ? new Date(dateFilter.start) : new Date(0);
+          const end = dateFilter.end ? new Date(dateFilter.end) : new Date();
+          end.setHours(23, 59, 59, 999);
+          return d >= start && d <= end;
+        }
+        return true;
+      });
+
+      const computedStats = filtered.length > 0 ? calculateStats(filtered, airportDB) : null;
+      
+      return {
+        ...dataset,
+        flights: filtered,
+        stats: computedStats
+      };
     });
 
-    if (filtered.length === 0) {
+    const primaryDataset = updatedDatasets[0];
+    
+    if (primaryDataset.flights.length === 0) {
       set({ status: 'error', errorMessage: 'No flights found in this date range.' });
       return;
     }
 
-    const computedStats = calculateStats(filtered, airportDB);
-    set({ flights: filtered, stats: computedStats, status: 'success' });
+    set({ 
+      datasets: updatedDatasets,
+      rawFlights: primaryDataset.rawFlights,
+      flights: primaryDataset.flights, 
+      stats: primaryDataset.stats, 
+      status: 'success' 
+    });
   },
 
-  processFile: async (file: File) => {
+  processFiles: async (files: File[], bypassConfig?: boolean) => {
     set({ status: 'loading', errorMessage: null });
     try {
-      const res = await fetch('/airports-min.json');
-      if (!res.ok) throw new Error('Failed to load local airport database');
-      const airportDB = await res.json();
+      let airportDB = get().airportDB;
+      if (!airportDB) {
+        const res = await fetch('/airports-min.json');
+        if (!res.ok) throw new Error('Failed to load local airport database');
+        airportDB = await res.json();
+      }
 
-      const parsedFlights = await parseLogbookCSV(file);
+      const newDatasets: LogbookDataset[] = [];
       
-      set({ rawFlights: parsedFlights, airportDB });
-      get().applyFilterAndCalculate();
+      for (const file of files) {
+        const parsedFlights = await parseLogbookCSV(file);
+        
+        (window as any).umami?.track('Logbook Uploaded', { 
+          flight_count: parsedFlights.length 
+        });
+
+        newDatasets.push({
+          id: crypto.randomUUID(),
+          fileName: file.name,
+          rawFlights: parsedFlights,
+          flights: [],
+          stats: null
+        });
+      }
+      
+      set({ datasets: newDatasets, airportDB });
+      
+      if (bypassConfig) {
+        get().applyFilterAndCalculate();
+      } else {
+        set({ status: 'success' });
+      }
+      
     } catch (error: any) {
-      set({ status: 'error', errorMessage: error.message || 'Error processing CSV' });
+      set({ status: 'error', errorMessage: error.message || 'Error processing files' });
     }
   },
 
-  resetStore: () => set({ rawFlights: [], flights: [], stats: null, status: 'idle', errorMessage: null })
+  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, status: 'idle', errorMessage: null })
 }));

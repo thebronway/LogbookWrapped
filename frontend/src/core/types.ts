@@ -58,3 +58,25 @@ export interface CalculatedStats {
     homeBaseCoords: [number, number] | null; // [longitude, latitude]
   };
 }
+
+export interface VersusCategory {
+  label: string;
+  valueA: number;
+  valueB: number;
+  winner: 'A' | 'B' | 'Tie';
+  delta: number;
+  unit: string;
+  isHigherBetter?: boolean;
+}
+
+export interface VersusStats {
+  hours: VersusCategory;
+  landings: VersusCategory;
+  distance: VersusCategory;
+  airports: VersusCategory;
+  night: VersusCategory;
+  fuel: VersusCategory;
+  overallWinner: 'A' | 'B' | 'Tie';
+  scoreA: number;
+  scoreB: number;
+}

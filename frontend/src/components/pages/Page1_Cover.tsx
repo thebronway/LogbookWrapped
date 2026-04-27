@@ -32,6 +32,11 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
     }
   }
 
+  // Apply the custom milestone title if the user typed one in on the config screen
+  if (dateFilter.label && dateFilter.label.trim() !== '') {
+    titleText = dateFilter.label;
+  }
+
   // Strip the year from the busiest month if we are already viewing a single-year logbook
   let displayBusiestMonth = stats.busiestMonth;
   if (isSingleYear && displayBusiestMonth && displayBusiestMonth !== 'Unknown') {
@@ -45,7 +50,7 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
       exit={{ opacity: 0 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl md:text-4xl mb-8 md:mb-12'} font-black tracking-tight text-blue-400`}>
+      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl md:text-5xl mb-8 md:mb-12'} font-black tracking-tight text-blue-400 leading-tight`}>
         {titleText}<br/>In The Sky.
       </h2>
 

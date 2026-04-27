@@ -1,12 +1,19 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-23* 
-*Current Version: v0.9.2*
+*Last updated: 2026-04-27* 
+*Current Version: v0.9.3*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.3
+- Dropzone UI Fixes
+- Added API to footer
+- New Homepage and UI Flow
+- New Filters 
+- New Compare Mode
 
 ### Release v0.9.2
 - Added API endpoint and documentation

@@ -6,6 +6,8 @@ export const Footer = () => {
       <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <p>&copy; {new Date().getFullYear()} Logbook Wrapped · All rights reserved</p>
         <div className="flex gap-4">
+          <Link to="/faq" className="hover:text-slate-300 transition-colors">FAQ</Link>
+          <Link to="/howtoimport" className="hover:text-slate-300 transition-colors">API</Link>
           <Link to="/privacy" className="hover:text-slate-300 transition-colors">Privacy</Link>
           <Link to="/disclaimer" className="hover:text-slate-300 transition-colors">Disclaimer</Link>
         </div>

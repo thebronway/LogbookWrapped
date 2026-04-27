@@ -32,3 +32,19 @@ export const getPage6Copy = (stats: CalculatedStats) => {
 
   return { nightCopy };
 };
+
+export const getYoYCopy = (deltaHours: number, isIncrease: boolean) => {
+  if (deltaHours < 5 && !isIncrease) {
+    return "Consistency is key. You flew almost the exact same amount as last year.";
+  }
+
+  if (isIncrease) {
+    if (deltaHours > 100) return `Massive growth! You logged ${deltaHours} more hours than last year. Someone's been living in the cockpit.`;
+    if (deltaHours > 50) return `Moving on up! You spent ${deltaHours} more hours in the air. Solid progress.`;
+    return `A nice bump! You flew ${deltaHours} hours more this year.`;
+  } else {
+    if (deltaHours > 100) return `Taking a breather? You logged ${deltaHours} fewer hours than last year. The sky misses you!`;
+    if (deltaHours > 50) return `A bit lighter on the throttle this year. You flew ${deltaHours} fewer hours.`;
+    return `Slightly less time in the air this year, flying ${deltaHours} fewer hours.`;
+  }
+};

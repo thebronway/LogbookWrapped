@@ -2,6 +2,11 @@ import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { Home } from './components/pages/Home';
+import { Upload } from './components/pages/Upload';
+import { Config } from './components/pages/Config';
+import { Wrapped } from './components/pages/Wrapped';
+import { Versus } from './components/pages/Versus';
+import { Demos } from './components/pages/Demos';
 import { About } from './components/pages/About';
 import { Privacy } from './components/pages/Privacy';
 import { Disclaimer } from './components/pages/Disclaimer';
@@ -12,6 +17,7 @@ import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable'
 import { NotFound } from './components/pages/NotFound';
 import { ImportAPI } from './components/pages/ImportAPI';
 import { HowToImport } from './components/pages/HowToImport';
+import { FAQ } from './components/pages/FAQ';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 
 function App() {
@@ -44,6 +50,15 @@ function App() {
           <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
           <Route path="/import" element={<ImportAPI />} />
           <Route path="/howtoimport" element={<HowToImport />} />
+          <Route path="/faq" element={<FAQ />} />
+          
+          {/* Phase 2/3 Routes */}
+          <Route path="/upload" element={<Upload />} />
+          <Route path="/config" element={<Config />} />
+          <Route path="/wrapped" element={<Wrapped />} />
+          <Route path="/versus" element={<Versus />} />
+          <Route path="/demos" element={<Demos />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

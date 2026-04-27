@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Shield, Zap, Share2, ArrowDownCircle } from 'lucide-react';
+import { Shield, Zap, Share2, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const SCREENSHOTS = Array.from({ length: 9 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
@@ -31,12 +32,12 @@ export const HeroSection = () => {
           </p>
         </div>
         
-        <a 
-          href="#steps-list" 
+        <Link 
+          to="/upload" 
           className="lg:hidden inline-flex items-center justify-center gap-3 bg-yellow-400 text-black font-bold py-4 px-10 rounded-2xl shadow-xl shadow-yellow-500/10 active:scale-95 transition-all w-full max-w-xs mx-auto"
         >
-          Make Your Wrapped <ArrowDownCircle size={20} />
-        </a>
+          Make Your Wrapped <ArrowRight size={20} />
+        </Link>
 
         <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4 w-full">
           <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
