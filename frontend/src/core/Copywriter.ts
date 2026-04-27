@@ -48,3 +48,35 @@ export const getYoYCopy = (deltaHours: number, isIncrease: boolean) => {
     return `Slightly less time in the air this year, flying ${deltaHours} fewer hours.`;
   }
 };
+
+export const getTitleData = (dateFilter: any, isPage1: boolean = false) => {
+  let line1 = "My";
+  let isMilestone = dateFilter?.type === 'milestone';
+
+  if (dateFilter?.type === 'this_year') {
+    line1 = `My ${new Date().getFullYear()} Logbook`;
+  } else if (dateFilter?.type === 'last_year') {
+    line1 = `My ${new Date().getFullYear() - 1} Logbook`;
+  } else if (dateFilter?.type === 'all_time') {
+    line1 = 'My All-Time Logbook';
+  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0,4) === dateFilter.end.substring(0,4)) {
+    line1 = `My ${dateFilter.start.substring(0, 4)} Logbook`;
+  } else if (isMilestone) {
+    const label = dateFilter.label || '';
+    if (isPage1) {
+      line1 = `My ${label}`; // Full title for Cover
+    } else {
+      const acronymMap: Record<string, string> = { 
+        'Private Pilot License': 'PPL', 
+        'Instrument Rating': 'IFR', 
+        'Commercial Pilot License': 'CPL', 
+        'Multi-Engine Rating': 'Multi-Engine', 
+      };
+      line1 = `My ${acronymMap[label] || label}`; // Acronym for Data Pages
+    }
+  }
+
+  const isLongLine1 = line1.length > 22;
+
+  return { line1, isMilestone, isLongLine1 };
+};

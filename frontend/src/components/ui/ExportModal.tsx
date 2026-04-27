@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { X, Share2, Archive, Loader2, Download } from 'lucide-react';
-import { CalculatedStats } from '../../core/types';
+import { ExportItem } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
-import { getExportPages } from '../../config/ExportPages';
 import { generateBlob, downloadZipBundle, shareOrDownloadImage, triggerDownload } from '../../core/ExportEngine';
 import { PreviewCard } from './PreviewCard';
 
 interface Props {
-  stats: CalculatedStats;
+  items: ExportItem[];
   onClose: () => void;
+  title?: string;
 }
 
-export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
+export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export to Social Media" }) => {
   const [isExporting, setIsExporting] = useState(false);
   const [loadingText, setLoadingText] = useState('');
   const [readyBlobs, setReadyBlobs] = useState<Record<string, Blob>>({});
   const [selectedFormat, setSelectedFormat] = useState<'story' | 'post'>('story');
 
-  // useMemo ensures the array reference stays stable between renders
-  // so the useEffect doesn't abort and restart the generation loop!
-  const pages = React.useMemo(() => getExportPages(stats), [stats]);
-  const normalPagesCount = pages.filter(p => !p.isPoster).length;
+  const normalPagesCount = items.filter(p => !p.isPoster).length;
+  const isSingleItem = items.length === 1;
 
   useEffect(() => {
     let isMounted = true;
@@ -28,35 +26,36 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
       // Allow 2s for D3 maps and geographical data to fully render
       await new Promise(r => setTimeout(r, 2000));
       
-      for (const page of pages) {
+      for (const item of items) {
         if (!isMounted) break;
-        if (page.isPoster) continue; 
+        if (item.isPoster) continue; 
         
         try {
-          const blobStory = await generateBlob(`${page.id}-story`, 'story');
-          const blobPost = await generateBlob(`${page.id}-post`, 'post');
+          const blobStory = await generateBlob(`${item.id}-story`, 'story');
+          const blobPost = await generateBlob(`${item.id}-post`, 'post');
           
           if (isMounted) {
             setReadyBlobs(prev => ({ 
                 ...prev, 
-                ...(blobStory ? { [`${page.id}-story`]: blobStory } : {}),
-                ...(blobPost ? { [`${page.id}-post`]: blobPost } : {})
+                ...(blobStory ? { [`${item.id}-story`]: blobStory } : {}),
+                ...(blobPost ? { [`${item.id}-post`]: blobPost } : {})
             }));
           }
         } catch (err) {
-          console.error(`Failed to generate blobs for ${page.id}`, err);
+          console.error(`Failed to generate blobs for ${item.id}`, err);
         }
       }
     };
     generateAll();
     return () => { isMounted = false; };
-  }, [pages]);
+  }, [items]);
 
   const handleDownloadZip = async () => {
+    if (isSingleItem) return;
     (window as any).umami?.track('Export Action', { type: 'zip_all' });
     setIsExporting(true);
     try {
-      await downloadZipBundle(pages, readyBlobs, setLoadingText);
+      await downloadZipBundle(items, readyBlobs, setLoadingText);
     } catch (err) {
       alert('Failed to generate ZIP bundle.');
     } finally {
@@ -82,15 +81,15 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
   return (
     <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300">
       
-      {/* LAYER 1: The Engine Sandbox */}
-      <div className="absolute top-0 left-0 w-[450px] h-[800px] pointer-events-none z-[1]">
-        {pages.filter(p => !p.isPoster).map((page, idx) => (
+      {/* LAYER 1: The Engine Sandbox (Invisible) */}
+      <div className="absolute top-0 left-0 w-[450px] h-[800px] pointer-events-none z-[1] opacity-0 overflow-hidden">
+        {items.filter(p => !p.isPoster).map((item, idx) => (
           <React.Fragment key={`sandbox-${idx}`}>
             <div className="absolute top-0 left-0 w-full h-[800px] bg-[#020617]">
-              <ExportWrapper pageId={`${page.id}-story`} format="story">{page.render('story')}</ExportWrapper>
+              <ExportWrapper pageId={`${item.id}-story`} format="story">{item.render('story')}</ExportWrapper>
             </div>
             <div className="absolute top-0 left-0 w-full h-[562px] bg-[#020617]">
-              <ExportWrapper pageId={`${page.id}-post`} format="post">{page.render('post')}</ExportWrapper>
+              <ExportWrapper pageId={`${item.id}-post`} format="post">{item.render('post')}</ExportWrapper>
             </div>
           </React.Fragment>
         ))}
@@ -102,7 +101,7 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
       {/* LAYER 3: The Actual Modal UI */}
       <div className="relative z-[10] flex flex-col h-full w-full p-4 sm:p-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0 gap-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Export to Social Media</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{title}</h2>
           
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-700 w-full sm:w-auto shadow-inner">
@@ -125,31 +124,33 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
           </div>
         </div>
 
-        <div className="flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {pages.map((page, idx) => {
-              const isFeatured = page.id === 'export-p7' || page.id === 'export-p8';
-              const isReady = readyBlobs[`${page.id}-${selectedFormat}`];
+        <div className={`flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24 ${isSingleItem ? 'flex justify-center items-start' : ''}`}>
+          <div className={isSingleItem ? 'w-full max-w-sm mt-4' : 'grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6'}>
+            {items.map((item, idx) => {
+              const isFeatured = !isSingleItem && (item.id === 'export-p7' || item.id === 'export-p8');
+              const isReady = readyBlobs[`${item.id}-${selectedFormat}`];
               
               return (
-              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg ${isFeatured ? 'md:col-span-2' : 'col-span-1'}`}>
-                <div className="text-sm font-medium text-slate-300 text-center">{page.name}</div>
-                <PreviewCard page={page} format={selectedFormat} />
+              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg ${isFeatured ? 'md:col-span-2' : 'col-span-1'} ${isSingleItem ? 'w-full' : ''}`}>
+                <div className="text-sm font-medium text-slate-300 text-center">{item.name}</div>
+                
+                {/* Visual Preview Engine */}
+                <PreviewCard page={item} format={selectedFormat} />
 
                 <div className="flex gap-2 mt-auto w-full">
                   <button 
-                    onClick={() => handleDownloadSingle(page.id, page.name)}
+                    onClick={() => handleDownloadSingle(item.id, item.name)}
                     disabled={isExporting || !isReady}
-                    className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-slate-700 hover:bg-slate-600 shadow-md' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
+                    className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-slate-700 hover:bg-slate-600 shadow-md' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span className="hidden sm:inline">Save</span></>}
+                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span>Save</span></>}
                   </button>
                   <button 
-                    onClick={() => handleShareSingle(page.id, page.name)}
+                    onClick={() => handleShareSingle(item.id, item.name)}
                     disabled={isExporting || !isReady}
-                    className={`flex-1 flex justify-center items-center gap-2 py-2 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-900/20' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
+                    className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-900/20' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span className="hidden sm:inline">Share</span></>}
+                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span>Share</span></>}
                   </button>
                 </div>
               </div>
@@ -158,20 +159,23 @@ export const ExportModal: React.FC<Props> = ({ stats, onClose }) => {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex justify-center pb-8 pt-12 pointer-events-none">
-          <button
-            onClick={handleDownloadZip}
-            disabled={isExporting || Object.keys(readyBlobs).length < (normalPagesCount * 2)}
-            className="pointer-events-auto flex items-center gap-3 px-8 py-4 bg-white hover:bg-slate-200 disabled:bg-slate-500 disabled:opacity-80 text-slate-950 font-bold rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95"
-          >
-            {isExporting || Object.keys(readyBlobs).length < (normalPagesCount * 2) ? <Loader2 className="animate-spin" size={20} /> : <Archive size={20} />}
-            {isExporting 
-              ? loadingText 
-              : Object.keys(readyBlobs).length < (normalPagesCount * 2)
-                ? `Generating ${Object.keys(readyBlobs).length}/${normalPagesCount * 2}...`
-                : 'Download All as ZIP (High Res)'}
-          </button>
-        </div>
+        {/* Hide the ZIP button entirely if it's just a single export item */}
+        {!isSingleItem && (
+          <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex justify-center pb-8 pt-12 pointer-events-none">
+            <button
+              onClick={handleDownloadZip}
+              disabled={isExporting || Object.keys(readyBlobs).length < (normalPagesCount * 2)}
+              className="pointer-events-auto flex items-center gap-3 px-8 py-4 bg-white hover:bg-slate-200 disabled:bg-slate-500 disabled:opacity-80 text-slate-950 font-bold rounded-full shadow-2xl transition-all hover:scale-105 active:scale-95"
+            >
+              {isExporting || Object.keys(readyBlobs).length < (normalPagesCount * 2) ? <Loader2 className="animate-spin" size={20} /> : <Archive size={20} />}
+              {isExporting 
+                ? loadingText 
+                : Object.keys(readyBlobs).length < (normalPagesCount * 2)
+                  ? `Generating ${Object.keys(readyBlobs).length}/${normalPagesCount * 2}...`
+                  : 'Download All as ZIP (High Res)'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

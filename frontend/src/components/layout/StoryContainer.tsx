@@ -12,6 +12,7 @@ import { Page8_Stats } from '../pages/Page8_Stats';
 import { Page9_Export } from '../pages/Page9_Export';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
+import { getExportPages } from '../../config/ExportPages';
 
 interface Props {
   stats: CalculatedStats;
@@ -85,12 +86,12 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   if (isDesktop) {
     return (
       <>
-        {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
-      {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
+        {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
+        {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
         
         <div className="w-full max-w-[1600px] mx-auto py-8 animate-in fade-in duration-500">
         <div className="flex justify-between items-center mb-8 px-4">
-          <h2 className="text-3xl font-bold text-white tracking-tight">Your Aviation Dashboard</h2>
+          <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">My LogbookWrapped Dashboard.</h2>
           <button onClick={onClose} className="bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shadow-lg border border-slate-700">
             <X size={20} />
           </button>
@@ -141,7 +142,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   {/* Mobile Layout */}
   return (
     <>
-      {isExportModalOpen && <ExportModal stats={stats} onClose={() => setIsExportModalOpen(false)} />}
+      {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       
       <div className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none">

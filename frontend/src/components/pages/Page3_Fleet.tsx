@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
+import { useLogbookStore } from '../../store/useLogbookStore';
+import { getTitleData } from '../../core/Copywriter';
 
 interface Props {
   stats: CalculatedStats;
@@ -8,6 +10,9 @@ interface Props {
 }
 
 export const Page3_Fleet: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
+  const dateFilter = useLogbookStore((state) => state.dateFilter);
+  const { line1, isLongLine1 } = getTitleData(dateFilter);
+
   return (
     <motion.div 
       initial={{ opacity: 0, x: 50 }}
@@ -15,8 +20,9 @@ export const Page3_Fleet: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
       exit={{ opacity: 0, x: -50 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl mb-10'} font-black tracking-tight text-indigo-400`}>
-        My Logbook <br /> Fleet.
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-10' : 'text-3xl mb-10')} font-black tracking-tight text-indigo-400 leading-tight`}>
+        {line1}<br />
+        Fleet.
       </h2>
 
       <div className="space-y-12">

@@ -1,12 +1,18 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-27* 
-*Current Version: v0.9.3*
+*Current Version: v0.9.4*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.4
+- Growth wrapped updates
+- Titles updates
+- Config page updates
+- My aviation dashboard 
 
 ### Release v0.9.3
 - Dropzone UI Fixes

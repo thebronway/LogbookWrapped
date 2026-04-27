@@ -59,7 +59,7 @@ export const Config = () => {
         setError(useLogbookStore.getState().errorMessage || 'No flights found in this date range.');
       } else {
         // Replace history so clicking 'back' from the dashboard goes directly to Home
-        navigate(mode === 'yoy' ? '/versus' : '/wrapped', { replace: true });
+        navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
       }
     }, 100);
   };
@@ -93,8 +93,7 @@ export const Config = () => {
       </Helmet>
 
       <div className="text-center space-y-4 mb-10">
-        <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Set Your Parameters</h1>
-        <p className="text-lg text-slate-400">Tell us what you want to celebrate.</p>
+        <h1 className="text-3xl md:text-5xl font-bold text-white tracking-tight">Configure your LogbookWrapped</h1>
       </div>
 
       <div className="w-full space-y-8">
@@ -163,7 +162,6 @@ export const Config = () => {
                   <option value="Instrument Rating">Instrument Rating</option>
                   <option value="Commercial Pilot License">Commercial Pilot License</option>
                   <option value="Multi-Engine Rating">Multi-Engine Rating</option>
-                  <option value="First Solo">First Solo</option>
                   <option value="Other">Other (Custom Title)</option>
                 </select>
               </div>
@@ -174,6 +172,7 @@ export const Config = () => {
                   <input 
                     type="text" 
                     placeholder="e.g., Tailwheel Checkout" 
+                    maxLength={15}
                     value={dateFilter.label || ''}
                     onChange={(e) => setDateFilter({ ...dateFilter, label: e.target.value })}
                     className="w-full bg-slate-900 border border-slate-600 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none"

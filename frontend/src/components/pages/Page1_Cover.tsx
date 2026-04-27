@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { AnimatedCounter } from '../ui/AnimatedCounter';
+import { getTitleData } from '../../core/Copywriter';
 
 interface Props {
   stats: CalculatedStats;
@@ -11,33 +12,10 @@ interface Props {
 
 export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
+  const { line1, isMilestone, isLongLine1 } = getTitleData(dateFilter, true);
 
-  let titleText = "My Time";
-  let isSingleYear = false;
+  const isSingleYear = dateFilter.type === 'this_year' || dateFilter.type === 'last_year' || (dateFilter.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0, 4) === dateFilter.end.substring(0, 4));
 
-  if (dateFilter.type === 'this_year') {
-    titleText = `My ${new Date().getFullYear()} Logbook`;
-    isSingleYear = true;
-  } else if (dateFilter.type === 'last_year') {
-    titleText = `My ${new Date().getFullYear() - 1} Logbook`;
-    isSingleYear = true;
-  } else if (dateFilter.type === 'custom' && dateFilter.start && dateFilter.end) {
-    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
-      const startYear = dateFilter.start.substring(0, 4);
-      const endYear = dateFilter.end.substring(0, 4);
-      if (startYear === endYear) {
-        titleText = `My ${startYear} Logbook`;
-        isSingleYear = true;
-      }
-    }
-  }
-
-  // Apply the custom milestone title if the user typed one in on the config screen
-  if (dateFilter.label && dateFilter.label.trim() !== '') {
-    titleText = dateFilter.label;
-  }
-
-  // Strip the year from the busiest month if we are already viewing a single-year logbook
   let displayBusiestMonth = stats.busiestMonth;
   if (isSingleYear && displayBusiestMonth && displayBusiestMonth !== 'Unknown') {
     displayBusiestMonth = displayBusiestMonth.split(' ')[0];
@@ -50,8 +28,9 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
       exit={{ opacity: 0 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl md:text-5xl mb-8 md:mb-12'} font-black tracking-tight text-blue-400 leading-tight`}>
-        {titleText}<br/>In The Sky.
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl md:text-3xl mb-8' : 'text-3xl md:text-4xl mb-8 md:mb-12')} font-black tracking-tight text-blue-400 leading-tight`}>
+        {line1}
+        {!isMilestone && <><br/>In The Sky.</>}
       </h2>
 
       <div className="space-y-5 md:space-y-10">

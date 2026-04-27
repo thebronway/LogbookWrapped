@@ -58,11 +58,14 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
 
     const currentYear = new Date().getFullYear();
 
-    // SPECIAL CASE: User uploaded 1 dataset but wants YoY comparison
     if (dateFilter.type === 'yoy' && datasets.length === 1) {
       const ds = datasets[0];
-      const y1 = parseInt(dateFilter.year1 || currentYear.toString());
-      const y2 = parseInt(dateFilter.year2 || (currentYear - 1).toString());
+      const inputY1 = parseInt(dateFilter.year1 || currentYear.toString());
+      const inputY2 = parseInt(dateFilter.year2 || (currentYear - 1).toString());
+
+      // UX Fix: Always force the older year to be Year 1 (Left) and the newer to be Year 2 (Right)
+      const y1 = Math.min(inputY1, inputY2);
+      const y2 = Math.max(inputY1, inputY2);
 
       const f1 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y1);
       const f2 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y2);

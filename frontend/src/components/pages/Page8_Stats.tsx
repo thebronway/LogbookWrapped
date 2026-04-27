@@ -12,23 +12,17 @@ interface Props {
 export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat = 'story' }) => {
   const dateFilter = useLogbookStore((state) => state.dateFilter);
 
-  // Dynamic Title Logic
-  let titleX = '';
-  if (dateFilter?.type === 'this_year') {
-    titleX = `${new Date().getFullYear()} `;
-  } else if (dateFilter?.type === 'last_year') {
-    titleX = `${new Date().getFullYear() - 1} `;
-  } else if (dateFilter?.type === 'all_time') {
-    titleX = 'All-Time ';
-  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
-    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
-      const startYear = dateFilter.start.substring(0, 4);
-      const endYear = dateFilter.end.substring(0, 4);
-      if (startYear === endYear) {
-        titleX = `${startYear} `;
-      }
-    }
+  let titlePrefix = "My LogbookWrapped";
+  if (dateFilter?.type === 'this_year') titlePrefix = `My ${new Date().getFullYear()} LogbookWrapped`;
+  else if (dateFilter?.type === 'last_year') titlePrefix = `My ${new Date().getFullYear() - 1} LogbookWrapped`;
+  else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0,4) === dateFilter.end.substring(0,4)) {
+    titlePrefix = `My ${dateFilter.start.substring(0, 4)} LogbookWrapped`;
+  } else if (dateFilter?.type === 'milestone') {
+    const label = dateFilter.label || '';
+    const acronymMap: Record<string, string> = { 'Private Pilot License': 'PPL', 'Instrument Rating': 'IFR', 'Commercial Pilot License': 'CPL', 'Multi-Engine Rating': 'Multi-Engine', 'First Solo': 'First Solo' };
+    titlePrefix = `My ${acronymMap[label] || label}`;
   }
+  const isLongTitle = titlePrefix.length > 20;
 
   let statRows = [
     { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`, sub: [`${stats.averageFlightTime} Hrs/Flight`, `${stats.totalNight} Hrs Night`] },
@@ -63,7 +57,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
       ? (exportFormat === 'story' ? 'p-6 pt-16' : 'p-5 pt-6') 
       : 'p-5 sm:p-6'
   }`;
-  const titleClass = `${exportFormat === 'post' ? 'text-2xl' : 'text-3xl'} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
+  const titleClass = `${exportFormat === 'post' ? (isLongTitle ? 'text-xl' : 'text-2xl') : (isLongTitle ? 'text-2xl' : 'text-3xl')} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
   const gapClass = `flex flex-col w-full flex-1 ${isExportMode ? "gap-4 pb-8" : "gap-3 sm:gap-4 pb-8"}`;
   const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
   const rightPadClass = `flex justify-between items-center gap-2 ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
@@ -80,7 +74,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
       className={paddingClass}
     >
       <h2 className={titleClass}>
-        My {titleX}Logbook<br />By The Numbers.
+        {titlePrefix}<br />By The Numbers.
       </h2>
       <div className={gapClass}>
         {statRows.map((row: any, i) => {

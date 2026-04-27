@@ -59,7 +59,7 @@ export interface CalculatedStats {
   };
 }
 
-export interface VersusCategory {
+export interface GrowthCategory {
   label: string;
   valueA: number;
   valueB: number;
@@ -69,14 +69,24 @@ export interface VersusCategory {
   isHigherBetter?: boolean;
 }
 
-export interface VersusStats {
-  hours: VersusCategory;
-  landings: VersusCategory;
-  distance: VersusCategory;
-  airports: VersusCategory;
-  night: VersusCategory;
-  fuel: VersusCategory;
+export interface GrowthStats {
+  hours: GrowthCategory;
+  flights: GrowthCategory;
+  distance: GrowthCategory;
+  landings: GrowthCategory;
+  night: GrowthCategory;
+  airports: GrowthCategory;
+  actualIMC: GrowthCategory;
+  simIMC: GrowthCategory;
+  fuel: GrowthCategory;
   overallWinner: 'A' | 'B' | 'Tie';
   scoreA: number;
   scoreB: number;
+}
+
+export interface ExportItem {
+  id: string;
+  name: string;
+  isPoster?: boolean;
+  render: (format: 'story' | 'post') => any;
 }

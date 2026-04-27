@@ -135,8 +135,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   return stats;
 };
 
-export const calculateVersusStats = (statsA: CalculatedStats, statsB: CalculatedStats): VersusStats => {
-  const compare = (valA: number, valB: number, label: string, unit: string, isHigherBetter = true): VersusCategory => {
+export const calculateGrowthStats = (statsA: CalculatedStats, statsB: CalculatedStats): GrowthStats => {
+  const compare = (valA: number, valB: number, label: string, unit: string, isHigherBetter = true): GrowthCategory => {
     let winner: 'A' | 'B' | 'Tie' = 'Tie';
     if (valA > valB) winner = isHigherBetter ? 'A' : 'B';
     if (valB > valA) winner = isHigherBetter ? 'B' : 'A';
@@ -153,21 +153,27 @@ export const calculateVersusStats = (statsA: CalculatedStats, statsB: Calculated
   };
 
   const hours = compare(statsA.totalHours, statsB.totalHours, 'Flight Time', 'hrs');
-  const landings = compare(statsA.totalLandings, statsB.totalLandings, 'Landings', '');
+  const flights = compare(statsA.totalFlights, statsB.totalFlights, 'Flights', '');
   const distance = compare(statsA.totalDistanceNm, statsB.totalDistanceNm, 'Distance', 'NM');
-  const airports = compare(statsA.uniqueAirports, statsB.uniqueAirports, 'Unique Airports', '');
+  const landings = compare(statsA.totalLandings, statsB.totalLandings, 'Landings', '');
   const night = compare(statsA.totalNight, statsB.totalNight, 'Night Hours', 'hrs');
-  const fuel = compare(statsA.estimatedFuelBurn, statsB.estimatedFuelBurn, 'Fuel Burned', 'gal', false); // Less fuel is "better" (eco-friendly)
+  const airports = compare(statsA.uniqueAirports, statsB.uniqueAirports, 'Unique Airports', '');
+  const actualIMC = compare(statsA.totalIMC, statsB.totalIMC, 'Actual IMC', 'hrs');
+  const simIMC = compare(statsA.totalSimulated, statsB.totalSimulated, 'Sim IMC', 'hrs');
+  const fuel = compare(statsA.estimatedFuelBurn, statsB.estimatedFuelBurn, 'Fuel Burned', 'gal', false);
 
-  const categories = [hours, landings, distance, airports, night];
+  const categories = [hours, flights, distance, landings, night, airports, actualIMC, simIMC];
   const scoreA = categories.filter(c => c.winner === 'A').length;
   const scoreB = categories.filter(c => c.winner === 'B').length;
 
   return {
     hours,
+    flights,
     landings,
     distance,
     airports,
+    actualIMC,
+    simIMC,
     night,
     fuel,
     scoreA,

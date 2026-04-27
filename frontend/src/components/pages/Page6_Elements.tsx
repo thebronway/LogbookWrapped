@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { CalculatedStats } from '../../core/types';
-import { getPage6Copy } from '../../core/Copywriter';
+import { getPage6Copy, getTitleData } from '../../core/Copywriter';
+import { useLogbookStore } from '../../store/useLogbookStore';
 import { AnimatedCounter } from '../ui/AnimatedCounter';
 
 interface Props {
@@ -10,13 +11,18 @@ interface Props {
 }
 
 export const Page6_Elements: React.FC<Props> = ({ stats, exportFormat = 'story' }) => {
+  const dateFilter = useLogbookStore((state) => state.dateFilter);
+  const { line1, isMilestone, isLongLine1 } = getTitleData(dateFilter);
   const { nightCopy } = getPage6Copy(stats);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-cyan-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? 'text-3xl mb-6' : 'text-4xl mb-8'} font-black text-cyan-400`}>My Logbook <br />In The Elements.</h2>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-8' : 'text-3xl mb-8')} font-black tracking-tight text-cyan-400 leading-tight`}>
+        {line1}<br />
+        In The Elements.
+      </h2>
       <div className="space-y-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
           <p className="text-cyan-500 text-sm font-bold uppercase tracking-widest mb-1">The Night Owl</p>

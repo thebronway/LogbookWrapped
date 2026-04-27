@@ -223,23 +223,17 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
     }
   }, [geoData, stats, exportFormat]);
 
-  // Dynamic Title Logic
-  let titleX = '';
-  if (dateFilter?.type === 'this_year') {
-    titleX = `${new Date().getFullYear()} `;
-  } else if (dateFilter?.type === 'last_year') {
-    titleX = `${new Date().getFullYear() - 1} `;
-  } else if (dateFilter?.type === 'all_time') {
-    titleX = 'All-Time ';
-  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
-    if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
-      const startYear = dateFilter.start.substring(0, 4);
-      const endYear = dateFilter.end.substring(0, 4);
-      if (startYear === endYear) {
-        titleX = `${startYear} `;
-      }
-    }
+  let titlePrefix = "My LogbookWrapped";
+  if (dateFilter?.type === 'this_year') titlePrefix = `My ${new Date().getFullYear()} LogbookWrapped`;
+  else if (dateFilter?.type === 'last_year') titlePrefix = `My ${new Date().getFullYear() - 1} LogbookWrapped`;
+  else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0,4) === dateFilter.end.substring(0,4)) {
+    titlePrefix = `My ${dateFilter.start.substring(0, 4)} LogbookWrapped`;
+  } else if (dateFilter?.type === 'milestone') {
+    const label = dateFilter.label || '';
+    const acronymMap: Record<string, string> = { 'Private Pilot License': 'PPL', 'Instrument Rating': 'IFR', 'Commercial Pilot License': 'CPL', 'Multi-Engine Rating': 'Multi-Engine', 'First Solo': 'First Solo' };
+    titlePrefix = `My ${acronymMap[label] || label}`;
   }
+  const isLongTitle = titlePrefix.length > 20;
 
   return (
     <motion.div 
@@ -259,8 +253,8 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
               : 'pt-10 pb-6 px-5 sm:px-6'
           }`}
         >
-            <h2 className={`${exportFormat === 'post' ? 'text-2xl' : 'text-3xl'} font-black text-white m-0 tracking-tight leading-tight`}>
-              My {titleX}Logbook Passport.
+            <h2 className={`${exportFormat === 'post' ? (isLongTitle ? 'text-xl' : 'text-2xl') : (isLongTitle ? 'text-2xl' : 'text-3xl')} font-black text-white m-0 tracking-tight leading-tight`}>
+              {titlePrefix} Passport.
             </h2>
         </motion.div>
 
