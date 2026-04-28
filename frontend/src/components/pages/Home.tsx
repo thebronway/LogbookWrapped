@@ -38,7 +38,7 @@ export const Home = () => {
             <Plane size={32} />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Upload Your Logbook</h3>
-          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, track a Milestone, or see your Year-over-Year Growth.</p>
+          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, track a Milestone, or see your Year-over-Year Growth. Processed <strong className="text-emerald-400">100% locally</strong>.</p>
         </Link>
 
         {/* Card 2: Demo Hangar */}
@@ -53,46 +53,49 @@ export const Home = () => {
       </div>
 
       {/* SEO Density & Trust Indicators */}
-      <div className="w-full max-w-3xl mt-8 text-center px-4 space-y-8 mb-8">
+      <div className="w-full max-w-4xl mt-8 bg-slate-800/40 border border-slate-700 p-6 sm:p-10 rounded-2xl space-y-10 text-left mb-8">
         
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Supported Electronic Flight Bags</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            LogbookWrapped’s proprietary parser automatically cleans and visualizes CSV exports from <strong className="text-slate-300">ForeFlight</strong>, <strong className="text-slate-300">Garmin Pilot</strong>, <strong className="text-slate-300">MyFlightbook</strong>, <strong className="text-slate-300">LogTen Pro</strong>, and custom spreadsheet formats.
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">Supported Electronic Flight Bags</h2>
+          <p className="text-slate-300 leading-relaxed">
+            LogbookWrapped’s proprietary parser automatically cleans and visualizes CSV exports from <strong className="text-white">ForeFlight</strong>, <strong className="text-white">Garmin Pilot</strong>, <strong className="text-white">MyFlightbook</strong>, <strong className="text-white">LogTen Pro</strong>, and custom spreadsheet formats.
           </p>
-          <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 mx-auto max-w-lg mt-2">
-            <p className="text-slate-300 text-sm">
-              Not sure how to get your data? <Link to="/export" className="text-sky-400 hover:text-sky-300 font-medium underline underline-offset-4 transition-colors">Read our EFB export guides.</Link>
-            </p>
+          <div className="pt-2">
+            <Link to="/export" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-sky-400 hover:bg-slate-700 hover:text-sky-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700">
+              Read our EFB export guides &rarr;
+            </Link>
           </div>
-        </div>
+        </section>
 
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">How We Parse Your Flight Logs</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">How We Parse Your Flight Logs</h2>
+          <p className="text-slate-300 leading-relaxed">
             Pilots log things differently. Some are meticulous; others leave half the columns blank. Here is how our engine automatically cleans, patches, and interprets your data before doing the math.
           </p>
-          <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 mx-auto max-w-lg mt-2">
-            <p className="text-slate-300 text-sm">
-              Curious how we crunch the numbers? <Link to="/methodology" className="text-sky-400 hover:text-sky-300 font-medium underline underline-offset-4 transition-colors">View our parsing methodology.</Link>
-            </p>
+          <div className="pt-2">
+            <Link to="/methodology" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-sky-400 hover:bg-slate-700 hover:text-sky-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700">
+              View our parsing methodology &rarr;
+            </Link>
           </div>
-        </div>
+        </section>
 
-        <div className="space-y-3">
-          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Share Your Aviation Adventures</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
-            View your routes, see aviation extremes and superlatives, and then export 4:5 posts and 9:16 vertical stories directly to <strong className="text-slate-300">Instagram, TikTok, Facebook, or aviation forums</strong>.
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">Share Your Aviation Adventures</h2>
+          <p className="text-slate-300 leading-relaxed">
+            View your routes, see aviation extremes and superlatives, and then export 4:5 posts and 9:16 vertical stories directly to <strong className="text-white">Instagram, TikTok, Facebook, or aviation forums</strong>.
           </p>
-        </div>
+        </section>
         
-        <div className="inline-block bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 mt-2">
-          <p className="text-slate-300 text-sm leading-relaxed">
-            <span className="text-emerald-400 font-bold">100% Private:</span> All processing happens completely in your web browser. No data is ever sent to a server. Your flight logs remain 100% private.&nbsp;
-            <Link to="/privacy" className="text-sky-400 hover:text-sky-300 underline underline-offset-4 mt-2 inline-block transition-colors">
+        <div className="bg-slate-900/60 border-l-4 border-emerald-500 p-4 rounded-r-lg mt-6">
+          <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
+            <span className="font-sans font-bold text-emerald-400 uppercase tracking-widest text-xs block mb-1">100% Private</span> 
+            All processing happens completely in your web browser. No data is ever sent to a server. Your flight logs remain strictly on your device.
+          </p>
+          <div className="pt-2">
+            <Link to="/privacy" className="text-sky-400 hover:text-sky-300 text-sm font-medium underline underline-offset-4 transition-colors">
               Read our full Privacy Policy
             </Link>
-          </p>
+          </div>
         </div>
         
       </div>

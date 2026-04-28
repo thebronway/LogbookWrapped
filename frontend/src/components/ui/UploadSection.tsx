@@ -39,7 +39,7 @@ export const UploadSection = () => {
               <div>
                 <span className="block font-medium text-white">2. Upload the file.</span>
                 <span className="text-sm text-slate-400 block mt-1 leading-relaxed">
-                  Drag and drop your file below. Everything is processed 100% locally in your browser. Curious how we crunch the numbers? <Link to="/methodology" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
+                  Drag and drop your file below. Everything is processed <strong className="text-emerald-400 font-bold">100% locally in your browser</strong>. Curious how we crunch the numbers? <Link to="/methodology" className="text-blue-400 hover:text-blue-300 underline underline-offset-4 transition-colors">View our methodology.</Link>
                 </span>
               </div>
             </li>

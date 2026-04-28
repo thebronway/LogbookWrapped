@@ -27,9 +27,9 @@ export const Demos = () => {
       // 1. SET THE FILE PATH BASED ON THE DEMO CLICKED
       let filePath = '';
       if (demoId === 'cfi' || demoId === 'private' || demoId === 'growth') {
-        filePath = '/assets/demo_files/demo1.csv';
+        filePath = '/assets/demo_files/demo_a.csv';
       } else if (demoId === 'regional') {
-        filePath = '/assets/demo_files/demo2.csv';
+        filePath = '/assets/demo_files/demo_b.csv';
       }
 
       const response = await fetch(filePath);
@@ -39,17 +39,17 @@ export const Demos = () => {
       const file = new File([blob], `${demoId}_logbook.csv`, { type: 'text/csv' });
 
       // 2. SET THE DATES TO MATCH THE DATA IN THOSE FILES
-      if (demoId === 'cfi') {
-        setDateFilter({ type: 'custom', start: '2025-01-01', end: '2025-12-31' });
+      if (demoId === 'cfi') { // Sarah's IFR Era
+        setDateFilter({ type: 'custom', start: '2023-01-01', end: '2023-12-31' });
       } 
-      else if (demoId === 'regional') {
+      else if (demoId === 'regional') { // John's All Time
         setDateFilter({ type: 'all_time' });
       } 
-      else if (demoId === 'private') {
-        setDateFilter({ type: 'milestone', label: 'Private Pilot Training', start: '2025-01-01', end: '2025-12-31' });
+      else if (demoId === 'private') { // Alex's Student Era
+        setDateFilter({ type: 'milestone', label: 'Private Pilot Training', start: '2020-01-01', end: '2021-12-31' });
       }
-      else if (demoId === 'growth') {
-        setDateFilter({ type: 'yoy', year1: '2025', year2: '2024' });
+      else if (demoId === 'growth') { // Mark's Pro Era YoY
+        setDateFilter({ type: 'yoy', year1: '2026', year2: '2025' });
       }
 
       // Pass true to bypass the /config screen
@@ -102,45 +102,45 @@ export const Demos = () => {
 
       <div className="text-center space-y-4">
         <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase italic">The Demo Hangar</h1>
-        <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Meet our demo pilots and experience LogbookWrapped through their eyes.</p>
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Meet our demo pilots and experience LogbookWrapped.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">
         <DemoCard 
           id="cfi" 
           name="Sarah" 
-          title="The Grinding CFI" 
+          title="The IFR Explorer" 
           icon={Plane}
-          colorClass="bg-sky-500"
-          borderClass="border-sky-500/30 hover:border-sky-400"
-          desc="Sarah is a 23-year-old CFI building time towards the airlines. Load her Annual Review to see what 500 hours of pattern work and steep turns looks like."
+          colorClass="bg-sky-700"
+          borderClass="border-sky-700/30 hover:border-sky-500"
+          desc="Explore a 2023 Annual Review highlighting instrument training and cross-country progression across the Southeast."
         />
         <DemoCard 
           id="regional" 
           name="Captain John" 
           title="The Regional Lifer" 
           icon={Briefcase}
-          colorClass="bg-purple-500"
-          borderClass="border-purple-500/30 hover:border-purple-400"
-          desc="John has been flying the line for 15 years. Load his All-Time Career to see how the app visualizes thousands of hours of East Coast hopping."
+          colorClass="bg-indigo-700"
+          borderClass="border-indigo-700/30 hover:border-indigo-500"
+          desc="Visualize 15 years of Part 121 operations. See how the engine handles thousands of hours of high-volume East Coast flying."
         />
         <DemoCard 
           id="private" 
           name="Alex" 
           title="The Weekend Warrior" 
           icon={Compass}
-          colorClass="bg-emerald-500"
-          borderClass="border-emerald-500/30 hover:border-emerald-400"
-          desc="Alex just earned his Private Pilot License! Load his Milestone Tracker to see his 60-hour journey from discovery flight to checkride."
+          colorClass="bg-teal-700"
+          borderClass="border-teal-700/30 hover:border-teal-500"
+          desc="Follow a complete Private Pilot journey. This Milestone Tracker details 2020-2021 flights from day one to the checkride."
         />
         <DemoCard 
           id="growth" 
           name="Mark" 
-          title="The Up-and-Comer" 
+          title="The West Coast Pro" 
           icon={TrendingUp}
-          colorClass="bg-yellow-500"
-          borderClass="border-yellow-500/30 hover:border-yellow-400"
-          desc="Mark hit it hard this year. Load his Growth Report to see how his 2025 flying stats stack up against his 2024 logbook."
+          colorClass="bg-amber-700"
+          borderClass="border-amber-700/30 hover:border-amber-500"
+          desc="Analyze year-over-year progression. This Growth Report compares high-volume West Coast operations between 2027 and 2028."
         />
       </div>
     </motion.div>

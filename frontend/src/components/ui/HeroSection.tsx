@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Shield, Zap, Share2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const SCREENSHOTS = Array.from({ length: 9 }, (_, i) => `/screenshots/page${i + 1}.webp`);
+const SCREENSHOTS = Array.from({ length: 10 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
 export const HeroSection = () => {
   const [currentImage, setCurrentImage] = useState(0);

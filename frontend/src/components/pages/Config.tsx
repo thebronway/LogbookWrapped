@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useNavigate, Navigate } from 'react-router-dom';
-import { Calendar, Trophy, Globe, Users, ArrowRight, AlertCircle, TrendingUp } from 'lucide-react';
-import { useLogbookStore, DateFilterType } from '../../store/useLogbookStore';
+import { Calendar, Trophy, Globe, ArrowUpRight, AlertCircle, TrendingUp } from 'lucide-react';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 type ConfigMode = 'annual' | 'milestone' | 'all_time' | 'yoy';
 
@@ -12,7 +12,7 @@ export const Config = () => {
   const navigate = useNavigate();
   const [mode, setMode] = useState<ConfigMode>('annual');
   const [error, setError] = useState<string | null>(null);
-  const [milestoneType, setMilestoneType] = useState<string>('Private Pilot License');
+  const [milestoneType, setMilestoneType] = useState<string>('None');
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -109,7 +109,7 @@ export const Config = () => {
               selected={mode === 'milestone'} 
               onClick={() => { 
                 setMode('milestone'); 
-                setDateFilter({ type: 'milestone', start: '', end: '', label: milestoneType === 'Other' ? '' : milestoneType }); 
+                setDateFilter({ type: 'milestone', start: '', end: '', label: (milestoneType === 'Other' || milestoneType === 'None') ? '' : milestoneType }); 
               }} 
             />
             <OptionCard 
@@ -148,16 +148,17 @@ export const Config = () => {
           {mode === 'milestone' && (
             <div className="space-y-6">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-slate-300">Milestone</label>
+                <label className="block text-sm font-bold text-slate-300">Milestone (Optional)</label>
                 <select 
                   value={milestoneType}
                   onChange={(e) => {
                     const val = e.target.value;
                     setMilestoneType(val);
-                    setDateFilter({ ...dateFilter, label: val === 'Other' ? '' : val });
+                    setDateFilter({ ...dateFilter, label: (val === 'Other' || val === 'None') ? '' : val });
                   }}
                   className="w-full bg-slate-900 border border-slate-600 text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500 outline-none font-medium appearance-none cursor-pointer"
                 >
+                  <option value="None">No Milestone (Date Range Only)</option>
                   <option value="Private Pilot License">Private Pilot License</option>
                   <option value="Instrument Rating">Instrument Rating</option>
                   <option value="Commercial Pilot License">Commercial Pilot License</option>
@@ -235,7 +236,7 @@ export const Config = () => {
 
           {mode === 'all_time' && (
             <div className="text-center py-4">
-              <Globe className="mx-auto text-emerald-400 mb-2 opacity-50" size={48} />
+              <Globe className="mx-auto text-blue-400 mb-2 opacity-50" size={48} />
               <p className="text-slate-300 font-medium">Ready to process your entire aviation history.</p>
             </div>
           )}
@@ -251,13 +252,10 @@ export const Config = () => {
 
         <button 
           onClick={handleGenerate}
-          className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-1 ${
-            mode === 'yoy' ? 'bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-500/20' : 
-            'bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20'
-          }`}
+          className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-1 bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20"
         >
           {mode === 'yoy' ? 'Analyze Growth' : 'Generate My Wrapped'}
-          <ArrowRight size={24} />
+          <ArrowUpRight size={24} />
         </button>
 
       </div>

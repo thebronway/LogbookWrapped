@@ -130,8 +130,8 @@ export const Growth = () => {
         </Link>
       </div>
 
-      <div className="w-full flex flex-col items-start mb-4 pr-8 md:pr-0 mt-4 md:mt-0">
-        <div className="flex items-center gap-4 mb-8">
+      <div className="w-full flex flex-col items-start mb-4 mt-4 md:mt-0">
+        <div className="flex items-center gap-4 mb-8 pr-10 md:pr-0">
           <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight md:whitespace-nowrap">
             My LogbookWrapped <br className="md:hidden" /> Growth Report.
           </h1>
@@ -142,7 +142,14 @@ export const Growth = () => {
         </div>
       </div>
 
-      <div className="w-full bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden">
+      <div 
+        className="w-full bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden"
+        style={{ 
+          transform: 'translateZ(0)', 
+          WebkitTransform: 'translateZ(0)',
+          WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+        }}
+      >
         
         <div className="flex justify-between items-center mb-10 relative px-2">
           <div className="text-center flex-1 z-10 w-1/3">
@@ -155,8 +162,8 @@ export const Growth = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-sky-400 truncate">{nameB}</h2>
           </div>
 
-          <div className="absolute -left-10 -top-10 w-48 h-48 bg-purple-500/20 rounded-full blur-[80px]" />
-          <div className="absolute -right-10 -top-10 w-48 h-48 bg-sky-500/20 rounded-full blur-[80px]" />
+          <div className="absolute -left-10 -top-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl -z-10" />
+          <div className="absolute -right-10 -top-10 w-48 h-48 bg-sky-500/20 rounded-full blur-3xl -z-10" />
         </div>
 
         <div className="bg-slate-800/50 rounded-2xl border border-slate-700/50 p-2 md:p-6 relative z-10">
@@ -277,7 +284,14 @@ const GrowthExportCard = ({ format, gStats, nameA, nameB }: { format: 'story'|'p
         </h1>
       </div>
         
-      <div className={`w-full bg-slate-900 border border-slate-700 rounded-3xl ${isPost ? 'p-5' : 'p-6'} shadow-2xl relative overflow-hidden`}>
+      <div 
+        className={`w-full bg-slate-900 border border-slate-700 rounded-3xl ${isPost ? 'p-5' : 'p-6'} shadow-2xl relative overflow-hidden`}
+        style={{ 
+          transform: 'translateZ(0)', 
+          WebkitTransform: 'translateZ(0)',
+          WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+        }}
+      >
         <div className={`flex justify-between items-center ${isPost ? 'mb-4' : 'mb-8'} relative`}>
           <div className="text-center flex-1 z-10 w-1/3">
             <h2 className={`${isPost ? 'text-xl' : 'text-2xl'} font-black text-purple-400 truncate`}>{nameA}</h2>
@@ -286,8 +300,8 @@ const GrowthExportCard = ({ format, gStats, nameA, nameB }: { format: 'story'|'p
           <div className="text-center flex-1 z-10 w-1/3">
             <h2 className={`${isPost ? 'text-xl' : 'text-2xl'} font-black text-sky-400 truncate`}>{nameB}</h2>
           </div>
-          <div className="absolute -left-10 -top-10 w-40 h-40 bg-purple-500/20 rounded-full blur-[60px]" />
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/20 rounded-full blur-[60px]" />
+          <div className="absolute -left-10 -top-10 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl -z-10" />
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-sky-500/20 rounded-full blur-3xl -z-10" />
         </div>
 
         <div className={`bg-slate-800/50 rounded-2xl border border-slate-700/50 relative z-10 ${isPost ? 'p-2' : 'p-3'}`}>
