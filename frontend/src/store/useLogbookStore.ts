@@ -25,7 +25,7 @@ export interface LogbookDataset {
 
 interface LogbookState {
   datasets: LogbookDataset[];
-  rawFlights: FlightRecord[];
+  rawFlights: FlightRecord[]; // Exposed globally for cross-linking
   flights: FlightRecord[];
   stats: CalculatedStats | null;
   airportDB: AirportDB | null;
@@ -53,13 +53,16 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
   },
 
   applyFilterAndCalculate: () => {
-    const { datasets, dateFilter, airportDB } = get();
+    const { datasets, dateFilter, airportDB, rawFlights: globalRawFlights } = get();
     if (!airportDB || datasets.length === 0) return;
 
     const currentYear = new Date().getFullYear();
+    
+    // Always pull from the pure global rawFlights to prevent dataset filtering corruption
+    const baseFlights = globalRawFlights.length > 0 ? globalRawFlights : datasets[0].rawFlights;
+    const dsBase = datasets[0]; // Used just to copy over the base properties like fileName
 
-    if (dateFilter.type === 'yoy' && datasets.length === 1) {
-      const ds = datasets[0];
+    if (dateFilter.type === 'yoy') {
       const inputY1 = parseInt(dateFilter.year1 || currentYear.toString());
       const inputY2 = parseInt(dateFilter.year2 || (currentYear - 1).toString());
 
@@ -67,8 +70,8 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       const y1 = Math.min(inputY1, inputY2);
       const y2 = Math.max(inputY1, inputY2);
 
-      const f1 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y1);
-      const f2 = ds.rawFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y2);
+      const f1 = baseFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y1);
+      const f2 = baseFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y2);
 
       const stats1 = f1.length > 0 ? calculateStats(f1, airportDB) : null;
       const stats2 = f2.length > 0 ? calculateStats(f2, airportDB) : null;
@@ -86,10 +89,10 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
 
       set({
         datasets: [
-          { ...ds, id: 'yoy1', ownerName: y1.toString(), flights: f1, stats: stats1 },
-          { ...ds, id: 'yoy2', ownerName: y2.toString(), flights: f2, stats: stats2 }
+          { ...dsBase, id: 'yoy1', ownerName: y1.toString(), flights: f1, stats: stats1, rawFlights: baseFlights },
+          { ...dsBase, id: 'yoy2', ownerName: y2.toString(), flights: f2, stats: stats2, rawFlights: baseFlights }
         ],
-        rawFlights: ds.rawFlights,
+        rawFlights: baseFlights,
         flights: f1,
         stats: stats1,
         status: 'success'
@@ -98,44 +101,41 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     }
 
     // STANDARD CASE
-    const updatedDatasets = datasets.map(dataset => {
-      const filtered = dataset.rawFlights.filter(f => {
-        const d = new Date(f.date);
-        if (isNaN(d.getTime())) return false;
+    const filtered = baseFlights.filter(f => {
+      const d = new Date(f.date);
+      if (isNaN(d.getTime())) return false;
 
-        if (dateFilter.type === 'this_year') return d.getFullYear() === currentYear;
-        if (dateFilter.type === 'last_year') return d.getFullYear() === currentYear - 1;
-        if (dateFilter.type === 'all_time') return true;
-        if (dateFilter.type === 'custom' || dateFilter.type === 'milestone') {
-          const start = dateFilter.start ? new Date(dateFilter.start) : new Date(0);
-          const end = dateFilter.end ? new Date(dateFilter.end) : new Date();
-          end.setHours(23, 59, 59, 999);
-          return d >= start && d <= end;
-        }
-        return true;
-      });
-
-      const computedStats = filtered.length > 0 ? calculateStats(filtered, airportDB) : null;
-      
-      return {
-        ...dataset,
-        flights: filtered,
-        stats: computedStats
-      };
+      if (dateFilter.type === 'this_year') return d.getFullYear() === currentYear;
+      if (dateFilter.type === 'last_year') return d.getFullYear() === currentYear - 1;
+      if (dateFilter.type === 'all_time') return true;
+      if (dateFilter.type === 'custom' || dateFilter.type === 'milestone') {
+        const start = dateFilter.start ? new Date(dateFilter.start) : new Date(0);
+        const end = dateFilter.end ? new Date(dateFilter.end) : new Date();
+        end.setHours(23, 59, 59, 999);
+        return d >= start && d <= end;
+      }
+      return true;
     });
 
-    const primaryDataset = updatedDatasets[0];
-    
-    if (primaryDataset.flights.length === 0) {
+    if (filtered.length === 0) {
       set({ status: 'error', errorMessage: 'No flights found in this date range.' });
       return;
     }
 
+    const computedStats = calculateStats(filtered, airportDB);
+
     set({ 
-      datasets: updatedDatasets,
-      rawFlights: primaryDataset.rawFlights,
-      flights: primaryDataset.flights, 
-      stats: primaryDataset.stats, 
+      datasets: [{
+        ...dsBase,
+        id: crypto.randomUUID(),
+        ownerName: undefined, // Clear the ownerName from YoY if it existed
+        flights: filtered,
+        stats: computedStats,
+        rawFlights: baseFlights
+      }],
+      rawFlights: baseFlights,
+      flights: filtered, 
+      stats: computedStats, 
       status: 'success' 
     });
   },
@@ -181,5 +181,5 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     }
   },
 
-  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, status: 'idle', errorMessage: null })
+  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' } })
 }));

@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { HeroSection } from '../ui/HeroSection';
-import { Plane, Users, Compass } from 'lucide-react';
+import { Plane, Compass } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
 export const Home = () => {
@@ -23,6 +23,7 @@ export const Home = () => {
       <Helmet>
         <title>LogbookWrapped | Your Aviation Year in Review</title>
         <meta name="description" content="A privacy-first web app that transforms EFB logbook exports into shareable aviation stories." />
+        <link rel="canonical" href="https://logbookwrapped.com/" />
       </Helmet>
 
       <HeroSection />
@@ -31,7 +32,7 @@ export const Home = () => {
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* Card 1: Upload */}
-        <Link to="/upload" className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-sky-500/30 hover:border-sky-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-sky-500/10 hover:-translate-y-1 relative overflow-hidden">
+        <Link to="/upload" onClick={() => (window as any).umami?.track('Funnel Started', { path: 'upload_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-sky-500/30 hover:border-sky-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-sky-500/10 hover:-translate-y-1 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-3xl group-hover:bg-sky-500/20 transition-colors" />
           <div className="w-16 h-16 bg-sky-500/20 text-sky-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
             <Plane size={32} />
@@ -41,7 +42,7 @@ export const Home = () => {
         </Link>
 
         {/* Card 2: Demo Hangar */}
-        <Link to="/demos" className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-emerald-500/30 hover:border-emerald-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 relative overflow-hidden">
+        <Link to="/demos" onClick={() => (window as any).umami?.track('Funnel Started', { path: 'demo_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-emerald-500/30 hover:border-emerald-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors" />
           <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
             <Compass size={32} />
@@ -49,8 +50,53 @@ export const Home = () => {
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Explore Examples</h3>
           <p className="text-slate-400 text-sm leading-relaxed z-10">Don't have a logbook handy? Meet our demo pilots and see the magic of LogbookWrapped in action.</p>
         </Link>
-
       </div>
+
+      {/* SEO Density & Trust Indicators */}
+      <div className="w-full max-w-3xl mt-8 text-center px-4 space-y-8 mb-8">
+        
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Supported Electronic Flight Bags</h2>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            LogbookWrapped’s proprietary parser automatically cleans and visualizes CSV exports from <strong className="text-slate-300">ForeFlight</strong>, <strong className="text-slate-300">Garmin Pilot</strong>, <strong className="text-slate-300">MyFlightbook</strong>, <strong className="text-slate-300">LogTen Pro</strong>, and custom spreadsheet formats.
+          </p>
+          <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 mx-auto max-w-lg mt-2">
+            <p className="text-slate-300 text-sm">
+              Not sure how to get your data? <Link to="/export" className="text-sky-400 hover:text-sky-300 font-medium underline underline-offset-4 transition-colors">Read our EFB export guides.</Link>
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">How We Parse Your Flight Logs</h2>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            Pilots log things differently. Some are meticulous; others leave half the columns blank. Here is how our engine automatically cleans, patches, and interprets your data before doing the math.
+          </p>
+          <div className="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3 mx-auto max-w-lg mt-2">
+            <p className="text-slate-300 text-sm">
+              Curious how we crunch the numbers? <Link to="/methodology" className="text-sky-400 hover:text-sky-300 font-medium underline underline-offset-4 transition-colors">View our parsing methodology.</Link>
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Share Your Aviation Adventures</h2>
+          <p className="text-slate-400 text-sm leading-relaxed">
+            View your routes, see aviation extremes and superlatives, and then export 4:5 posts and 9:16 vertical stories directly to <strong className="text-slate-300">Instagram, TikTok, Facebook, or aviation forums</strong>.
+          </p>
+        </div>
+        
+        <div className="inline-block bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 mt-2">
+          <p className="text-slate-300 text-sm leading-relaxed">
+            <span className="text-emerald-400 font-bold">100% Private:</span> All processing happens completely in your web browser. No data is ever sent to a server. Your flight logs remain 100% private.&nbsp;
+            <Link to="/privacy" className="text-sky-400 hover:text-sky-300 underline underline-offset-4 mt-2 inline-block transition-colors">
+              Read our full Privacy Policy
+            </Link>
+          </p>
+        </div>
+        
+      </div>
+      
     </motion.div>
   );
 };

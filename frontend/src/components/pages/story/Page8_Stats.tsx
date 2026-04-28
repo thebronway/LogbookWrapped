@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CalculatedStats } from '../../core/types';
-import { useLogbookStore } from '../../store/useLogbookStore';
+import { CalculatedStats } from '../../../core/types';
+import { useLogbookStore } from '../../../store/useLogbookStore';
 
 interface Props {
   stats: CalculatedStats;

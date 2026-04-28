@@ -1,12 +1,12 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.9.4-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.9.5-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
 
-**LogbookWrapped** is "Spotify Wrapped for Pilots." It transforms CSV exports from an EFBs (like ForeFlight, Garmin Pilot, or MyFlightbook) into a “passport” of a pilot’s flying history. Pilots get a shareable, story-format breakdown of their flight hours, routes, aircraft, and aviation extremes, which are all ready to be exported directly to social media or aviation forums.
+**LogbookWrapped** is "Spotify Wrapped for Pilots." It transforms CSV exports from EFBs (like ForeFlight, Garmin Pilot, or MyFlightbook) into a shareable visual history of a pilot’s flying career. Pilots get a story-format breakdown of their flight hours, routes, aircraft, and extremes—whether they are reviewing a specific year's **Wrapped**, analyzing year-over-year **Growth**, or celebrating all-time career **Milestones**. All ready to be exported directly to social media or aviation forums.
 
 > **Note:** All processing happens 100% in the web browser. No data is ever sent to a server. Your flight logs remain 100% private.
 
@@ -41,6 +41,7 @@
 
 ## Features
 
+* **Multiple Dashboards:** Explore data via an annual **Wrapped** story, track year-over-year progression with **Growth**, or celebrate all-time achievements in **Milestones**.
 * **Story Mode Interface:** A sequential animated experience detailing total hours, sorties, and home base status.
 * **The Stats Card:** A high-impact summary card designed for quick social sharing.
 * **The Footprint Map:** Path visualization that auto-scales from local practice areas to global maps.
@@ -55,7 +56,7 @@
 
 LogbookWrapped offers a 100% serverless, client-side import API for third-party flight tracking apps and EFBs. Devs can easily add a "Generate End of Year or All-time LogbookWrapped" button to your platform that securely transmits a user's logbook data directly to LogbookWrapped via `window.postMessage()`. 
 
-For technical specifications, implementation examples, and allowlist requirements, please review our [Developer Integration Guide](https://logbookwrapped.com/howtoimport).
+For technical specifications, implementation examples, and allowlist requirements, please review our [Developer Integration Guide](https://logbookwrapped.com/dev).
 
 ## The Passport Experience
 

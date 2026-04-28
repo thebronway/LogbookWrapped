@@ -2,32 +2,34 @@ import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Play, Compass, Plane, Briefcase } from 'lucide-react';
+import { Play, Compass, Plane, Briefcase, TrendingUp } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
 export const Demos = () => {
-  const { status, datasets, setDateFilter, processFiles } = useLogbookStore();
+  const { status, datasets, setDateFilter, processFiles, dateFilter } = useLogbookStore();
   const navigate = useNavigate();
 
-  // If a demo successfully processes (and bypasses config), go straight to the story
+  // If a demo successfully processes (and bypasses config), route to the correct experience
   useEffect(() => {
     if (status === 'success' && datasets.length > 0 && datasets[0].stats) {
-      navigate('/wrapped');
+      if (dateFilter.type === 'yoy') {
+        navigate('/growth');
+      } else {
+        navigate('/wrapped');
+      }
     }
-  }, [status, datasets, navigate]);
+  }, [status, datasets, navigate, dateFilter.type]);
 
-  const loadDemo = async (demoId: 'cfi' | 'regional' | 'private') => {
+  const loadDemo = async (demoId: 'cfi' | 'regional' | 'private' | 'growth') => {
     try {
       (window as any).umami?.track('Demo Character Loaded', { character: demoId });
       
       // 1. SET THE FILE PATH BASED ON THE DEMO CLICKED
       let filePath = '';
-      if (demoId === 'cfi') {
+      if (demoId === 'cfi' || demoId === 'private' || demoId === 'growth') {
         filePath = '/assets/demo_files/demo1.csv';
       } else if (demoId === 'regional') {
         filePath = '/assets/demo_files/demo2.csv';
-      } else if (demoId === 'private') {
-        filePath = '/assets/demo_files/demo1.csv';
       }
 
       const response = await fetch(filePath);
@@ -44,8 +46,10 @@ export const Demos = () => {
         setDateFilter({ type: 'all_time' });
       } 
       else if (demoId === 'private') {
-        // Here is where you can change the title of the Milestone
         setDateFilter({ type: 'milestone', label: 'Private Pilot Training', start: '2025-01-01', end: '2025-12-31' });
+      }
+      else if (demoId === 'growth') {
+        setDateFilter({ type: 'yoy', year1: '2025', year2: '2024' });
       }
 
       // Pass true to bypass the /config screen
@@ -101,7 +105,7 @@ export const Demos = () => {
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Meet our demo pilots and experience LogbookWrapped through their eyes.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">
         <DemoCard 
           id="cfi" 
           name="Sarah" 
@@ -128,6 +132,15 @@ export const Demos = () => {
           colorClass="bg-emerald-500"
           borderClass="border-emerald-500/30 hover:border-emerald-400"
           desc="Alex just earned his Private Pilot License! Load his Milestone Tracker to see his 60-hour journey from discovery flight to checkride."
+        />
+        <DemoCard 
+          id="growth" 
+          name="Mark" 
+          title="The Up-and-Comer" 
+          icon={TrendingUp}
+          colorClass="bg-yellow-500"
+          borderClass="border-yellow-500/30 hover:border-yellow-400"
+          desc="Mark hit it hard this year. Load his Growth Report to see how his 2025 flying stats stack up against his 2024 logbook."
         />
       </div>
     </motion.div>

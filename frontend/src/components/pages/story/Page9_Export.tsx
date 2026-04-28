@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Share2, Bug, Check, Forward, HandCoins } from 'lucide-react';
-import { CalculatedStats } from '../../core/types';
-import { useLogbookStore } from '../../store/useLogbookStore';
+import { Share2, Bug, Check, Forward, HandCoins, TrendingUp } from 'lucide-react';
+import { CalculatedStats } from '../../../core/types';
+import { useLogbookStore } from '../../../store/useLogbookStore';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   stats: CalculatedStats;
@@ -12,8 +13,41 @@ interface Props {
 }
 
 export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
-  const dateFilter = useLogbookStore((state) => state.dateFilter);
+  const { dateFilter, rawFlights, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
+
+  const generateGrowthLink = () => {
+    if (!rawFlights || rawFlights.length === 0) return null;
+    
+    // Find all unique years in the raw data
+    const years = [...new Set(rawFlights.map(f => {
+      const d = new Date(f.date);
+      return isNaN(d.getTime()) ? null : d.getFullYear();
+    }).filter(y => y !== null))] as number[];
+    
+    // Sort descending to get the most recent years
+    years.sort((a, b) => b - a);
+    
+    if (years.length >= 2) {
+      return { y1: years[1].toString(), y2: years[0].toString() };
+    }
+    return null;
+  };
+
+  const growthYears = generateGrowthLink();
+
+  const handleGrowthClick = () => {
+    if (growthYears) {
+      setDateFilter({ type: 'yoy', year1: growthYears.y1, year2: growthYears.y2 });
+      applyFilterAndCalculate();
+      
+      // Give the Zustand store a split second to flush the math calculations before pushing the new page
+      setTimeout(() => {
+        navigate('/growth');
+      }, 50);
+    }
+  };
 
   const handleShareApp = async () => {
     const shareUrl = 'https://logbookwrapped.com';
@@ -99,6 +133,16 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
               Share or Download
             </button>
 
+            {growthYears && (
+              <button 
+                onClick={handleGrowthClick}
+                className="w-full bg-slate-800 hover:bg-slate-700 text-purple-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
+              >
+                <TrendingUp size={18} />
+                View {growthYears.y2} vs {growthYears.y1} Growth
+              </button>
+            )}
+
             <button 
               onClick={() => {
                 (window as any).umami?.track('Donation Modal Opened', { source: 'page_9' });
@@ -125,6 +169,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
               href="/contact"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => (window as any).umami?.track('Support Link Clicked', { source: 'dashboard_footer' })}
               className="w-full mt-3 text-slate-500 hover:text-slate-300 py-2 font-bold text-[13px] flex items-center justify-center gap-2 transition-colors"
             >
               <Bug size={14} />

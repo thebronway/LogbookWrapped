@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
-import { Page1_Cover } from '../pages/Page1_Cover';
-import { Page2_BigPicture } from '../pages/Page2_BigPicture';
-import { Page3_Fleet } from '../pages/Page3_Fleet';
-import { Page4_Extremes } from '../pages/Page4_Extremes';
-import { Page5_Superlatives } from '../pages/Page5_Superlatives';
-import { Page6_Elements } from '../pages/Page6_Elements';
-import { Page7_Passport } from '../pages/Page7_Passport';
-import { Page8_Stats } from '../pages/Page8_Stats';
-import { Page9_Export } from '../pages/Page9_Export';
+import { Page1_Cover } from '../pages/story/Page1_Cover';
+import { Page2_BigPicture } from '../pages/story/Page2_BigPicture';
+import { Page3_Fleet } from '../pages/story/Page3_Fleet';
+import { Page4_Extremes } from '../pages/story/Page4_Extremes';
+import { Page5_Superlatives } from '../pages/story/Page5_Superlatives';
+import { Page6_Elements } from '../pages/story/Page6_Elements';
+import { Page7_Passport } from '../pages/story/Page7_Passport';
+import { Page8_Stats } from '../pages/story/Page8_Stats';
+import { Page9_Export } from '../pages/story/Page9_Export';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
 import { getExportPages } from '../../config/ExportPages';
@@ -92,7 +92,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         <div className="w-full max-w-[1600px] mx-auto py-8 animate-in fade-in duration-500">
         <div className="flex justify-between items-center mb-8 px-4">
           <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">My LogbookWrapped Dashboard.</h2>
-          <button onClick={onClose} className="bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shadow-lg border border-slate-700">
+          <button onClick={onClose} className="bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shadow-lg border border-yellow-400/30 hover:border-yellow-400/60">
             <X size={20} />
           </button>
         </div>
@@ -174,7 +174,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             </div>
           ))}
         </div>
-      <button onClick={onClose} className="absolute top-8 right-4 z-[100] bg-black/50 p-2 rounded-full text-white/70 hover:text-white hover:bg-black/80 transition-all backdrop-blur-md">
+      <button onClick={onClose} className="absolute top-8 right-4 z-[100] bg-black/50 p-2 rounded-full text-white/70 hover:text-white hover:bg-black/80 transition-all backdrop-blur-md border border-yellow-400/30">
         <X size={20} />
       </button>
 

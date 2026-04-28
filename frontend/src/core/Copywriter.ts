@@ -34,7 +34,7 @@ export const getPage6Copy = (stats: CalculatedStats) => {
 };
 
 export const getYoYCopy = (deltaHours: number, isIncrease: boolean) => {
-  if (deltaHours < 5 && !isIncrease) {
+  if (deltaHours < 5) {
     return "Consistency is key. You flew almost the exact same amount as last year.";
   }
 

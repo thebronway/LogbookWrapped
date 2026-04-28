@@ -8,6 +8,12 @@ This document tracks past changes starting with v0.8.1.
 
 ## Changelog
 
+### Release v0.9.5
+- Dev API updates
+- Content Updates
+- Backend Cleanup
+- UI updates
+
 ### Release v0.9.4
 - Growth wrapped updates
 - Titles updates

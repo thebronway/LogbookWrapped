@@ -1,14 +1,14 @@
 import React from 'react';
 import { CalculatedStats, ExportItem } from '../core/types';
 
-import { Page1_Cover } from '../components/pages/Page1_Cover';
-import { Page2_BigPicture } from '../components/pages/Page2_BigPicture';
-import { Page3_Fleet } from '../components/pages/Page3_Fleet';
-import { Page4_Extremes } from '../components/pages/Page4_Extremes';
-import { Page5_Superlatives } from '../components/pages/Page5_Superlatives';
-import { Page6_Elements } from '../components/pages/Page6_Elements';
-import { Page7_Passport } from '../components/pages/Page7_Passport';
-import { Page8_Stats } from '../components/pages/Page8_Stats';
+import { Page1_Cover } from '../components/pages/story/Page1_Cover';
+import { Page2_BigPicture } from '../components/pages/story/Page2_BigPicture';
+import { Page3_Fleet } from '../components/pages/story/Page3_Fleet';
+import { Page4_Extremes } from '../components/pages/story/Page4_Extremes';
+import { Page5_Superlatives } from '../components/pages/story/Page5_Superlatives';
+import { Page6_Elements } from '../components/pages/story/Page6_Elements';
+import { Page7_Passport } from '../components/pages/story/Page7_Passport';
+import { Page8_Stats } from '../components/pages/story/Page8_Stats';
 
 export const getExportPages = (stats: CalculatedStats): ExportItem[] => [
   { id: 'export-p7', name: 'Passport', isPoster: false, render: (format) => <Page7_Passport stats={stats} isExportMode={true} exportFormat={format} /> },

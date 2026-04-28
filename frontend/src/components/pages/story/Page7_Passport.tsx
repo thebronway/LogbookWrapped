@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
-import { CalculatedStats } from '../../core/types';
-import { useLogbookStore } from '../../store/useLogbookStore';
-import { RadarLoader } from '../ui/RadarLoader';
+import { CalculatedStats } from '../../../core/types';
+import { useLogbookStore } from '../../../store/useLogbookStore';
+import { RadarLoader } from '../../ui/RadarLoader';
 
 interface Props {
   stats: CalculatedStats;

@@ -40,12 +40,15 @@ export const HeroSection = () => {
         </Link>
 
         <div className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-1 gap-4 w-full">
+          {/* Hidden H2 for Screen Readers and SEO structure */}
+          <h2 className="sr-only">Core Features</h2>
+          
           <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
             <div className="p-2 bg-emerald-500/10 rounded-lg text-emerald-400">
               <Shield size={24} />
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">100% Private</p>
+              <h3 className="text-white font-semibold text-base m-0">100% Private</h3>
               <p className="text-sm text-slate-400">100% client-side in-browser processing.</p>
             </div>
           </div>
@@ -55,8 +58,8 @@ export const HeroSection = () => {
               <Zap size={24} />
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">Instant Insights</p>
-              <p className="text-sm text-slate-400">Auto-detects EFB formats automatically.</p>
+              <h3 className="text-white font-semibold text-base m-0">Instant Insights</h3>
+              <p className="text-sm text-slate-400">Auto-detects and parses EFB logbooks formats automatically.</p>
             </div>
           </div>
 
@@ -65,8 +68,8 @@ export const HeroSection = () => {
               <Share2 size={24} />
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">Social Ready</p>
-              <p className="text-sm text-slate-400">Export 9:16 vertical infographics for social media.</p>
+              <h3 className="text-white font-semibold text-base m-0">Social Ready</h3>
+              <p className="text-sm text-slate-400">Export 9:16 vertical stories and 4:5 posts for social media.</p>
             </div>
           </div>
         </div>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Navigate, Link } from 'react-router-dom';
-import { Share2, Bug, Check, Forward, HandCoins, X } from 'lucide-react';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
+import { Share2, Bug, Check, Forward, HandCoins, X, Calendar, Globe } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { calculateGrowthStats } from '../../core/MathEngine';
 import { getYoYCopy } from '../../core/Copywriter';
@@ -11,11 +11,35 @@ import { DonationModal } from '../ui/DonationModal';
 import { ExportModal } from '../ui/ExportModal';
 
 export const Growth = () => {
-  const { datasets, resetStore } = useLogbookStore();
+  const { datasets, resetStore, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showDonation, setShowDonation] = useState(false);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleViewWrapped = (yearOrType: string) => {
+    // 1. Tell the component we are leaving so it doesn't trigger the aggressive homepage redirect
+    setIsNavigating(true);
+    
+    // 2. Set the new filters
+    if (yearOrType === 'all_time') {
+       setDateFilter({ type: 'all_time' });
+    } else {
+       setDateFilter({ type: 'custom', start: `${yearOrType}-01-01`, end: `${yearOrType}-12-31` });
+    }
+    
+    // 3. Recalculate and navigate instantly
+    applyFilterAndCalculate();
+    navigate('/wrapped');
+  };
 
+  // If we are actively navigating away, freeze the UI so it doesn't crash on the missing second dataset
+  if (isNavigating) {
+    return <div className="min-h-screen w-full bg-slate-900" />;
+  }
+
+  // The aggressive fallback redirect
   if (datasets.length !== 2 || !datasets[0].stats || !datasets[1].stats) {
     return <Navigate to="/" replace />;
   }
@@ -27,7 +51,7 @@ export const Growth = () => {
 
   const gStats = calculateGrowthStats(pilotA.stats!, pilotB.stats!);
   
-  const isIncrease = gStats.hours.winner === 'A';
+  const isIncrease = gStats.hours.valueB > gStats.hours.valueA;
   const copyText = getYoYCopy(gStats.hours.delta, isIncrease);
 
   const handleShareApp = async () => {
@@ -100,7 +124,7 @@ export const Growth = () => {
         <Link 
           to="/"
           onClick={() => resetStore()}
-          className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors shadow-lg border border-slate-700 block"
+          className="p-2 bg-slate-800 hover:bg-slate-700 rounded-full text-slate-400 hover:text-white transition-colors shadow-lg border border-yellow-400/30 hover:border-yellow-400/60 block"
         >
           <X size={24} />
         </Link>
@@ -145,7 +169,7 @@ export const Growth = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-md mx-auto mt-4 flex flex-col gap-4">
+      <div className="w-full max-w-md mx-auto mt-6 flex flex-col gap-3">
         <button 
           onClick={() => {
             (window as any).umami?.track('Growth Export Opened');
@@ -165,7 +189,7 @@ export const Growth = () => {
           className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
         >
           <HandCoins size={18} />
-          Help Keep the App Airbone
+          Help Keep the App Airborne
         </button>
 
         <button 
@@ -179,11 +203,40 @@ export const Growth = () => {
           {copied ? 'Link Copied!' : 'Share App with a Wingman'}
         </button>
 
+        <hr className="border-slate-800/60 w-full my-3" />
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+           <button 
+            onClick={() => handleViewWrapped(nameA)}
+            className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm"
+          >
+            <Calendar size={16} className="text-purple-400" />
+            {nameA} Wrapped
+          </button>
+          
+          <button 
+            onClick={() => handleViewWrapped(nameB)}
+            className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm"
+          >
+            <Calendar size={16} className="text-sky-400" />
+            {nameB} Wrapped
+          </button>
+        </div>
+
+        <button 
+          onClick={() => handleViewWrapped('all_time')}
+          className="w-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm"
+        >
+          <Globe size={16} />
+          View All-Time Career Wrapped
+        </button>
+
         <a 
           href="/contact"
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full mt-3 text-slate-500 hover:text-slate-300 py-2 font-bold text-[13px] flex items-center justify-center gap-2 transition-colors"
+          onClick={() => (window as any).umami?.track('Support Link Clicked', { source: 'growth_footer' })}
+          className="w-full mt-2 text-slate-500 hover:text-slate-300 py-2 font-bold text-[13px] flex items-center justify-center gap-2 transition-colors"
         >
           <Bug size={14} />
           Report an Issue

@@ -15,8 +15,8 @@ import { Methodology } from './components/pages/Methodology';
 import { Export } from './components/pages/Export';
 import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable';
 import { NotFound } from './components/pages/NotFound';
-import { ImportAPI } from './components/pages/ImportAPI';
-import { HowToImport } from './components/pages/HowToImport';
+import { ImportWrapped } from './components/pages/ImportWrapped';
+import { Dev } from './components/pages/Dev';
 import { FAQ } from './components/pages/FAQ';
 import { ScrollToTop } from './components/layout/ScrollToTop';
 
@@ -48,8 +48,8 @@ function App() {
           <Route path="/methodology" element={<Methodology />} />
           <Route path="/export" element={<Export />} />
           <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
-          <Route path="/import" element={<ImportAPI />} />
-          <Route path="/howtoimport" element={<HowToImport />} />
+          <Route path="/mywrapped" element={<ImportWrapped />} />
+          <Route path="/dev" element={<Dev />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/config" element={<Config />} />

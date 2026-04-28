@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CalculatedStats } from '../../core/types';
-import { getPage3Copy, getTitleData } from '../../core/Copywriter';
-import { useLogbookStore } from '../../store/useLogbookStore';
-import { AnimatedCounter } from '../ui/AnimatedCounter';
+import { CalculatedStats } from '../../../core/types';
+import { getPage3Copy, getTitleData } from '../../../core/Copywriter';
+import { useLogbookStore } from '../../../store/useLogbookStore';
+import { AnimatedCounter } from '../../ui/AnimatedCounter';
 
 interface Props {
   stats: CalculatedStats;

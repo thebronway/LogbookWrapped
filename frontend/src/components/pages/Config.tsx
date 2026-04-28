@@ -253,7 +253,7 @@ export const Config = () => {
           onClick={handleGenerate}
           className={`w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-1 ${
             mode === 'yoy' ? 'bg-sky-600 hover:bg-sky-500 text-white shadow-lg shadow-sky-500/20' : 
-            'bg-sky-500 hover:bg-sky-400 text-white shadow-lg shadow-sky-500/20'
+            'bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20'
           }`}
         >
           {mode === 'yoy' ? 'Analyze Growth' : 'Generate My Wrapped'}

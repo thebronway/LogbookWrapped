@@ -68,7 +68,10 @@ export const UploadSection = () => {
             </div>
             <p className="text-red-200 font-medium">{errorMessage}</p>
             <button 
-              onClick={resetStore} 
+              onClick={() => {
+                (window as any).umami?.track('Upload Retry Clicked');
+                resetStore();
+              }} 
               className="px-6 py-2 bg-white text-black rounded-full hover:bg-slate-200 transition-colors font-bold text-sm"
             >
               Try Another File

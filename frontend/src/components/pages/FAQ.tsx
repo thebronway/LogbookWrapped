@@ -6,8 +6,8 @@ export const FAQ = () => {
   const faqs = [
     {
       question: "What is LogbookWrapped?",
-      answerText: "LogbookWrapped is a privacy-first web application designed for pilots to visualize their flight history. By uploading your logbook data, you receive a beautiful, engaging, and easy-to-share recap of your flying hours, favorite routes, fleet diversity, and aviation extremes.",
-      answerUI: <>LogbookWrapped is a privacy-first web application designed for pilots to visualize their flight history. By uploading your logbook data, you receive a beautiful, engaging, and easy-to-share recap of your flying hours, favorite routes, fleet diversity, and aviation extremes.</>
+      answerText: "LogbookWrapped is a privacy-first web application designed for pilots to visualize their flight history. By uploading your logbook data, you receive an easy-to-share recap of your flying career—whether you're looking at a specific year in Wrapped mode, tracking year-over-year progression in Growth mode, or celebrating all-time Milestones.",
+      answerUI: <>LogbookWrapped is a privacy-first web application designed for pilots to visualize their flight history. By uploading your logbook data, you receive an easy-to-share recap of your flying career—whether you're looking at a specific year in Wrapped mode, tracking year-over-year progression in Growth mode, or celebrating all-time Milestones.</>
     },
     {
       question: "Is my logbook data private and secure?",
@@ -37,7 +37,7 @@ export const FAQ = () => {
     {
       question: "Can I integrate LogbookWrapped into my own aviation app?",
       answerText: "Yes! We offer a 100% serverless, client-side import API using the browser's native window.postMessage() API. This allows partner applications to securely send user flight data to LogbookWrapped for visualization without routing data through third-party backends. Contact us to get your domain added to our allowlist.",
-      answerUI: <>Yes! We offer a 100% serverless, client-side import API using the browser's native window.postMessage() API. This allows partner applications to securely send user flight data to LogbookWrapped for visualization without routing data through third-party backends. Read our <Link to="/howtoimport" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">API Implementation Guide</Link> or <Link to="/contact" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">contact us</Link> to get your domain added to our allowlist.</>
+      answerUI: <>Yes! We offer a 100% serverless, client-side import API using the browser's native window.postMessage() API. This allows partner applications to securely send user flight data to LogbookWrapped for visualization without routing data through third-party backends. Read our <Link to="/dev" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">API Implementation Guide</Link> or <Link to="/contact" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">contact us</Link> to get your domain added to our allowlist.</>
     },
     {
       question: "Is LogbookWrapped free to use?",
