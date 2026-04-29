@@ -9,8 +9,8 @@ import { Page5_Superlatives } from '../pages/story/Page5_Superlatives';
 import { Page6_Elements } from '../pages/story/Page6_Elements';
 import { Page7_Passport } from '../pages/story/Page7_Passport';
 import { Page8_Stats } from '../pages/story/Page8_Stats';
-import { Page8_5_GrowthHighlights } from '../pages/story/Page8_5_GrowthHighlights';
-import { Page9_Export } from '../pages/story/Page9_Export';
+import { Page9_GrowthHighlights } from '../pages/story/Page9_GrowthHighlights';
+import { Page10_Export } from '../pages/story/Page10_Export';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
@@ -58,10 +58,10 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     <Page6_Elements stats={stats} key="p6" />,
     <Page7_Passport stats={stats} key="p7" />,
     <Page8_Stats stats={stats} key="p8" />,
-    ...(comparisonStats ? [<Page8_5_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p8.5" />] : []),
-    <Page9_Export 
+    ...(comparisonStats ? [<Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" />] : []),
+    <Page10_Export 
       stats={stats} 
-      key="p9" 
+      key="p10"
       onOpenExport={() => setIsExportModalOpen(true)} 
       onOpenDonation={() => setIsDonationModalOpen(true)}
     />

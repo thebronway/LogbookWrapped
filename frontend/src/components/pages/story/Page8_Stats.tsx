@@ -28,37 +28,25 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
     { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`, sub: [`${stats.averageFlightTime} Hrs/Flight`, `${stats.totalNight} Hrs Night`] },
     { type: 'single', label: 'Total Flights', value: `${stats.totalFlights} Flights`, sub: [`${stats.flightsPerMonth} Flights/Month`, `Busiest: ${stats.busiestMonth}`] },
     { type: 'single', label: 'Distance Flown', value: `${stats.totalDistanceNm?.toLocaleString()} NM` },
+    { type: 'single', label: 'Landings', value: `${stats.totalLandings} Landings`, sub: `${stats.totalApproaches} Approach${stats.totalApproaches === 1 ? '' : 'es'}` },
+    { type: 'single', label: 'Actual IMC', value: `${stats.totalIMC} Hours`, sub: `${stats.totalSimulated} Hours Simulated` },
     { type: 'double', 
-      left: { label: 'Actual IMC', value: `${stats.totalIMC} Hrs` },
-      right: { label: 'Sim IMC', value: `${stats.totalSimulated} Hrs` }
+      left: { label: 'Airports', value: stats.uniqueAirports, sub: `Home: ${stats.homeBase}` },
+      right: { label: 'Top State', value: stats.mostVisitedState, sub: `${stats.mostVisitedStateCount} Visit${stats.mostVisitedStateCount === 1 ? '' : 's'}` }
     },
     { type: 'double', 
-      left: { label: 'Landings', value: stats.totalLandings, sub: `${stats.totalApproaches} Approach${stats.totalApproaches === 1 ? '' : 'es'}` },
-      right: { label: 'Aircraft', value: stats.uniqueTailNumbers, sub: `${stats.uniqueAircraftTypes} Type${stats.uniqueAircraftTypes === 1 ? '' : 's'}` }
-    },
-    { type: 'double', 
-      left: { label: 'Type', value: stats.mostUsedAirframe, sub: `${stats.mostUsedAirframeCount} Flight${stats.mostUsedAirframeCount === 1 ? '' : 's'}` },
-      right: { label: 'Tail', value: stats.mostUsedTailNumber, sub: `${stats.mostUsedTailNumberCount} Flight${stats.mostUsedTailNumberCount === 1 ? '' : 's'}` }
-    },
-    { type: 'double', 
-      left: { label: 'Airports', value: stats.uniqueAirports, sub: `Home Base: ${stats.homeBase}` },
-      right: { label: 'Top State', value: stats.mostVisitedState, sub: `${stats.mostVisitedStateCount} time${stats.mostVisitedStateCount === 1 ? '' : 's'}` }
-    },
-    { type: 'single', label: 'Shortest Flight', value: `${stats.shortestFlight} Hour${stats.shortestFlight === 1 ? '' : 's'}`, sub: `${stats.shortestFlightRoute} on ${stats.shortestFlightDate}` },
-    { type: 'single', label: 'Longest Flight', value: `${stats.longestFlight} NM`, sub: `${stats.longestFlightRoute} on ${stats.longestFlightDate}` },
+      left: { label: 'Type', value: stats.mostUsedAirframe, sub: `${stats.mostUsedAirframeCount} Sortie${stats.mostUsedAirframeCount === 1 ? '' : 's'}` },
+      right: { label: 'Tail', value: stats.mostUsedTailNumber, sub: `${stats.mostUsedTailNumberCount} Sortie${stats.mostUsedTailNumberCount === 1 ? '' : 's'}` }
+    }
   ];
-
-  if (exportFormat === 'post') {
-    statRows = statRows.filter(row => row.label !== 'Shortest Flight' && row.label !== 'Longest Flight');
-  }
 
   const paddingClass = `flex flex-col h-full w-full bg-gradient-to-br from-slate-800 to-slate-950 text-white overflow-hidden ${
     isExportMode 
       ? (exportFormat === 'story' ? 'p-6 pt-16' : 'p-5 pt-6') 
       : 'p-5 sm:p-6'
   }`;
-  const titleClass = `${exportFormat === 'post' ? (isLongTitle ? 'text-xl' : 'text-2xl') : (isLongTitle ? 'text-2xl' : 'text-3xl')} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
-  const gapClass = `flex flex-col justify-between w-full flex-1 ${isExportMode ? "pb-8" : "pb-8"}`;
+  const titleClass = `${exportFormat === 'post' ? 'text-2xl' : (isLongTitle ? 'text-2xl' : 'text-3xl')} font-black text-sky-400 tracking-tight leading-tight shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`;
+  const gapClass = "flex flex-col w-full flex-1 pb-8";
   const leftPadClass = `flex justify-between items-center gap-2 border-r border-slate-700/50 ${isExportMode ? "pr-4" : "pr-3 sm:pr-4"}`;
   const rightPadClass = `flex justify-between items-center gap-2 ${isExportMode ? "pl-4" : "pl-3 sm:pl-4"}`;
 
@@ -81,7 +69,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
           
           const staggerDelay = 0.2 + (i * 0.08);
           const isLastRow = i === statRows.length - 1;
-          const dynamicRowClass = `${isExportMode && isLastRow ? 'border-b-0' : 'border-b border-slate-700/50'} py-1 sm:py-1.5 ${isExportMode ? (exportFormat === 'post' ? "pb-2" : "pb-2.5") : ""}`;
+          const dynamicRowClass = `flex-1 ${isLastRow ? 'border-b-0' : 'border-b border-slate-700/50'}`;
 
           if (row.type === 'double') {
             return (
@@ -90,7 +78,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
                 initial={{ x: -40, opacity: 0 }} 
                 animate={{ x: 0, opacity: 1 }} 
                 transition={{ delay: staggerDelay, ease: "easeOut" }}
-                className={`grid grid-cols-2 ${dynamicRowClass}`}
+                className={`grid grid-cols-2 items-center ${dynamicRowClass}`}
               >
                 
                 {/* Left Side */}

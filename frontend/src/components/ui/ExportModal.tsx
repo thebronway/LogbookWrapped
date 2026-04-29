@@ -125,13 +125,12 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
         </div>
 
         <div className={`flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24 ${isSingleItem ? 'flex justify-center items-start' : ''}`}>
-          <div className={isSingleItem ? 'w-full max-w-sm mt-4' : 'grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6'}>
+          <div className={isSingleItem ? 'w-full max-w-sm mt-4' : 'grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6'}>
             {items.map((item, idx) => {
-              const isFeatured = !isSingleItem && (item.id === 'export-p7' || item.id === 'export-p8');
               const isReady = readyBlobs[`${item.id}-${selectedFormat}`];
               
               return (
-              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg ${isFeatured ? 'md:col-span-2' : 'col-span-1'} ${isSingleItem ? 'w-full' : ''}`}>
+              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg col-span-1 ${isSingleItem ? 'w-full' : ''}`}>
                 <div className="text-sm font-medium text-slate-300 text-center">{item.name}</div>
                 
                 {/* Visual Preview Engine */}

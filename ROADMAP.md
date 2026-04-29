@@ -9,6 +9,7 @@ This document tracks planned improvements, enhancements, and maintenance.
 ## Release Roadmap
 
 ### Release v0.9.8
+- Performace tweaks
 - Big json files for maps - lazy?
 - Rename 8.5 to 9
 - Add Page 10 Milestones Analyze Checkrides?
@@ -17,6 +18,7 @@ This document tracks planned improvements, enhancements, and maintenance.
 - Growth Report x2 / Passport Title Color
 - Growth Report not respecting <br />
 - Config page yellow highlight
+
 
 ### Release v0.9.9
 - Offline PWA

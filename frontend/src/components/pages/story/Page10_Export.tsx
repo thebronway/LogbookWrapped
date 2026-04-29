@@ -12,7 +12,7 @@ interface Props {
   isExportMode?: boolean;
 }
 
-export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
+export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
   const { dateFilter, rawFlights, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
@@ -133,7 +133,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
               Share or Download
             </button>
 
-            {growthYears && (
+            {growthYears && !['this_year', 'last_year', 'yoy'].includes(dateFilter?.type || '') && !(dateFilter?.type === 'custom' && dateFilter.start?.substring(0,4) === dateFilter.end?.substring(0,4)) && (
               <button 
                 onClick={handleGrowthClick}
                 className="w-full bg-slate-800 hover:bg-slate-700 text-purple-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
@@ -145,7 +145,7 @@ export const Page9_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonat
 
             <button 
               onClick={() => {
-                (window as any).umami?.track('Donation Modal Opened', { source: 'page_9' });
+                (window as any).umami?.track('Donation Modal Opened', { source: 'page_10' });
                 if (onOpenDonation) onOpenDonation();
               }}
               className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"

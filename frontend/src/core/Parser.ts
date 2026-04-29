@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { normalizeFlightData } from './Normalizer';
+import { normalizeFlightData, detectEFBProfile } from './Normalizer';
 import { FlightRecord } from './types';
 
 export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
@@ -10,24 +10,12 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
       const text = e.target?.result as string;
       if (!text) return reject(new Error("File is empty"));
 
-      // --- DEBUGGING: Detect EFB Format ---
-      let detectedEFB = "Unknown";
-      // Grab the first chunk of the file to check headers
-      const headerScan = text.substring(0, 1000); 
+      const firstLine = text.split('\n')[0] || "";
+      const headersForDetection = firstLine.split(',').map(h => h.trim().replace(/["']/g, ""));
+      const { name: detectedEFB } = detectEFBProfile(headersForDetection);
       
-      if (headerScan.includes('ForeFlight')) {
-        detectedEFB = "ForeFlight";
-      } else if (headerScan.includes('Aircraft ID') && headerScan.includes('Total Duration')) {
-        detectedEFB = "Garmin Pilot";
-      } else if (headerScan.includes('Tail Number') && headerScan.includes('Total Flight Time')) {
-        detectedEFB = "MyFlightbook";
-      } else if (headerScan.includes('Aircraft ID') && headerScan.includes('Total Time') && headerScan.includes('Type')) {
-        detectedEFB = "LogTen Pro";
-      }
       console.log(`[Parser] Detected EFB Format: ${detectedEFB}`);
-      
       (window as any).umami?.track('Logbook Parsed', { efb_type: detectedEFB });
-      // ------------------------------------
 
       let csvTextToParse = text;
       const preParsedAircraftMap: Record<string, string> = {};
@@ -62,12 +50,20 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
+          if (results.data.length === 0) {
+            return reject(new Error("The CSV was parsed but contains no flight rows."));
+          }
+          
+          const headers = Object.keys(results.data[0]);
+          if (!headers.some(h => h.toLowerCase().includes('date'))) {
+            return reject(new Error("Missing required 'Date' column. Ensure you exported a flight log, not an aircraft list."));
+          }
+
           try {
             const normalized = normalizeFlightData(results.data, preParsedAircraftMap);
             resolve(normalized);
           } catch (error) {
-            console.error(error);
-            reject(new Error("Failed to normalize flight data. Check CSV format."));
+            reject(new Error(`Normalization Error: ${error instanceof Error ? error.message : 'Invalid CSV structure'}`));
           }
         },
         error: (error: any) => {

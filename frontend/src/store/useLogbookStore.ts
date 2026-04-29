@@ -107,21 +107,23 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       return;
     }
 
-    // STANDARD CASE
-    const filtered = baseFlights.filter(f => {
-      const d = new Date(f.date);
-      if (isNaN(d.getTime())) return false;
+    const startTs = dateFilter.start ? new Date(dateFilter.start).getTime() : 0;
+    const endTs = dateFilter.end ? new Date(dateFilter.end).getTime() : Infinity;
 
-      if (dateFilter.type === 'this_year') return d.getFullYear() === currentYear;
-      if (dateFilter.type === 'last_year') return d.getFullYear() === currentYear - 1;
-      if (dateFilter.type === 'all_time') return true;
-      if (dateFilter.type === 'custom' || dateFilter.type === 'milestone') {
-        const start = dateFilter.start ? new Date(dateFilter.start) : new Date(0);
-        const end = dateFilter.end ? new Date(dateFilter.end) : new Date();
-        end.setHours(23, 59, 59, 999);
-        return d >= start && d <= end;
+    const filtered = baseFlights.filter(f => {
+      const flightDate = new Date(f.date);
+      const flightTime = flightDate.getTime();
+      if (isNaN(flightTime)) return false;
+
+      switch (dateFilter.type) {
+        case 'this_year': return flightDate.getFullYear() === currentYear;
+        case 'last_year': return flightDate.getFullYear() === currentYear - 1;
+        case 'all_time': return true;
+        case 'custom':
+        case 'milestone':
+          return flightTime >= startTs && flightTime <= endTs;
+        default: return true;
       }
-      return true;
     });
 
     if (filtered.length === 0) {

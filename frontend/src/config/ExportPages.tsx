@@ -9,7 +9,7 @@ import { Page5_Superlatives } from '../components/pages/story/Page5_Superlatives
 import { Page6_Elements } from '../components/pages/story/Page6_Elements';
 import { Page7_Passport } from '../components/pages/story/Page7_Passport';
 import { Page8_Stats } from '../components/pages/story/Page8_Stats';
-import { Page8_5_GrowthHighlights } from '../components/pages/story/Page8_5_GrowthHighlights';
+import { Page9_GrowthHighlights } from '../components/pages/story/Page9_GrowthHighlights';
 import { useLogbookStore } from '../store/useLogbookStore';
 
 export const getExportPages = (stats: CalculatedStats): ExportItem[] => {
@@ -21,11 +21,11 @@ export const getExportPages = (stats: CalculatedStats): ExportItem[] => {
 
   if (comparisonStats) {
     items.push({
-      id: 'export-p8-5',
+      id: 'export-p9',
       name: 'Growth Highlights',
       isPoster: false,
       render: (format) => (
-        <Page8_5_GrowthHighlights 
+        <Page9_GrowthHighlights 
           stats={stats} 
           comparisonStats={comparisonStats} 
           isExportMode={true} 

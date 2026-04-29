@@ -11,7 +11,7 @@ interface Props {
   exportFormat?: 'story' | 'post';
 }
 
-export const Page8_5_GrowthHighlights: React.FC<Props> = ({ 
+export const Page9_GrowthHighlights: React.FC<Props> = ({ 
   stats, 
   comparisonStats, 
   isExportMode, 
@@ -33,8 +33,8 @@ export const Page8_5_GrowthHighlights: React.FC<Props> = ({
 
   // Formatting for Export vs Story UI
   const containerClasses = isExportMode 
-    ? (isPost ? 'p-6 pt-6 justify-center' : 'p-6 pt-20') 
-    : 'p-6 pt-12';
+    ? (isPost ? 'p-5 pt-6' : 'p-6 pt-16') 
+    : 'p-5 sm:p-6';
 
   return (
     <motion.div 
@@ -43,8 +43,8 @@ export const Page8_5_GrowthHighlights: React.FC<Props> = ({
       className={`flex flex-col h-full w-full bg-gradient-to-br from-purple-900 via-slate-950 to-blue-900 text-white overflow-hidden ${containerClasses}`}
     >
       {/* Title Sections */}
-      <div className="flex flex-col items-start gap-2 text-left shrink-0 mb-6">
-        <h1 className={`${isExportMode ? (isPost ? 'text-2xl' : 'text-3xl') : 'text-2xl'} font-black text-white tracking-tight leading-tight`}>
+      <div className={`flex flex-col items-start gap-2 text-left shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`}>
+        <h1 className={`${isExportMode ? (isPost ? 'text-2xl' : 'text-2xl') : 'text-2xl'} font-black text-indigo-400 tracking-tight leading-tight`}>
           My LogbookWrapped <br /> Growth Report.
         </h1>
       </div>
