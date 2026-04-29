@@ -9,7 +9,9 @@ import { Page5_Superlatives } from '../pages/story/Page5_Superlatives';
 import { Page6_Elements } from '../pages/story/Page6_Elements';
 import { Page7_Passport } from '../pages/story/Page7_Passport';
 import { Page8_Stats } from '../pages/story/Page8_Stats';
+import { Page8_5_GrowthHighlights } from '../pages/story/Page8_5_GrowthHighlights';
 import { Page9_Export } from '../pages/story/Page9_Export';
+import { useLogbookStore } from '../../store/useLogbookStore';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
 import { getExportPages } from '../../config/ExportPages';
@@ -20,6 +22,7 @@ interface Props {
 }
 
 export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
+  const comparisonStats = useLogbookStore(state => state.comparisonStats);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -39,7 +42,9 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       (window as any).umami?.track('Dashboard Viewed', { device: 'desktop' });
     } else {
       // Mobile users progress through the story
-      const pageNames = ['Cover', 'BigPicture', 'Fleet', 'Extremes', 'Superlatives', 'Elements', 'Passport', 'Stats', 'Export'];
+      const pageNames = ['Cover', 'BigPicture', 'Fleet', 'Extremes', 'Superlatives', 'Elements', 'Passport', 'Stats'];
+      if (comparisonStats) pageNames.push('Growth');
+      pageNames.push('Export');
       (window as any).umami?.track('Story Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
     }
   }, [currentIndex, isDesktop]);
@@ -53,6 +58,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     <Page6_Elements stats={stats} key="p6" />,
     <Page7_Passport stats={stats} key="p7" />,
     <Page8_Stats stats={stats} key="p8" />,
+    ...(comparisonStats ? [<Page8_5_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p8.5" />] : []),
     <Page9_Export 
       stats={stats} 
       key="p9" 
@@ -125,13 +131,19 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             {pages[5]}
           </div>
 
-          {/* Bottom Row: Stats (Left) & Export (Right) */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+          {/* Bottom Row: Stats, Optional Growth, and Export */}
+          <div className={`col-span-1 md:col-span-2 ${comparisonStats ? 'lg:col-span-1' : 'lg:col-span-2'} row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative`}>
             {pages[7]}
           </div>
+
+          {comparisonStats && (
+            <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+              {pages[8]}
+            </div>
+          )}
           
-          <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[8]}
+          <div className={`col-span-1 md:col-span-2 ${comparisonStats ? 'lg:col-span-2' : 'lg:col-span-2'} row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative`}>
+            {pages[pages.length - 1]}
           </div>
         </div>
       </div>

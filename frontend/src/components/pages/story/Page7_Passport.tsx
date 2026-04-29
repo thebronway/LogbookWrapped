@@ -249,7 +249,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
           initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
           className={`w-full shrink-0 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20 ${
             isExportMode 
-              ? (exportFormat === 'story' ? 'pt-16 pb-6 px-6' : 'pt-8 pb-4 px-6') 
+              ? (exportFormat === 'story' ? 'pt-20 pb-6 px-6' : 'pt-8 pb-4 px-6') 
               : 'pt-10 pb-6 px-5 sm:px-6'
           }`}
         >

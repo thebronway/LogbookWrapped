@@ -28,10 +28,13 @@ interface LogbookState {
   rawFlights: FlightRecord[]; // Exposed globally for cross-linking
   flights: FlightRecord[];
   stats: CalculatedStats | null;
+  comparisonStats: CalculatedStats | null;
   airportDB: AirportDB | null;
   status: 'idle' | 'loading' | 'success' | 'error';
   errorMessage: string | null;
   dateFilter: DateFilter;
+  isDemo: boolean;
+  setIsDemo: (val: boolean) => void;
   setDateFilter: (filter: DateFilter) => void;
   processFiles: (files: File[], bypassConfig?: boolean) => Promise<void>;
   resetStore: () => void;
@@ -44,9 +47,13 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
   flights: [],
   airportDB: null,
   stats: null,
+  comparisonStats: null,
   status: 'idle',
   errorMessage: null,
   dateFilter: { type: 'this_year' },
+  isDemo: false,
+
+  setIsDemo: (val) => set({ isDemo: val }),
 
   setDateFilter: (filter) => {
     set({ dateFilter: filter });
@@ -124,11 +131,33 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
 
     const computedStats = calculateStats(filtered, airportDB);
 
+    let comparisonStats: CalculatedStats | null = null;
+    let targetYear: number | null = null;
+
+    if (dateFilter.type === 'this_year') targetYear = currentYear;
+    else if (dateFilter.type === 'last_year') targetYear = currentYear - 1;
+    else if (dateFilter.type === 'custom' && dateFilter.start?.endsWith('-01-01') && dateFilter.end?.endsWith('-12-31')) {
+      const startY = parseInt(dateFilter.start.substring(0, 4));
+      const endY = parseInt(dateFilter.end.substring(0, 4));
+      if (startY === endY) targetYear = startY;
+    }
+
+    if (targetYear !== null) {
+      const compYear = targetYear - 1;
+      const compFlights = baseFlights.filter(f => {
+        const d = new Date(f.date);
+        return !isNaN(d.getTime()) && d.getFullYear() === compYear;
+      });
+      if (compFlights.length > 0) {
+        comparisonStats = calculateStats(compFlights, airportDB);
+      }
+    }
+
     set({ 
       datasets: [{
         ...dsBase,
         id: crypto.randomUUID(),
-        ownerName: undefined, // Clear the ownerName from YoY if it existed
+        ownerName: undefined, 
         flights: filtered,
         stats: computedStats,
         rawFlights: baseFlights
@@ -136,6 +165,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       rawFlights: baseFlights,
       flights: filtered, 
       stats: computedStats, 
+      comparisonStats,
       status: 'success' 
     });
   },
@@ -181,5 +211,5 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     }
   },
 
-  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' } })
+  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, comparisonStats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' }, isDemo: false })
 }));

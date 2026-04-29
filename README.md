@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.9.6-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.9.7-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -58,17 +58,6 @@
 LogbookWrapped offers a 100% serverless, client-side import API for third-party flight tracking apps and EFBs. Devs can easily add a "Generate End of Year or All-time LogbookWrapped" button to your platform that securely transmits a user's logbook data directly to LogbookWrapped via `window.postMessage()`. 
 
 For technical specifications, implementation examples, and allowlist requirements, please review our [Developer Integration Guide](https://logbookwrapped.com/dev).
-
-## The Passport Experience
-
-* **The Aviator:** Total hours and sorties with dynamic experience metrics.
-* **The Footprint:** Geographic coverage area analysis and distance comparisons.
-* **The Fleet:** Most used airframes and tail number counts.
-* **The Big Picture:** Monumental time and distance conversions.
-* **The Extremes:** Analysis of favorite routes and flight durations.
-* **The Stats Card:** A consolidated overview of your annual aviation highlights.
-* **Superlatives:** Landing frequency, most visited states, and unique airport status.
-* **In The Elements:** Breakdown of night hours, IMC time, and estimated fuel burn.
 
 ## Support & Feedback
 

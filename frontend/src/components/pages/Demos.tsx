@@ -1,71 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Play, Compass, Plane, Briefcase, TrendingUp } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Play, Compass, Plane, Briefcase, TrendingUp, Calendar, Globe, Map, ArrowRight } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
 export const Demos = () => {
-  const { status, datasets, setDateFilter, processFiles, dateFilter } = useLogbookStore();
+  const { setDateFilter, processFiles, resetStore, setIsDemo } = useLogbookStore();
   const navigate = useNavigate();
+  const [loadingDemo, setLoadingDemo] = useState<string | null>(null);
 
-  // If a demo successfully processes (and bypasses config), route to the correct experience
   useEffect(() => {
-    if (status === 'success' && datasets.length > 0 && datasets[0].stats) {
-      if (dateFilter.type === 'yoy') {
+    resetStore();
+  }, [resetStore]);
+
+  const loadDemo = async (fileName: string, filterConfig: any, actionId: string) => {
+    try {
+      setLoadingDemo(actionId);
+      (window as any).umami?.track('Demo Loaded', { file: fileName, filterType: filterConfig.type });
+      
+      const response = await fetch(`/assets/demo_files/${fileName}`);
+      if (!response.ok) throw new Error('Failed to fetch demo file');
+      
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: 'text/csv' });
+
+      setIsDemo(true);
+      setDateFilter(filterConfig);
+      await processFiles([file], true);
+      setLoadingDemo(null);
+      if (filterConfig.type === 'yoy') {
         navigate('/growth');
       } else {
         navigate('/wrapped');
       }
-    }
-  }, [status, datasets, navigate, dateFilter.type]);
-
-  const loadDemo = async (demoId: 'cfi' | 'regional' | 'private' | 'growth') => {
-    try {
-      (window as any).umami?.track('Demo Character Loaded', { character: demoId });
-      
-      // 1. SET THE FILE PATH BASED ON THE DEMO CLICKED
-      let filePath = '';
-      if (demoId === 'cfi' || demoId === 'private' || demoId === 'growth') {
-        filePath = '/assets/demo_files/demo_a.csv';
-      } else if (demoId === 'regional') {
-        filePath = '/assets/demo_files/demo_b.csv';
-      }
-
-      const response = await fetch(filePath);
-      if (!response.ok) throw new Error('Failed to fetch demo file');
-      
-      const blob = await response.blob();
-      const file = new File([blob], `${demoId}_logbook.csv`, { type: 'text/csv' });
-
-      // 2. SET THE DATES TO MATCH THE DATA IN THOSE FILES
-      if (demoId === 'cfi') { // Sarah's IFR Era
-        setDateFilter({ type: 'custom', start: '2023-01-01', end: '2023-12-31' });
-      } 
-      else if (demoId === 'regional') { // John's All Time
-        setDateFilter({ type: 'all_time' });
-      } 
-      else if (demoId === 'private') { // Alex's Student Era
-        setDateFilter({ type: 'milestone', label: 'Private Pilot Training', start: '2020-01-01', end: '2021-12-31' });
-      }
-      else if (demoId === 'growth') { // Mark's Pro Era YoY
-        setDateFilter({ type: 'yoy', year1: '2026', year2: '2025' });
-      }
-
-      // Pass true to bypass the /config screen
-      await processFiles([file], true);
     } catch (error) {
       console.error('Error loading demo:', error);
       alert("Failed to load demo data. Please try again.");
+      setLoadingDemo(null);
     }
   };
 
-  const DemoCard = ({ id, name, title, desc, icon: Icon, colorClass, borderClass }: any) => (
-    <button 
-      onClick={() => loadDemo(id)}
-      className={`relative overflow-hidden flex flex-col p-8 rounded-3xl bg-slate-800/40 border transition-all group text-left cursor-pointer hover:-translate-y-1 hover:shadow-2xl ${borderClass}`}
-    >
-      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl group-hover:bg-white/10 transition-colors" />
+  const DemoCard = ({ name, title, desc, icon: Icon, colorClass, borderClass, fileName, actions }: any) => (
+    <div className={`relative overflow-hidden flex flex-col p-8 rounded-3xl bg-slate-800/40 border transition-all text-left shadow-xl ${borderClass}`}>
+      <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl" />
       
       <div className="flex items-center gap-4 mb-4 z-10">
         <div className={`p-4 rounded-2xl ${colorClass}`}>
@@ -81,13 +59,32 @@ export const Demos = () => {
         {desc}
       </p>
       
-      <div 
-        className={`w-full py-4 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all z-10 ${colorClass} group-hover:opacity-90 shadow-lg`}
-      >
-        <Play size={20} fill="currentColor" />
-        Load Logbook
+      <div className="flex flex-col sm:flex-row gap-3 z-10 w-full mt-auto">
+        {actions.map((action: any, idx: number) => {
+          const actionId = `${fileName}-${idx}`;
+          const isLoading = loadingDemo === actionId;
+          const ActionIcon = action.icon || Play;
+          
+          return (
+            <button 
+              key={idx}
+              disabled={loadingDemo !== null}
+              onClick={() => loadDemo(fileName, action.filter, actionId)}
+              className={`flex-1 py-3 px-3 rounded-xl font-bold text-white flex items-center justify-center gap-2 transition-all shadow-lg text-[13px] border border-white/10 hover:border-white/30 ${
+                action.primary ? colorClass : 'bg-slate-800/80 hover:bg-slate-700'
+              } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
+            >
+              {isLoading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <ActionIcon size={16} fill={action.primary ? "currentColor" : "none"} />
+              )}
+              {action.label}
+            </button>
+          )
+        })}
       </div>
-    </button>
+    </div>
   );
 
   return (
@@ -105,43 +102,77 @@ export const Demos = () => {
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Meet our demo pilots and experience LogbookWrapped.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">
         <DemoCard 
-          id="cfi" 
+          fileName="demo_2026.csv"
           name="Sarah" 
-          title="The IFR Explorer" 
+          title="The Annual Reviewer" 
           icon={Plane}
           colorClass="bg-sky-700"
-          borderClass="border-sky-700/30 hover:border-sky-500"
-          desc="Explore a 2023 Annual Review highlighting instrument training and cross-country progression across the Southeast."
+          borderClass="border-sky-700/30"
+          desc="Explore a complete 2026 Annual Review highlighting recent training and flight progression over a single year."
+          actions={[
+            { label: "2026 Wrapped", primary: true, icon: Calendar, filter: { type: 'custom', start: '2026-01-01', end: '2026-12-31' } },
+            { label: "25 vs 26 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2025', year2: '2026' } }
+          ]}
         />
         <DemoCard 
-          id="regional" 
+          fileName="demo_alltime.csv"
           name="Captain John" 
-          title="The Regional Lifer" 
+          title="The Career Pilot" 
           icon={Briefcase}
           colorClass="bg-indigo-700"
-          borderClass="border-indigo-700/30 hover:border-indigo-500"
-          desc="Visualize 15 years of Part 121 operations. See how the engine handles thousands of hours of high-volume East Coast flying."
+          borderClass="border-indigo-700/30"
+          desc="Visualize an entire flying career. See how the engine handles thousands of hours of high-volume operations."
+          actions={[
+            { label: "All-Time Wrapped", primary: true, icon: Globe, filter: { type: 'all_time' } },
+            { label: "25 vs 26 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2025', year2: '2026' } }
+          ]}
         />
         <DemoCard 
-          id="private" 
+          fileName="demo_ppl.csv"
           name="Alex" 
-          title="The Weekend Warrior" 
+          title="The Student Pilot" 
           icon={Compass}
           colorClass="bg-teal-700"
-          borderClass="border-teal-700/30 hover:border-teal-500"
-          desc="Follow a complete Private Pilot journey. This Milestone Tracker details 2020-2021 flights from day one to the checkride."
+          borderClass="border-teal-700/30"
+          desc="Follow a complete Private Pilot journey. Track the milestones from the very first flight to the checkride."
+          actions={[
+            { label: "PPL Milestone", primary: true, icon: Play, filter: { type: 'milestone', label: 'Private Pilot License', start: '2025-01-01', end: '2026-12-31' } },
+            { label: "25 vs 26 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2025', year2: '2026' } }
+          ]}
         />
         <DemoCard 
-          id="growth" 
+          fileName="demo_cc.csv"
           name="Mark" 
-          title="The West Coast Pro" 
-          icon={TrendingUp}
+          title="The Cross Country Guy" 
+          icon={Map}
           colorClass="bg-amber-700"
-          borderClass="border-amber-700/30 hover:border-amber-500"
-          desc="Analyze year-over-year progression. This Growth Report compares high-volume West Coast operations between 2027 and 2028."
+          borderClass="border-amber-700/30"
+          desc="Analyze an extensive history of cross-country flights. Perfect for visualizing long-distance routes and regional travel."
+          actions={[
+            { label: "All-Time Wrapped", primary: true, icon: Globe, filter: { type: 'all_time' } },
+            { label: "25 vs 26 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2025', year2: '2026' } }
+          ]}
         />
+      </div>
+
+      {/* Call to Action Section */}
+      <div className="mt-4 md:mt-8 flex flex-col items-center gap-4 bg-slate-800/40 p-8 md:p-10 rounded-3xl border border-slate-700/50 w-full max-w-3xl mx-auto shadow-xl text-center">
+        <h3 className="text-2xl md:text-3xl font-black text-white leading-tight">
+          Ready for takeoff?
+        </h3>
+        <p className="text-slate-300 text-lg mb-2">
+          After trying out the demo hangar, drop in your own logbook export to see your stats.
+        </p>
+        <Link 
+          to="/upload" 
+          onClick={() => (window as any).umami?.track('Demo CTA Clicked')}
+          className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-black py-4 px-8 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-yellow-500/20 hover:-translate-y-0.5"
+        >
+          Create Your Own Wrapped
+          <ArrowRight size={20} />
+        </Link>
       </div>
     </motion.div>
   );

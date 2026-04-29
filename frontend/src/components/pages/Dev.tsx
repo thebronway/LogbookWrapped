@@ -6,8 +6,9 @@ export const Dev: React.FC = () => {
   return (
     <div className="flex flex-col items-center min-h-[80vh] px-6 py-12 md:py-24 max-w-4xl mx-auto w-full">
       <Helmet>
-        <title>Developer API | LogbookWrapped</title>
-        <meta name="description" content="Integrate LogbookWrapped into your aviation app with our 100% client-side, zero-server import API." />
+        <title>Developer API | Partner Integration | LogbookWrapped</title>
+        <meta name="description" content="Integrate LogbookWrapped into your aviation app with our secure, 100% client-side import API using the browser's native window.postMessage() API." />
+        <link rel="canonical" href="https://logbookwrapped.com/dev" />
       </Helmet>
       <motion.div
         initial={{ opacity: 0, y: 20 }} 

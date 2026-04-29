@@ -11,8 +11,12 @@ COPY . .
 ARG AIRPORT_VERSION=latest
 
 # This pulls airports-latest-min.json by default, but saves it locally as just airports-min.json
-RUN apk add --no-cache curl && \
+RUN apk add --no-cache curl chromium nss freetype harfbuzz ttf-freefont && \
     curl -fL "https://assets.conway.im/logbookwrapped/airports/airports-${AIRPORT_VERSION}-min.json" -o public/airports-min.json
+
+# Tell Puppeteer to use the Alpine Chromium we just installed instead of downloading its own
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 RUN npm run build
 

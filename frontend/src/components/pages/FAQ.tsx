@@ -54,7 +54,8 @@ export const FAQ = () => {
     >
       <Helmet>
         <title>Frequently Asked Questions | LogbookWrapped</title>
-        <meta name="description" content="Get answers to common questions about LogbookWrapped's privacy, data processing, supported logbook formats, and methodology." />
+        <meta name="description" content="Answers to common questions about LogbookWrapped's privacy, data processing, supported logbook formats like ForeFlight and Garmin, and parsing methodology." />
+        <link rel="canonical" href="https://logbookwrapped.com/faq" />
         {/* JSON-LD Schema for Answer Engine Optimization (AEO) and SEO */}
         <script type="application/ld+json">
           {JSON.stringify({

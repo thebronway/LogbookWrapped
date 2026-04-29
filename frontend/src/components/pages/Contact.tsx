@@ -24,7 +24,8 @@ export const Contact = () => {
     >
       <Helmet>
         <title>Contact Us | LogbookWrapped</title>
-        <meta name="description" content="Get in touch with the team behind Logbook Wrapped. We welcome bug reports, feature requests, and general feedback." />
+        <meta name="description" content="Get in touch with the LogbookWrapped team for feedback, bug reports, or to request a new EFB export format. We're here to help pilots tell their stories." />
+        <link rel="canonical" href="https://logbookwrapped.com/contact" />
       </Helmet>
 
       <header className="mb-12 text-center">
@@ -53,7 +54,7 @@ export const Contact = () => {
           <a 
             href={issuesUrl}
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             onClick={() => (window as any).umami?.track('Support Action', { type: 'github_issue_opened' })}
             className="flex items-center justify-center gap-2 w-full py-4 bg-white text-slate-900 hover:bg-slate-200 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-white/10 mt-auto"
           >

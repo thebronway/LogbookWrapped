@@ -1,12 +1,21 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-28* 
-*Current Version: v0.9.6*
+*Last updated: 2026-04-29* 
+*Current Version: v0.9.7*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.7
+- Security Updates
+- SEO/AEO analysis
+- Stats card (page 8) ui fixes
+- Growth page monolithic breakup and restyling
+- Demo file and UI updates
+- Add growth report to year wrapped report.
+- Scroll to top fixes
 
 ### Release v0.9.6
 - Content Updates

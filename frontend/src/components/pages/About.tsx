@@ -13,7 +13,23 @@ export const About = () => {
     >
       <Helmet>
         <title>About LogbookWrapped | Your Aviation Story</title>
-        <meta name="description" content="Learn more about LogbookWrapped, the privacy-first tool built for pilots to visualize their flight history." />
+        <meta name="description" content="Learn about the mission behind LogbookWrapped—a tool built by pilots, for pilots, to celebrate their journey through the skies with beautiful visualizations." />
+        <link rel="canonical" href="https://logbookwrapped.com/about" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "LogbookWrapped",
+              "url": "https://logbookwrapped.com",
+              "logo": "https://logbookwrapped.com/logo/logo.webp",
+              "sameAs": [
+                "https://github.com/thebronway/LogbookWrapped"
+              ]
+            }
+          })}
+        </script>
       </Helmet>
 
       <header className="mb-12">
@@ -61,7 +77,7 @@ export const About = () => {
             <a 
               href="https://buymeacoffee.com/brianconway" 
               target="_blank" 
-              rel="noreferrer"
+              rel="noopener noreferrer nofollow sponsored"
               onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'bmc', source: 'about_page' })}
               className="flex-1 w-full bg-[#FFDD00] hover:bg-[#FFEA4D] text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-sm sm:text-lg px-2"
             >
@@ -72,7 +88,7 @@ export const About = () => {
             <a 
               href="https://paypal.me/brconway" 
               target="_blank" 
-              rel="noreferrer"
+              rel="noopener noreferrer nofollow sponsored"
               onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'paypal', source: 'about_page' })}
               className="flex-1 w-full bg-[#00457C] hover:bg-[#005a9e] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-sm sm:text-lg px-2"
             >
@@ -99,7 +115,7 @@ export const About = () => {
               <a 
                 href="https://brian.conway.im" 
                 target="_blank" 
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 onClick={() => (window as any).umami?.track('Portfolio Link Clicked', { source: 'about_page' })}
                 className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
               >
@@ -117,7 +133,7 @@ export const About = () => {
             <a 
               href="https://github.com/thebronway/LogbookWrapped" 
               target="_blank" 
-              rel="noopener noreferrer"
+              rel="noopener noreferrer nofollow"
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-slate-800 text-white font-bold rounded-full transition-transform hover:scale-105 active:scale-95 hover:bg-slate-700 shadow-xl border border-slate-700"
             >
               <Github size={20} />

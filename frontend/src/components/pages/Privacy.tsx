@@ -14,7 +14,8 @@ export const Privacy = () => {
     >
       <Helmet>
         <title>Privacy Policy | LogbookWrapped</title>
-        <meta name="description" content="Read the privacy policy for Logbook Wrapped. We respect your data with 100% client-side processing." />
+        <meta name="description" content="LogbookWrapped is built with a 100% client-side, privacy-first architecture. Read our commitment to keeping your sensitive flight data on your device." />
+        <link rel="canonical" href="https://logbookwrapped.com/privacy" />
       </Helmet>
 
       <header className="mb-12">

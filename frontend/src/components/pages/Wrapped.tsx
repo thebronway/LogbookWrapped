@@ -4,12 +4,12 @@ import { StoryContainer } from '../layout/StoryContainer';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 export const Wrapped = () => {
-  const { status, stats, resetStore } = useLogbookStore();
+  const { status, stats, resetStore, isDemo } = useLogbookStore();
   const navigate = useNavigate();
 
   const handleClose = () => {
     resetStore();
-    navigate('/');
+    navigate(isDemo ? '/demos' : '/');
   };
 
   if (status !== 'success' || !stats) {

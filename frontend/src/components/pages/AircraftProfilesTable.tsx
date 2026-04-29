@@ -67,14 +67,15 @@ export const AircraftProfilesTable = () => {
       className="max-w-4xl mx-auto py-16 px-6 sm:px-8 space-y-10 text-slate-300 w-full"
     >
       <Helmet>
-        <title>Supported Aircraft | LogbookWrapped</title>
-        <meta name="description" content="A complete list of aircraft performance profiles used by LogbookWrapped." />
+        <title>Supported Aircraft Profiles | LogbookWrapped Database</title>
+        <meta name="description" content="Explore our database of aircraft performance profiles used to calculate fuel burn and distance stats for your LogbookWrapped experience." />
+        <link rel="canonical" href="https://logbookwrapped.com/aircraftprofiles" />
       </Helmet>
       
       <div className="space-y-4">
         <h1 className="text-4xl font-black text-white tracking-tight">Supported Aircraft Profiles</h1>
         <p className="text-lg text-slate-400 leading-relaxed">
-          We use this database to estimate fuel burn and validate distances. Our parser will attempt to group your logged variants into these core profiles. If your aircraft isn't listed, we default to <strong className="text-white">120 KTAS</strong> and <strong className="text-white">10 GPH</strong>.
+          We use this database, derived from <a href="https://www.icao.int/publications/DOC8643/Pages/Search.aspx" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">ICAO Type Designators</a> and the <a href="https://registry.faa.gov/aircraftinquiry/" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">FAA Aircraft Registry</a>, to estimate fuel burn and validate distances. Our parser will attempt to group your logged variants into these core profiles. If your aircraft isn't listed, we default to <strong className="text-white">120 KTAS</strong> and <strong className="text-white">10 GPH</strong>.
         </p>
         <div className="flex flex-wrap items-center gap-4">
           <Link 

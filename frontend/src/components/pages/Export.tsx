@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { Download, Smartphone } from 'lucide-react';
+import { Download, Smartphone, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Export = () => (
@@ -9,8 +9,30 @@ export const Export = () => (
     className="max-w-4xl mx-auto px-6 py-16 text-slate-300"
   >
     <Helmet>
-      <title>How to Export Your Logbook | LogbookWrapped</title>
-      <meta name="description" content="Learn how to export your aviation logbook from ForeFlight, Garmin Pilot, LogTen Pro, and more." />
+      <title>How to Export Your Logbook | LogbookWrapped Guide</title>
+      <meta name="description" content="Step-by-step guides for exporting your pilot logbook as a CSV from ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro for use with LogbookWrapped." />
+      <link rel="canonical" href="https://logbookwrapped.com/export" />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "name": "How to Export ForeFlight Logbook to CSV",
+          "step": [
+            {
+              "@type": "HowToStep",
+              "text": "Open ForeFlight on the web (plan.foreflight.com) or the iOS App."
+            },
+            {
+              "@type": "HowToStep",
+              "text": "Navigate to the Logbook section."
+            },
+            {
+              "@type": "HowToStep",
+              "text": "Tap the Export button and select 'Export as CSV'."
+            }
+          ]
+        })}
+      </script>
     </Helmet>
 
     <header className="mb-12">
@@ -38,6 +60,17 @@ export const Export = () => (
               <li>Tap the <strong>Export</strong> button (usually an arrow pointing out of a box at the top right).</li>
               <li>Select <strong>Export as CSV</strong>.</li>
             </ol>
+            <div className="pt-3">
+              <a 
+                href="https://support.foreflight.com/hc/en-us/articles/204044424-How-do-I-export-my-Logbook-" 
+                target="_blank" 
+                rel="noopener noreferrer nofollow" 
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-blue-400 hover:bg-slate-700 hover:text-blue-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700"
+              >
+                Official ForeFlight Guide
+                <ExternalLink size={14} />
+              </a>
+            </div>
           </div>
 
           <div>
@@ -48,6 +81,17 @@ export const Export = () => (
               <li>Tap the <strong>Menu</strong> icon (three dots) in the top right.</li>
               <li>Select <strong>Export Logbook</strong> and choose the <strong>CSV</strong> format.</li>
             </ol>
+            <div className="pt-3">
+              <a 
+                href="https://fly.garmin.com/fly-garmin/support/" 
+                target="_blank" 
+                rel="noopener noreferrer nofollow" 
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-emerald-400 hover:bg-slate-700 hover:text-emerald-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700"
+              >
+                flyGarmin Support Portal
+                <ExternalLink size={14} />
+              </a>
+            </div>
           </div>
 
           <div>

@@ -14,8 +14,22 @@ export const Methodology = () => {
       className="max-w-4xl mx-auto py-16 px-6 sm:px-8 text-slate-300"
     >
       <Helmet>
-        <title>How It Works | LogbookWrapped</title>
-        <meta name="description" content="Discover how LogbookWrapped cleans, patches, and interprets your pilot logbook data to calculate your aviation stats." />
+        <title>Methodology | How We Parse Your Logbook | LogbookWrapped</title>
+        <meta name="description" content="Technical details on how our engine cleans, patches, and interprets your pilot logbook data to calculate accurate aviation statistics and visualizations." />
+        <link rel="canonical" href="https://logbookwrapped.com/methodology" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            "headline": "LogbookWrapped Parsing Methodology",
+            "description": "How LogbookWrapped cleans, patches, and interprets EFB logbook data.",
+            "articleSection": "Data Processing",
+            "author": {
+              "@type": "Organization",
+              "name": "LogbookWrapped"
+            }
+          })}
+        </script>
       </Helmet>
       
       <header className="mb-12 space-y-4">
@@ -176,10 +190,11 @@ export const Methodology = () => {
             LogbookWrapped relies on several incredible open-source projects to power our geographic and airport data. We want to extend a huge thank you to the maintainers of these datasets:
           </p>
           <ul className="list-disc list-inside space-y-2 text-sm text-slate-400 ml-2 mt-2">
-            <li><strong className="text-slate-300">Global Boundaries:</strong> Provided by <a href="https://www.naturalearthdata.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">Natural Earth</a>, a public domain map dataset.</li>
-            <li><strong className="text-slate-300">Map Rendering Architecture:</strong> Powered by <a href="https://github.com/topojson/topojson" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">TopoJSON</a>, created by Mike Bostock.</li>
-            <li><strong className="text-slate-300">Canadian Geographies:</strong> Sourced via <a href="https://carto.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">CARTO</a> (formerly CartoDB) open datasets.</li>
-            <li><strong className="text-slate-300">Airport Database:</strong> A highly curated, locally-stored subset derived from <a href="https://ourairports.com/" target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">OurAirports</a> and FAA open data.</li>
+            <li><strong className="text-slate-300">Global Boundaries:</strong> Provided by <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">Natural Earth</a>, a public domain map dataset.</li>
+            <li><strong className="text-slate-300">Map Rendering Architecture:</strong> Powered by <a href="https://github.com/topojson/topojson" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">TopoJSON</a>, created by Mike Bostock.</li>
+            <li><strong className="text-slate-300">Canadian Geographies:</strong> Sourced via <a href="https://carto.com/" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">CARTO</a> (formerly CartoDB) open datasets.</li>
+            <li><strong className="text-slate-300">Airport Database:</strong> A highly curated, locally-stored subset derived from <a href="https://ourairports.com/" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">OurAirports</a> and 
+            &nbsp;<a href="https://www.faa.gov/airports/airport_safety/airportdata_5010/" target="_blank" rel="noopener noreferrer nofollow" className="text-blue-400 hover:underline">FAA open data</a>.</li>
           </ul>
         </section>
       </div>

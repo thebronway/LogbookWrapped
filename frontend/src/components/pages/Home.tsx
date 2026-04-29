@@ -22,8 +22,23 @@ export const Home = () => {
     >
       <Helmet>
         <title>LogbookWrapped | Your Aviation Year in Review</title>
-        <meta name="description" content="A privacy-first web app that transforms EFB logbook exports into shareable aviation stories." />
+        <meta name="description" content="Visualize your flight history with LogbookWrapped. A privacy-first tool to transform EFB exports into shareable stories." />
         <link rel="canonical" href="https://logbookwrapped.com/" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            "name": "LogbookWrapped",
+            "operatingSystem": "Web Browser",
+            "applicationCategory": "AviationSoftware",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "description": "A privacy-first web app that transforms EFB logbook exports into shareable aviation stories."
+          })}
+        </script>
       </Helmet>
 
       <HeroSection />
@@ -58,7 +73,11 @@ export const Home = () => {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white">Supported Electronic Flight Bags</h2>
           <p className="text-slate-300 leading-relaxed">
-            LogbookWrapped’s proprietary parser automatically cleans and visualizes CSV exports from <strong className="text-white">ForeFlight</strong>, <strong className="text-white">Garmin Pilot</strong>, <strong className="text-white">MyFlightbook</strong>, <strong className="text-white">LogTen Pro</strong>, and custom spreadsheet formats.
+            LogbookWrapped’s parser automatically cleans and visualizes CSV exports from&nbsp;
+            <a href="https://foreflight.com" target="_blank" rel="noopener noreferrer nofollow" className="text-white hover:text-sky-400 underline decoration-slate-700 transition-colors">ForeFlight</a>,&nbsp;
+            <a href="https://fly.garmin.com/fly-garmin/garmin-pilot/" target="_blank" rel="noopener noreferrer nofollow" className="text-white hover:text-sky-400 underline decoration-slate-700 transition-colors">Garmin Pilot</a>,&nbsp;
+            <a href="https://myflightbook.com" target="_blank" rel="noopener noreferrer nofollow" className="text-white hover:text-sky-400 underline decoration-slate-700 transition-colors">MyFlightbook</a>,&nbsp;
+            <a href="https://coradine.com" target="_blank" rel="noopener noreferrer nofollow" className="text-white hover:text-sky-400 underline decoration-slate-700 transition-colors">LogTen Pro</a>, and custom spreadsheet formats.
           </p>
           <div className="pt-2">
             <Link to="/export" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-sky-400 hover:bg-slate-700 hover:text-sky-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700">

@@ -13,7 +13,8 @@ export const Disclaimer = () => {
     >
       <Helmet>
         <title>Disclaimer | LogbookWrapped</title>
-        <meta name="description" content="Legal and liability disclaimer for the Logbook Wrapped platform." />
+        <meta name="description" content="Legal disclaimer for LogbookWrapped. Information about data accuracy, trademark affiliations, and the intended use of our aviation visualization tools." />
+        <link rel="canonical" href="https://logbookwrapped.com/disclaimer" />
       </Helmet>
 
       <header className="mb-12">
