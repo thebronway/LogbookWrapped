@@ -13,6 +13,9 @@ export const ImportWrapped: React.FC = () => {
       const allowedOrigins = [
         'http://localhost:5173', 
         'http://localhost:3000',
+        'http://localhost:3001',
+        'https://files.conway.im',
+        'https://logbookwrapped.conway.im',
         // 'https://their-app.com' 
       ];
       

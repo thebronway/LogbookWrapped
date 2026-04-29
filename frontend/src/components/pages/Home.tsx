@@ -53,7 +53,7 @@ export const Home = () => {
             <Plane size={32} />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Upload Your Logbook</h3>
-          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, track a Milestone, or see your Year-over-Year Growth. Processed <strong className="text-emerald-400">100% locally</strong>.</p>
+          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, Lifetime Reivew, Track a Milestone, or see your Year-over-Year Growth.<br /> All processed <strong className="text-emerald-400">100% locally</strong>.</p>
         </Link>
 
         {/* Card 2: Demo Hangar */}
@@ -62,8 +62,8 @@ export const Home = () => {
           <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
             <Compass size={32} />
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3 z-10">Explore Examples</h3>
-          <p className="text-slate-400 text-sm leading-relaxed z-10">Don't have a logbook handy? Meet our demo pilots and see the magic of LogbookWrapped in action.</p>
+          <h3 className="text-2xl font-bold text-white mb-3 z-10">Demo Hangar</h3>
+          <p className="text-slate-400 text-sm leading-relaxed z-10">Not ready to upload your logbook yet? Explore our demos to see exactly how LogbookWrapped works before uploading and making your own.</p>
         </Link>
       </div>
 

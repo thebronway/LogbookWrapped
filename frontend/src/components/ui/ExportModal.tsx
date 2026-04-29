@@ -107,13 +107,13 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
             <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-700 w-full sm:w-auto shadow-inner">
               <button
                 onClick={() => setSelectedFormat('story')}
-                className={`flex-1 sm:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 ${selectedFormat === 'story' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                className={`flex-1 sm:px-6 py-2 rounded-md text-sm font-bold whitespace-nowrap transition-all duration-300 ${selectedFormat === 'story' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
               >
                 Story (9:16)
               </button>
               <button
                 onClick={() => setSelectedFormat('post')}
-                className={`flex-1 sm:px-6 py-2 rounded-md text-sm font-bold transition-all duration-300 ${selectedFormat === 'post' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                className={`flex-1 sm:px-6 py-2 rounded-md text-sm font-bold whitespace-nowrap transition-all duration-300 ${selectedFormat === 'post' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
               >
                 Post (4:5)
               </button>
@@ -140,16 +140,16 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
                   <button 
                     onClick={() => handleDownloadSingle(item.id, item.name)}
                     disabled={isExporting || !isReady}
-                    className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-slate-700 hover:bg-slate-600 shadow-md' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
+                    className={`flex-1 flex justify-center items-center gap-1 sm:gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-slate-700 hover:bg-slate-600 shadow-md' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span>Save</span></>}
+                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span className="hidden sm:inline">Save</span></>}
                   </button>
                   <button 
                     onClick={() => handleShareSingle(item.id, item.name)}
                     disabled={isExporting || !isReady}
-                    className={`flex-1 flex justify-center items-center gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-900/20' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
+                    className={`flex-1 flex justify-center items-center gap-1 sm:gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-900/20' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span>Share</span></>}
+                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span className="hidden sm:inline">Share</span></>}
                   </button>
                 </div>
               </div>

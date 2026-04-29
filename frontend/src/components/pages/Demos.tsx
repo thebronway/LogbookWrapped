@@ -99,7 +99,7 @@ export const Demos = () => {
 
       <div className="text-center space-y-4">
         <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight uppercase italic">The Demo Hangar</h1>
-        <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Meet our demo pilots and experience LogbookWrapped.</p>
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto">Don't have your logbook exported yet? Try our demos.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-5xl mx-auto">

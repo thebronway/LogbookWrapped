@@ -87,32 +87,35 @@ export const Growth = () => {
     } catch (err) { console.error('Failed to copy', err); }
   };
 
-  // ------------------------------------
-  // LAYOUT RENDERERS
-  // ------------------------------------
   const desktopLayout = (
     <motion.div 
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
-      className="flex flex-col items-center w-full max-w-2xl mx-auto px-4 md:px-6 py-12 md:py-16 gap-8 relative"
+      className="flex flex-col items-center w-full max-w-5xl mx-auto px-4 md:px-6 py-12 gap-8 relative"
     >
       <Helmet><title>Growth Report | LogbookWrapped</title></Helmet>
 
-      <div className="w-full flex justify-between items-start md:items-center gap-4 mb-4 mt-4 md:mt-0">
+      <div className="w-full flex justify-between items-center mb-2">
         <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
           My LogbookWrapped <br className="md:hidden" /> Growth Report.
         </h1>
         <Link 
           to={closeRoute} 
           onClick={() => resetStore()} 
-          className="bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shadow-lg border border-yellow-400/30 hover:border-yellow-400/60 shrink-0 mt-1 md:mt-0"
+          className="bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all shadow-lg border border-yellow-400/30 hover:border-yellow-400/60 shrink-0"
         >
           <X size={20} />
         </Link>
       </div>
 
-      <GrowthPage1_Stats nameA={nameA} nameB={nameB} gStats={gStats} copyText={copyText} isDesktop={true} />
-      <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { (window as any).umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { (window as any).umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { (window as any).umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} />
+      <div className="flex flex-row w-full justify-center items-stretch gap-8">
+        <div className="flex-1 flex justify-end items-stretch">
+          <GrowthPage1_Stats nameA={nameA} nameB={nameB} gStats={gStats} copyText={copyText} isDesktop={true} />
+        </div>
+        <div className="flex-1 flex justify-start items-stretch">
+          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { (window as any).umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { (window as any).umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { (window as any).umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} />
+        </div>
+      </div>
     </motion.div>
   );
 

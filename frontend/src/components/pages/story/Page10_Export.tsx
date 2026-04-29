@@ -97,10 +97,10 @@ export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-      className="flex flex-col h-full w-full p-6 bg-slate-950 text-white overflow-y-auto justify-center items-center"
+      className="flex flex-col h-full w-full px-6 pt-24 pb-24 lg:p-0 bg-slate-950 lg:bg-transparent text-white overflow-y-auto justify-start lg:justify-center items-center"
     >
       {!isExportMode && (
-        <div className="relative flex flex-col w-full max-w-sm sm:max-w-full h-auto sm:h-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden mb-12 sm:mb-0">
+        <div className="relative flex flex-col shrink-0 w-full max-w-sm lg:max-w-full h-auto lg:h-full bg-slate-900 rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none border border-slate-800 lg:border-none overflow-hidden mb-12 lg:mb-0">
           
           {/* Top Section: Boarding Pass Header */}
           <div className="p-8 pb-8 text-center bg-slate-800/50 sm:pt-16">

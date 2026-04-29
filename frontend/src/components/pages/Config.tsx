@@ -69,10 +69,10 @@ export const Config = () => {
       id={`option-card-${id}`}
       onClick={onClick}
       className={`p-5 rounded-2xl cursor-pointer border-2 transition-all flex items-start gap-4 ${
-        selected ? 'border-sky-500 bg-sky-500/10 shadow-lg shadow-sky-500/20' : 'border-slate-700 bg-slate-800/40 hover:border-slate-500 hover:bg-slate-800'
+        selected ? 'border-yellow-400 bg-yellow-400/5 shadow-lg shadow-yellow-400/10' : 'border-slate-700 bg-slate-800/40 hover:border-slate-500 hover:bg-slate-800'
       }`}
     >
-      <div className={`p-3 rounded-xl ${selected ? 'bg-sky-500/20 text-sky-400' : 'bg-slate-700/50 text-slate-400'}`}>
+      <div className={`p-3 rounded-xl ${selected ? 'bg-yellow-400/20 text-yellow-400' : 'bg-slate-700/50 text-slate-400'}`}>
         <Icon size={24} />
       </div>
       <div>
@@ -236,7 +236,7 @@ export const Config = () => {
 
           {mode === 'all_time' && (
             <div className="text-center py-4">
-              <Globe className="mx-auto text-blue-400 mb-2 opacity-50" size={48} />
+              <Globe className="mx-auto text-sky-400 mb-2 opacity-50" size={48} />
               <p className="text-slate-300 font-medium">Ready to process your entire aviation history.</p>
             </div>
           )}
@@ -254,7 +254,7 @@ export const Config = () => {
           onClick={handleGenerate}
           className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-1 bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20"
         >
-          {mode === 'yoy' ? 'Analyze Growth' : 'Generate My Wrapped'}
+          {mode === 'yoy' ? 'Analyze My Growth' : 'Generate My Wrapped'}
           <ArrowUpRight size={24} />
         </button>
 

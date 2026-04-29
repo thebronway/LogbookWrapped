@@ -52,40 +52,45 @@ export const Dev: React.FC = () => {
           
           <div className="bg-[#0d1117] border border-slate-800 rounded-xl overflow-hidden relative">
             <pre className="p-4 overflow-x-auto text-sm text-sky-200 font-mono leading-relaxed">
-{`// 1. Define the raw CSV data (must match standard EFB export formats)
-const rawCsvString = "Date,Aircraft ID,Route,Total Time...\\n2023-10-01,N12345,KLAX-KSFO,1.5...";
+              {`// 1. Define the raw CSV data (must match standard EFB export formats)
+              const rawCsvString = "Date,Aircraft ID,Route,Total Time...\\n2024-10-01,N12345,KLAX-KSFO,1.5...";
 
-// 2. Open LogbookWrapped in a new tab
-const wrappedWindow = window.open('https://logbookwrapped.com/mywrapped', '_blank');
+              // 2. Open LogbookWrapped in a new tab
+              const wrappedWindow = window.open('https://logbookwrapped.com/mywrapped', '_blank');
 
-// 3. Set up a listener to wait for LogbookWrapped to be ready
-const handleMessage = (event) => {
-  // Verify the message came from LogbookWrapped
-  if (event.origin !== 'https://logbookwrapped.com') return;
+              // 3. Set up a listener to wait for LogbookWrapped to be ready
+              const handleMessage = (event) => {
+                // Verify the message came from LogbookWrapped
+                if (event.origin !== 'https://logbookwrapped.com') return;
 
-  // When LogbookWrapped says it's ready, send the payload
-  if (event.data && event.data.type === 'LOGBOOK_WRAPPED_READY') {
-    
-    // Example: Launching a Growth (Year-over-Year) Report
-    const payload = {
-      type: 'LOGBOOK_IMPORT',
-      csvData: rawCsvString,
-      filter: {
-        type: 'yoy',      // Determines the dashboard mode
-        year1: '2025',    // The baseline year
-        year2: '2024'     // The comparison year
-      }
-    };
+                // When LogbookWrapped says it's ready, send the payload
+                if (event.data && event.data.type === 'LOGBOOK_WRAPPED_READY') {
+                  
+                  // Choose one of the following filter configurations:
+                  const filters = {
+                    this_year: { type: 'this_year' },
+                    last_year: { type: 'last_year' },
+                    all_time:  { type: 'all_time' },
+                    growth:    { type: 'yoy', year1: '2025', year2: '2024' },
+                    milestone: { type: 'milestone', label: 'Instrument Rating', start: '2024-01-01', end: '2024-06-15' },
+                    custom:    { type: 'custom', start: '2024-03-01', end: '2024-03-31' }
+                  };
 
-    // Send the data securely
-    wrappedWindow.postMessage(payload, 'https://logbookwrapped.com');
+                  const payload = {
+                    type: 'LOGBOOK_IMPORT',
+                    csvData: rawCsvString,
+                    filter: filters.this_year // Change this key to test different reports
+                  };
 
-    // Clean up the listener once sent
-    window.removeEventListener('message', handleMessage);
-  }
-};
+                  // Send the data securely
+                  wrappedWindow.postMessage(payload, 'https://logbookwrapped.com');
 
-window.addEventListener('message', handleMessage);`}
+                  // Clean up the listener once sent
+                  window.removeEventListener('message', handleMessage);
+                }
+              };
+
+              window.addEventListener('message', handleMessage);`}
             </pre>
           </div>
         </div>
@@ -102,17 +107,23 @@ window.addEventListener('message', handleMessage);`}
             <li>
               <strong className="text-slate-200">filter (Optional):</strong> An object dictating the target experience and timeframe. If omitted, defaults to the current year Wrapped.
               <ul className="list-disc list-inside ml-4 mt-2 space-y-2 text-sm text-slate-400">
-                <li><code className="text-slate-300">{"{ type: 'this_year' }"}</code> - Current calendar year Wrapped</li>
-                <li><code className="text-slate-300">{"{ type: 'last_year' }"}</code> - Previous calendar year Wrapped</li>
-                <li><code className="text-slate-300">{"{ type: 'all_time' }"}</code> - Entire logbook history Wrapped</li>
                 <li>
-                  <code className="text-slate-300">{"{ type: 'yoy', year1: '2025', year2: '2024' }"}</code> - Generates a <strong>Growth</strong> report comparing the two provided years.
+                  <code className="text-slate-300">{"{ type: 'this_year' }"}</code> — Filters for the current calendar year (e.g., 2026).
                 </li>
                 <li>
-                  <code className="text-slate-300">{"{ type: 'milestone', label: 'Private Pilot', start: '2023-01-01', end: '2023-12-31' }"}</code> - Generates a <strong>Milestone</strong> tracker with a custom title on the cover page.
+                  <code className="text-slate-300">{"{ type: 'last_year' }"}</code> — Filters for the previous calendar year (e.g., 2025).
                 </li>
                 <li>
-                  <code className="text-slate-300">{"{ type: 'custom', start: '2022-01-01', end: '2022-12-31' }"}</code> - Any custom date range (YYYY-MM-DD). If the range spans exactly Jan 1st to Dec 31st of a single year, LogbookWrapped automatically renders an annual Wrapped.
+                  <code className="text-slate-300">{"{ type: 'all_time' }"}</code> — Includes every flight record found in the provided CSV.
+                </li>
+                <li>
+                  <code className="text-slate-300">{"{ type: 'yoy', year1: '2025', year2: '2024' }"}</code> — Generates a <strong>Growth</strong> report comparing two specific years. Note: years must be strings.
+                </li>
+                <li>
+                  <code className="text-slate-300">{"{ type: 'milestone', label: 'Private Pilot', start: '2023-01-01', end: '2023-12-31' }"}</code> — Generates a milestone report with a custom title using the provided date range.
+                </li>
+                <li>
+                  <code className="text-slate-300">{"{ type: 'custom', start: '2022-01-01', end: '2022-12-31' }"}</code> — Filters for a specific date range (YYYY-MM-DD). If the range covers exactly Jan 1st to Dec 31st of one year, it automatically renders an annual Wrapped.
                 </li>
               </ul>
             </li>

@@ -20,9 +20,9 @@ export const GrowthPage2_Export: React.FC<Props> = ({
     <motion.div 
       initial={{ opacity: 0 }} 
       animate={{ opacity: 1 }} 
-      className={`flex flex-col h-full w-full justify-center items-center ${isDesktop ? '' : 'p-6 bg-slate-950 text-white overflow-y-auto pb-12'}`}
+      className={`flex flex-col h-full w-full ${isDesktop ? 'justify-center items-center' : 'justify-start items-center px-6 pt-24 pb-24 bg-slate-950 text-white overflow-y-auto'}`}
     >
-      <div className={`relative flex flex-col w-full bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden ${isDesktop ? 'max-w-md' : 'max-w-sm h-auto'}`}>
+      <div className={`relative flex flex-col w-full shrink-0 bg-slate-900 shadow-2xl border border-slate-800 overflow-hidden ${isDesktop ? 'max-w-md h-full rounded-3xl' : 'max-w-sm h-auto rounded-2xl mb-12'}`}>
         
         <div className="p-8 pb-8 text-center bg-slate-800/50">
           <h2 className="text-3xl font-black text-white leading-tight tracking-tight">
@@ -54,12 +54,12 @@ export const GrowthPage2_Export: React.FC<Props> = ({
 
           <hr className="border-slate-800/60 w-full my-1" />
 
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
-             <button onClick={() => handleViewWrapped(nameA)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm">
-              <Calendar size={16} className="text-purple-400" /> {nameA} Wrapped
+          <div className="flex flex-row gap-2 w-full">
+             <button onClick={() => handleViewWrapped(nameA)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
+              <Calendar size={14} className="text-purple-400 shrink-0" /> <span className="truncate">{nameA} Wrapped</span>
             </button>
-            <button onClick={() => handleViewWrapped(nameB)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm">
-              <Calendar size={16} className="text-sky-400" /> {nameB} Wrapped
+            <button onClick={() => handleViewWrapped(nameB)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
+              <Calendar size={14} className="text-sky-400 shrink-0" /> <span className="truncate">{nameB} Wrapped</span>
             </button>
           </div>
 

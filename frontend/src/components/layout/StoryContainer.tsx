@@ -131,19 +131,23 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             {pages[5]}
           </div>
 
-          {/* Bottom Row: Stats, Optional Growth, and Export */}
-          <div className={`col-span-1 md:col-span-2 ${comparisonStats ? 'lg:col-span-1' : 'lg:col-span-2'} row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative`}>
-            {pages[7]}
-          </div>
-
-          {comparisonStats && (
-            <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-              {pages[8]}
+          {/* Bottom Row: Nested grid spans all 4 columns, perfectly splitting into 3 equal columns (or 2) without breaking the upper grid */}
+          <div className={`col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 ${comparisonStats ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-6 !overflow-visible`}>
+            
+            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
+              {pages[7]}
             </div>
-          )}
-          
-          <div className={`col-span-1 md:col-span-2 ${comparisonStats ? 'lg:col-span-2' : 'lg:col-span-2'} row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative`}>
-            {pages[pages.length - 1]}
+
+            {comparisonStats && (
+              <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
+                {pages[8]}
+              </div>
+            )}
+            
+            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
+              {pages[pages.length - 1]}
+            </div>
+
           </div>
         </div>
       </div>

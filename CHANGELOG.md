@@ -1,12 +1,21 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-04-29* 
-*Current Version: v0.9.7*
+*Current Version: v0.9.8*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v0.9.8
+- Performace tweaks and code cleanup
+- Story Pages UI unification and updates
+- Growth Page UI unification and updates
+- Config page yellow highlight
+- Screenshot Updates
+- API Tests
+- API documentation updates
 
 ### Release v0.9.7
 - Security Updates
