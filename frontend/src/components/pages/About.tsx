@@ -39,15 +39,15 @@ export const About = () => {
       <div className="space-y-10 text-lg leading-relaxed">
         <section>
           <p>
-            Welcome to LogbookWrapped, the tool for pilots wanting to visualize their aviation milestones. 
-            We believe your flight history is more than just rows in a CSV file, it's a story of your journey through the skies.
+            Welcome to LogbookWrapped, the ultimate tool for pilots wanting to visualize their aviation milestones. 
+            We believe your flight history is more than just rows in an EFB export—it's the story of your journey through the skies.
           </p>
         </section>
         <section>
           <p>
             Born from the viral success of end-of-year review apps, LogbookWrapped was created to give 
             aviators a beautiful, engaging, and easy-to-share recap of their flying hours, favorite routes, 
-            fleet diversity, and aviation extremes.
+            fleet diversity, and aviation extremes. Whether you use ForeFlight, Garmin Pilot, MyFlightbook, or LogTen Pro, we turn your raw CSV data into a shareable aviation story.
           </p>
         </section>
 

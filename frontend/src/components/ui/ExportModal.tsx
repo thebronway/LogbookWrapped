@@ -133,7 +133,6 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
               <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg col-span-1 ${isSingleItem ? 'w-full' : ''}`}>
                 <div className="text-sm font-medium text-slate-300 text-center">{item.name}</div>
                 
-                {/* Visual Preview Engine */}
                 <PreviewCard page={item} format={selectedFormat} />
 
                 <div className="flex gap-2 mt-auto w-full">
@@ -158,7 +157,6 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
           </div>
         </div>
 
-        {/* Hide the ZIP button entirely if it's just a single export item */}
         {!isSingleItem && (
           <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent flex justify-center pb-8 pt-12 pointer-events-none">
             <button

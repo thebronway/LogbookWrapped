@@ -8,6 +8,14 @@ This document tracks past changes starting with v0.8.1.
 
 ## Changelog
 
+### Release v0.9.9
+- Reduced map sizes
+- SEO/AEO Optimizations
+- Content Updates
+- NPM Updates
+- Comment Cleanup
+- Tech Debt Cleanup
+
 ### Release v0.9.8
 - Performace tweaks and code cleanup
 - Story Pages UI unification and updates

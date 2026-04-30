@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useNavigate, Navigate } from 'react-router-dom';
@@ -64,7 +64,16 @@ export const Config = () => {
     }, 100);
   };
 
-  const OptionCard = ({ id, icon: Icon, title, desc, selected, onClick }: any) => (
+  interface OptionCardProps {
+    id: string;
+    icon: React.ElementType;
+    title: string;
+    desc: string;
+    selected: boolean;
+    onClick: () => void;
+  }
+
+  const OptionCard = ({ id, icon: Icon, title, desc, selected, onClick }: OptionCardProps) => (
     <div 
       id={`option-card-${id}`}
       onClick={onClick}

@@ -19,20 +19,19 @@ export const detectEFBProfile = (headers: string[]): { profile: any, name: strin
 const standardizeAircraftType = (rawType: string): string => {
   if (!rawType) return 'UNKNOWN';
 
-  // Step A: Sanitize (uppercase, remove spaces, dashes, etc.)
   const cleanType = rawType.toUpperCase().replace(/[-\s_]/g, '');
   const availableProfiles = Object.keys(AIRCRAFT_PROFILES);
 
-  // Step B: Direct or Substring Match (e.g., "C172P" includes "C172")
+  // Direct or Substring Match (e.g., "C172P" includes "C172")
   for (const profile of availableProfiles) {
     if (cleanType.includes(profile)) {
       return profile;
     }
   }
 
-  // Step C: Numeric "Missing Prefix" Match (e.g., "172N" matching "C172")
+  // Numeric "Missing Prefix" Match (e.g., "172N" matching "C172")
   for (const profile of availableProfiles) {
-    const numericPart = profile.replace(/\D/g, ''); // Extract only numbers
+    const numericPart = profile.replace(/\D/g, '');
     if (numericPart.length >= 2 && cleanType.includes(numericPart)) {
       return profile;
     }
@@ -48,14 +47,13 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
   let profile = PROFILES.FOREFLIGHT; // Default fallback
   let isKnownProfile = false;
 
-  // 1. Use centralized detection logic
   const { profile: detectedProfile } = detectEFBProfile(headers);
   if (detectedProfile) {
     profile = detectedProfile;
     isKnownProfile = true;
   }
 
-  // 2. FUZZY MATCHER FOR CUSTOM SPREADSHEETS
+  // FUZZY MATCHER FOR CUSTOM SPREADSHEETS
   if (!isKnownProfile) {
     const findCol = (aliases: string[]) => {
       const lowerHeaders = headers.map(h => h.toLowerCase().trim());
@@ -85,7 +83,6 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
     };
   }
 
-  // 3. Build Tail-to-Type Map
   const tailToTypeMap: Record<string, string> = preParsedAircraftMap || {};
   rawRows.forEach(row => {
     const tail = row[profile.aircraftId];
@@ -93,7 +90,6 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
     if (tail && type) tailToTypeMap[tail] = type;
   });
 
-  // 4. Map and Normalize Rows
   return rawRows.map(row => {
     let departure = row[profile.departure];
     let destination = row[profile.destination];

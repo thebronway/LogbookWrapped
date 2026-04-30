@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
-import { UploadCloud, Users } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
 
 export const Dropzone = () => {

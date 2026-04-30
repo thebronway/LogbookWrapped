@@ -21,7 +21,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const mapTracker = createMapTracker();
   const supTracker = createSuperlativeTracker();
 
-  // 1. THE SINGLE LOOP
+  // THE SINGLE LOOP
   flights.forEach(f => {
     stats.totalHours += f.totalTime;
     stats.totalLandings += f.landings;
@@ -33,10 +33,8 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || AIRCRAFT_PROFILES['UNKNOWN'];
     stats.estimatedFuelBurn += (f.totalTime * profile.gph);
     
-    // Delegation: Route & Geographic Validation
     const { flightLegs, calculatedDistance } = analyzeFlightRoute(f, airportDB, profile.speed);
     
-    // Delegation: Graph & Bounds Tracking
     processFlightMapData(f, flightLegs, airportDB, mapTracker);
 
     const flightDist = f.distance && f.distance > 0 ? f.distance : calculatedDistance;
@@ -54,7 +52,6 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
       stats.longestFlightRoute = `${f.departure} to ${f.destination}`;
     }
 
-    // Accumulate metrics for superlatives
     supTracker.aircraftTypes.add(f.aircraftType);
     supTracker.tailNumbers.add(f.aircraftId);
     supTracker.aircraftTypeCounts[f.aircraftType] = (supTracker.aircraftTypeCounts[f.aircraftType] || 0) + 1;
@@ -86,7 +83,6 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     }
   });
 
-  // 2. RESOLVE HELPERS
   const winners = getWinners(supTracker);
   Object.assign(stats, winners);
 
@@ -114,7 +110,6 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.mapData.bounds = [mapTracker.minLon, mapTracker.minLat, mapTracker.maxLon, mapTracker.maxLat];
   }
 
-  // 3. FINAL MATH & CLEANUP
   stats.averageFlightTime = stats.totalFlights > 0 ? stats.totalHours / stats.totalFlights : 0;
   stats.flightsPerMonth = winners.activeMonths > 0 ? stats.totalFlights / winners.activeMonths : 0;
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;

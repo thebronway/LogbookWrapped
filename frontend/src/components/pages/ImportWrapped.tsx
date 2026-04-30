@@ -11,12 +11,8 @@ export const ImportWrapped: React.FC = () => {
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       const allowedOrigins = [
-        'http://localhost:5173', 
-        'http://localhost:3000',
-        'http://localhost:3001',
         'https://files.conway.im',
         'https://logbookwrapped.conway.im',
-        // 'https://their-app.com' 
       ];
       
       if (!allowedOrigins.includes(event.origin)) {
@@ -37,7 +33,6 @@ export const ImportWrapped: React.FC = () => {
           // Use processFiles (array) and pass `true` to bypass the Config page
           await processFiles([virtualFile], true);
           
-          // Redirect based on the mode requested by the API payload
           if (filter?.type === 'yoy') {
             navigate('/growth');
           } else {

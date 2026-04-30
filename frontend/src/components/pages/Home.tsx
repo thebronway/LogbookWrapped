@@ -43,20 +43,17 @@ export const Home = () => {
 
       <HeroSection />
 
-      {/* Launchpad App Grid */}
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* Card 1: Upload */}
         <Link to="/upload" onClick={() => (window as any).umami?.track('Funnel Started', { path: 'upload_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-sky-500/30 hover:border-sky-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-sky-500/10 hover:-translate-y-1 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-3xl group-hover:bg-sky-500/20 transition-colors" />
           <div className="w-16 h-16 bg-sky-500/20 text-sky-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
             <Plane size={32} />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Upload Your Logbook</h3>
-          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, Lifetime Reivew, Track a Milestone, or see your Year-over-Year Growth.<br /> All processed <strong className="text-emerald-400">100% locally</strong>.</p>
+          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, Lifetime Review, Track a Milestone, or see your Year-over-Year Growth.<br /> All processed <strong className="text-emerald-400">100% locally</strong>.</p>
         </Link>
 
-        {/* Card 2: Demo Hangar */}
         <Link to="/demos" onClick={() => (window as any).umami?.track('Funnel Started', { path: 'demo_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-emerald-500/30 hover:border-emerald-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors" />
           <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
@@ -67,7 +64,6 @@ export const Home = () => {
         </Link>
       </div>
 
-      {/* SEO Density & Trust Indicators */}
       <div className="w-full max-w-4xl mt-8 bg-slate-800/40 border border-slate-700 p-6 sm:p-10 rounded-2xl space-y-10 text-left mb-8">
         
         <section className="space-y-3">
@@ -89,7 +85,7 @@ export const Home = () => {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white">How We Parse Your Flight Logs</h2>
           <p className="text-slate-300 leading-relaxed">
-            Pilots log things differently. Some are meticulous; others leave half the columns blank. Here is how our engine automatically cleans, patches, and interprets your data before doing the math.
+            Every pilot logs their flight time differently. Some are meticulous with their remarks; others leave half the columns blank. Here is how our custom engine automatically cleans, patches, and interprets your raw flight data before crunching the numbers to generate your aviation year in review.
           </p>
           <div className="pt-2">
             <Link to="/methodology" className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 text-sky-400 hover:bg-slate-700 hover:text-sky-300 rounded-lg text-sm font-semibold transition-colors border border-slate-700">
@@ -101,7 +97,7 @@ export const Home = () => {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white">Share Your Aviation Adventures</h2>
           <p className="text-slate-300 leading-relaxed">
-            View your routes, see aviation extremes and superlatives, and then export 4:5 posts and 9:16 vertical stories directly to <strong className="text-white">Instagram, TikTok, Facebook, or aviation forums</strong>.
+            Whether you are celebrating a new license or looking back at a busy flying season, LogbookWrapped helps you visualize your journey. View your routes on our interactive maps, discover your personal aviation extremes, and uncover unique superlatives. When you are ready, instantly export high-resolution 4:5 posts and 9:16 vertical stories directly to <strong className="text-white">Instagram, TikTok, Facebook, or your favorite aviation forums</strong>.
           </p>
         </section>
         

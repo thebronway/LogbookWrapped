@@ -18,17 +18,20 @@ export const HeroSection = () => {
     <section className="flex flex-col lg:flex-row items-center justify-between gap-16 w-full">
       <div className="flex-1 flex flex-col items-center lg:items-center gap-8 text-center lg:text-center">
         <img 
-          src="/logo/logo3.webp" 
+          src="/logo/logo.webp" 
           alt="Logbook Wrapped Logo" 
           className="h-28 w-auto md:h-52 md:w-auto object-contain" 
         />
         
         <div className="space-y-4">
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-            Your Year in <span className="text-yellow-400">Aviation</span>, Visualized.
+            <span className="block text-2xl md:text-3xl text-slate-300 mb-2 font-bold tracking-normal">LogbookWrapped</span>
+            Your Aviation Journey,<br />
+            <span className="text-yellow-400">Visualized.</span>
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl leading-relaxed">
-            LogbookWrapped is the <strong>"Spotify Wrapped for Pilots."</strong> <br />Turn your logbook data into a stunning visual journey.
+          <p className="text-xl text-slate-400 max-w-2xl leading-relaxed mt-6">
+            The <strong>"Spotify Wrapped for Pilots."</strong> <br className="hidden md:block" />Turn your logbook data into a stunning visual story.<br className="hidden md:block" />
+            Generate your Annual Review, Lifetime Review, track a Milestone, or see your Year-over-Year Growth.
           </p>
         </div>
         

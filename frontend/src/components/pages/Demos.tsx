@@ -94,7 +94,22 @@ export const Demos = () => {
       className="flex flex-col items-center w-full max-w-6xl mx-auto px-4 md:px-6 py-12 lg:py-20 gap-12"
     >
       <Helmet>
-        <title>Explore Examples | LogbookWrapped</title>
+        <title>Explore Examples & Demos | LogbookWrapped</title>
+        <meta name="description" content="Try LogbookWrapped without uploading your own data. Explore interactive demo logbooks for student pilots, career captains, and weekend aviators." />
+        <link rel="canonical" href="https://logbookwrapped.com/demos" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "name": "LogbookWrapped Interactive Demos",
+            "description": "A collection of sample pilot logbooks demonstrating the parsing and visualization capabilities of LogbookWrapped.",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Annual Review Demo" },
+              { "@type": "ListItem", "position": 2, "name": "Career Pilot Demo" },
+              { "@type": "ListItem", "position": 3, "name": "Student Pilot Milestone Demo" }
+            ]
+          })}
+        </script>
       </Helmet>
 
       <div className="text-center space-y-4">

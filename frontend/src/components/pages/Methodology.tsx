@@ -21,13 +21,24 @@ export const Methodology = () => {
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "TechArticle",
-            "headline": "LogbookWrapped Parsing Methodology",
-            "description": "How LogbookWrapped cleans, patches, and interprets EFB logbook data.",
+            "headline": "LogbookWrapped Logbook Parsing Methodology",
+            "description": "Technical documentation on how LogbookWrapped automatically cleans, patches, and interprets pilot logbook CSV exports from major EFBs.",
             "articleSection": "Data Processing",
             "author": {
               "@type": "Organization",
-              "name": "LogbookWrapped"
-            }
+              "name": "LogbookWrapped",
+              "url": "https://logbookwrapped.com"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "LogbookWrapped",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://logbookwrapped.com/logo/logo.webp"
+              }
+            },
+            "datePublished": "2024-01-01T08:00:00+08:00",
+            "dateModified": new Date().toISOString()
           })}
         </script>
       </Helmet>

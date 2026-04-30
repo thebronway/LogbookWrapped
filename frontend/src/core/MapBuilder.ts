@@ -4,7 +4,7 @@ export interface MapTracker {
   airports: Set<string>;
   drawnEdges: Set<string>;
   stateCounts: Record<string, number>;
-  edges: [number, number][][];
+  edges: [[number, number], [number, number]][];
   minLat: number; maxLat: number;
   minLon: number; maxLon: number;
   hasInternational: boolean;

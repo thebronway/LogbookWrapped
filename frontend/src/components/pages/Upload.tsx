@@ -9,7 +9,6 @@ export const Upload = () => {
   const { status, datasets } = useLogbookStore();
   const navigate = useNavigate();
 
-  // Once files are processed, navigate to the configuration screen
   useEffect(() => {
     if (status === 'success' && datasets.length > 0) {
       navigate('/config', { replace: true });

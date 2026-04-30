@@ -22,10 +22,10 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
       fetch('/assets/maps/countries-50m.json').then(r => r.json()), 
       fetch('/assets/maps/states-10m.json').then(r => r.json()),
       fetch('/assets/maps/canada.geojson').then(r => r.json()),
-      fetch('/assets/maps/ne_10m_lakes.geojson').then(r => r.json())
-    ]).then(([worldTopo, usTopo, canadaGeo, lakesGeo]) => {
+      fetch('/assets/maps/ne_10m_lakes.topojson').then(r => r.json())
+    ]).then(([worldTopo, usTopo, canadaGeo, lakesTopo]) => {
       
-      const allCountries = topojson.feature(worldTopo, worldTopo.objects.countries).features;
+      const allCountries = (topojson.feature(worldTopo as any, worldTopo.objects.countries) as any).features;
       
       // Geographic IDs for the Americas and the complete Caribbean
       const neighborIds = new Set([
@@ -38,20 +38,22 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
         "534", "533", "531", "535", "060" 
       ]);
 
+      // Dynamically get the layer name Mapshaper assigned to the file
+      const lakesLayerName = Object.keys(lakesTopo.objects)[0];
+
       const parsedData = {
-        // Now it checks our list to draw all of these neighbors!
         neighbors: allCountries.filter((c: any) => neighborIds.has(c.id)),
         canadaProvinces: canadaGeo.features,
-        lakes: lakesGeo.features, // Store the newly fetched lakes
+        lakes: (topojson.feature(lakesTopo as any, lakesTopo.objects[lakesLayerName]) as any).features,
         stateBorders: topojson.mesh(usTopo, usTopo.objects.states),
-        stateFeatures: topojson.feature(usTopo, usTopo.objects.states).features,
+        stateFeatures: (topojson.feature(usTopo as any, usTopo.objects.states) as any).features,
         countryFeatures: allCountries
       };
 
       if (isExportMode) {
         setGeoData(parsedData);
       } else {
-        // Hold short! Delay D3 rendering by 1.2s so Framer Motion can complete its slide-in animation smoothly
+        // Delay D3 rendering by 1.2s so Framer Motion can complete its slide-in animation smoothly
         setTimeout(() => {
           setGeoData(parsedData);
         }, 1200);
@@ -201,7 +203,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
           .attr("cx", coords[0])
           .attr("cy", coords[1])
           .attr("r", 6)
-          .attr("fill", "#ffffff") // Pure White airport dots
+          .attr("fill", "#ffffff")
           .attr("opacity", 1.0)
           .attr("stroke", "#000000") 
           .attr("stroke-width", 1.5);
@@ -215,7 +217,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
           .attr("cx", homeCoords[0])
           .attr("cy", homeCoords[1])
           .attr("r", 12) 
-          .attr("fill", "#10b981") // Emerald Green Home Base
+          .attr("fill", "#10b981")
           .attr("opacity", 1.0)
           .attr("stroke", "#ffffff")
           .attr("stroke-width", 3); 
@@ -244,7 +246,6 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
       style={{ background: 'linear-gradient(135deg, #0f172a 0%, #2e1065 35%, #0c4a6e 75%, #020617 100%)' }}
     >
         
-        {/* Top Area */}
         <motion.div 
           initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
           className={`w-full shrink-0 border-b border-slate-800/50 flex flex-col justify-center relative z-10 bg-black/20 ${
@@ -258,18 +259,15 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
             </h2>
         </motion.div>
 
-        {/* Middle Area: Map */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }}
           className="flex-grow w-full relative flex justify-center items-center overflow-hidden bg-black"
         >
             <svg ref={mapRef} viewBox="0 0 1040 1100" preserveAspectRatio="xMidYMid slice" className="w-full h-full max-h-full bg-black z-0" />
             
-            {/* Radar Sweep Loading State */}
             {!geoData && !isExportMode && <RadarLoader />}
         </motion.div>
 
-        {/* Empty Watermark Stripe */}
         {isExportMode && (
           <div className={`w-full shrink-0 bg-black/30 border-t border-slate-800/50 ${
             exportFormat === 'post' ? 'h-[30px]' : 'h-[36px]'

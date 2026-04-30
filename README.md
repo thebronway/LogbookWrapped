@@ -1,12 +1,12 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v0.9.8-blue.svg)
+![Version](https://img.shields.io/badge/version-v0.9.9-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
 
-**LogbookWrapped** is "Spotify Wrapped for Pilots." It transforms CSV exports from EFBs (like ForeFlight, Garmin Pilot, or MyFlightbook) into a shareable visual history of a pilot’s flying career. Pilots get a story-format breakdown of their flight hours, routes, aircraft, and extremes—whether they are reviewing a specific year's **Wrapped**, analyzing year-over-year **Growth**, or celebrating all-time career **Milestones**. All ready to be exported directly to social media or aviation forums.
+**LogbookWrapped** is "Spotify Wrapped for Pilots." It transforms CSV exports from EFBs (like ForeFlight, Garmin Pilot, or MyFlightbook) into a shareable visual history of a pilot’s flying career. Pilots get a story-format breakdown of their flight hours, routes, aircraft, and extremes, whether they are reviewing a specific year's **Wrapped**, analyzing year-over-year **Growth**, or celebrating all-time career **Milestones**. All ready to be exported directly to social media or aviation forums.
 
 > **Note:** All processing happens 100% in the web browser. No data is ever sent to a server. Your flight logs remain 100% private.
 

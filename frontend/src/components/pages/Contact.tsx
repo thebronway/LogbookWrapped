@@ -45,7 +45,7 @@ export const Contact = () => {
           <h3 className="text-xl text-white font-bold mb-3">Open a GitHub Issue</h3>
           <div className="text-sm text-slate-400 mb-8 flex-grow space-y-4 leading-relaxed">
             <p>
-              Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is open source, and our development is 100% transparent and open-source.
+              Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is 100% open-source, and our development process is completely transparent.
             </p>
             <p>
               Check our public tracker to see if your idea has already been posted, or create a new issue for our team to look at.
