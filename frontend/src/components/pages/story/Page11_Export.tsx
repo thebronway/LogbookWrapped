@@ -98,7 +98,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
           <div className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
             <button 
               onClick={() => {
-                (window as any).umami?.track('Export Modal Opened');
+                window.umami?.track('Export Modal Opened');
                 if (onOpenExport) onOpenExport();
               }}
               className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg shadow-blue-900/20"
@@ -119,7 +119,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
 
             <button 
               onClick={() => {
-                (window as any).umami?.track('Donation Modal Opened', { source: 'page_10' });
+                window.umami?.track('Donation Modal Opened', { source: 'page_10' });
                 if (onOpenDonation) onOpenDonation();
               }}
               className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
@@ -130,7 +130,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
 
             <button 
               onClick={() => {
-                (window as any).umami?.track('App Shared');
+                window.umami?.track('App Shared');
                 handleShareApp();
               }}
               className="w-full bg-slate-800 hover:bg-slate-700 text-emerald-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
@@ -143,7 +143,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
               href="/contact"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => (window as any).umami?.track('Support Link Clicked', { source: 'dashboard_footer' })}
+              onClick={() => window.umami?.track('Support Link Clicked', { source: 'dashboard_footer' })}
               className="w-full mt-3 text-slate-500 hover:text-slate-300 py-2 font-bold text-[13px] flex items-center justify-center gap-2 transition-colors"
             >
               <Bug size={14} />

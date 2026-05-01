@@ -1,14 +1,14 @@
 # LogbookWrapped Roadmap
 
 *Last updated: 2026-05-01* 
-*Current Version: v1.0.0*
+*Current Version: v1.0.1*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
 
-### Release v1.1.1
+### Release v1.0.2
 - Growth report over multiple years option
 
 ### Reddit Questions

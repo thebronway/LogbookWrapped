@@ -8,14 +8,17 @@ export const parseLogbookCSV = (file: File): Promise<{flights: FlightRecord[], e
 
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      if (!text) return reject(new Error("File is empty"));
+      if (!text) {
+        window.umami?.track('Parse Failed', { error_message: 'File is empty' });
+        return reject(new Error("File is empty"));
+      }
 
       const firstLine = text.split('\n')[0] || "";
       const headersForDetection = firstLine.split(',').map(h => h.trim().replace(/["']/g, ""));
       const { name: detectedEFB } = detectEFBProfile(headersForDetection);
       
       console.log(`[Parser] Detected EFB Format: ${detectedEFB}`);
-      (window as any).umami?.track('Logbook Parsed', { efb_type: detectedEFB });
+      window.umami?.track('Logbook Parsed', { efb_type: detectedEFB });
 
       let csvTextToParse = text;
       const preParsedAircraftMap: Record<string, string> = {};
@@ -51,11 +54,13 @@ export const parseLogbookCSV = (file: File): Promise<{flights: FlightRecord[], e
         skipEmptyLines: true,
         complete: (results) => {
           if (results.data.length === 0) {
+            window.umami?.track('Parse Failed', { error_message: 'CSV contains no flight rows' });
             return reject(new Error("The CSV was parsed but contains no flight rows."));
           }
           
           const headers = Object.keys(results.data[0] as object);
           if (!headers.some(h => h.toLowerCase().includes('date'))) {
+            window.umami?.track('Parse Failed', { error_message: 'Missing Date column' });
             return reject(new Error("Missing required 'Date' column. Ensure you exported a flight log, not an aircraft list."));
           }
 
@@ -63,16 +68,22 @@ export const parseLogbookCSV = (file: File): Promise<{flights: FlightRecord[], e
             const normalized = normalizeFlightData(results.data, preParsedAircraftMap);
             resolve({ flights: normalized, efb: detectedEFB });
           } catch (error) {
-            reject(new Error(`Normalization Error: ${error instanceof Error ? error.message : 'Invalid CSV structure'}`));
+            const errMsg = error instanceof Error ? error.message : 'Invalid CSV structure';
+            window.umami?.track('Parse Failed', { error_message: `Normalization Error: ${errMsg}` });
+            reject(new Error(`Normalization Error: ${errMsg}`));
           }
         },
-        error: (error: any) => {
+        error: (error: Error) => {
+          window.umami?.track('Parse Failed', { error_message: `PapaParse Error: ${error.message}` });
           reject(error);
         }
       });
     };
 
-    reader.onerror = () => reject(new Error("Failed to read the file."));
+    reader.onerror = () => {
+      window.umami?.track('Parse Failed', { error_message: 'FileReader failed to read the file' });
+      reject(new Error("Failed to read the file."));
+    };
     reader.readAsText(file); 
   });
 };

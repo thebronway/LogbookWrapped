@@ -28,7 +28,7 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
   if (!['small', 'medium', 'large'].includes(autoSize)) autoSize = 'unknown';
 
   const handleUnlock = async () => {
-    (window as any).umami?.track('Community Stats Unlocked', { size: autoSize, year: yearStr });
+    window.umami?.track('Community Stats Unlocked', { size: autoSize, year: yearStr });
     setIsSubmitting(true);
     setLoadingPhase(1);
     setError(null);
@@ -102,7 +102,7 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
           {label}
           {isTie ? (
             <span className="text-[8px] px-1.5 py-[1px] rounded-full font-black bg-slate-500/20 text-slate-400">
-              ➖ {diffFormatted}
+              - {diffFormatted}
             </span>
           ) : (
             <span className={`text-[8px] px-1.5 py-[1px] rounded-full font-black ${isUp ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
@@ -195,7 +195,7 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
                   )}
                 </button>
                 <button 
-                  onClick={() => (window as any).umami?.track('Community Stats Skipped')}
+                  onClick={() => window.umami?.track('Community Stats Skipped')}
                   className="w-full relative z-50 mt-3 bg-transparent border border-slate-700 hover:bg-slate-800/50 text-slate-400 hover:text-slate-300 font-bold py-4 rounded-xl transition-all flex items-center justify-center text-lg"
                 >
                   Skip for now

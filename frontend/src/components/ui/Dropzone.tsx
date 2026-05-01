@@ -25,12 +25,12 @@ export const Dropzone = () => {
     
     const validFiles = files.filter(file => {
       if (file.size > 10 * 1024 * 1024) {
-        (window as any).umami?.track('Upload Attempt', { status: 'error_size' });
+        window.umami?.track('Upload Attempt', { status: 'error_size' });
         alert(`File ${file.name} exceeds 10MB limit.`);
         return false;
       }
       if (!(file.type === 'text/csv' || validExtensions.some(ext => file.name.toLowerCase().endsWith(ext)))) {
-        (window as any).umami?.track('Upload Attempt', { status: 'error_invalid_extension' });
+        window.umami?.track('Upload Attempt', { status: 'error_invalid_extension' });
         alert(`File ${file.name} is not a valid CSV, TXT, or TSV.`);
         return false;
       }
@@ -38,7 +38,7 @@ export const Dropzone = () => {
     });
 
     if (validFiles.length > 0) {
-      (window as any).umami?.track('Upload Attempt', { status: 'success', count: validFiles.length });
+      window.umami?.track('Upload Attempt', { status: 'success', count: validFiles.length });
       processFiles(validFiles);
     }
     

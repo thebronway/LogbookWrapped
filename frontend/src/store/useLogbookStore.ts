@@ -213,7 +213,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       for (const file of files) {
         const { flights: parsedFlights, efb } = await parseLogbookCSV(file);
         
-        (window as any).umami?.track('Logbook Uploaded', { 
+        window.umami?.track('Logbook Uploaded', { 
           flight_count: parsedFlights.length 
         });
 

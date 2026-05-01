@@ -52,7 +52,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
 
   const handleDownloadZip = async () => {
     if (isSingleItem) return;
-    (window as any).umami?.track('Export Action', { type: 'zip_all' });
+    window.umami?.track('Export Action', { type: 'zip_all' });
     setIsExporting(true);
     try {
       await downloadZipBundle(items, readyBlobs, setLoadingText);
@@ -64,7 +64,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   };
 
   const handleDownloadSingle = (id: string, name: string) => {
-    (window as any).umami?.track('Export Action', { type: 'save_single', format: selectedFormat, page: id });
+    window.umami?.track('Export Action', { type: 'save_single', format: selectedFormat, page: id });
     const blob = readyBlobs[`${id}-${selectedFormat}`];
     if (!blob) return;
     const filename = `LogbookWrapped_${selectedFormat === 'story' ? 'Story' : 'Post'}_${name.replace(/\s+/g, '')}.png`;
@@ -72,7 +72,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   };
 
   const handleShareSingle = async (id: string, name: string) => {
-    (window as any).umami?.track('Export Action', { type: 'share_single', format: selectedFormat, page: id });
+    window.umami?.track('Export Action', { type: 'share_single', format: selectedFormat, page: id });
     const blob = readyBlobs[`${id}-${selectedFormat}`];
     if (!blob) return;
     await shareOrDownloadImage(blob, name, selectedFormat);

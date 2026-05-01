@@ -17,7 +17,7 @@ export const Demos = () => {
   const loadDemo = async (fileName: string, filterConfig: any, actionId: string) => {
     try {
       setLoadingDemo(actionId);
-      (window as any).umami?.track('Demo Loaded', { file: fileName, filterType: filterConfig.type });
+      window.umami?.track('Demo Loaded', { file: fileName, filterType: filterConfig.type });
       
       const response = await fetch(`/assets/demo_files/${fileName}`);
       if (!response.ok) throw new Error('Failed to fetch demo file');
@@ -182,7 +182,7 @@ export const Demos = () => {
         </p>
         <Link 
           to="/upload" 
-          onClick={() => (window as any).umami?.track('Demo CTA Clicked')}
+          onClick={() => window.umami?.track('Demo CTA Clicked')}
           className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-300 text-black py-4 px-8 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-yellow-500/20 hover:-translate-y-0.5"
         >
           Create Your Own Wrapped

@@ -43,13 +43,13 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
   useEffect(() => {
     if (isDesktop) {
-      (window as any).umami?.track('Dashboard Viewed', { device: 'desktop' });
+      window.umami?.track('Dashboard Viewed', { device: 'desktop' });
     } else {
       const pageNames = ['Cover', 'BigPicture', 'Fleet', 'Extremes', 'Superlatives', 'Elements', 'Passport', 'Stats'];
       if (comparisonStats) pageNames.push('Growth');
       if (showCommunityPage) pageNames.push('Community');
       pageNames.push('Export');
-      (window as any).umami?.track('Story Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
+      window.umami?.track('Story Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
     }
   }, [currentIndex, isDesktop]);
 

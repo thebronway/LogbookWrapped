@@ -41,7 +41,7 @@ export const Config = () => {
       }
     }
 
-    (window as any).umami?.track('Generate Wrapped Clicked', {
+    window.umami?.track('Generate Wrapped Clicked', {
       mode: mode, 
       filter_type: dateFilter.type,
       file_count: datasets.length,
@@ -76,7 +76,10 @@ export const Config = () => {
   const OptionCard = ({ id, icon: Icon, title, desc, selected, onClick }: OptionCardProps) => (
     <div 
       id={`option-card-${id}`}
-      onClick={onClick}
+      onClick={() => {
+        window.umami?.track('Config Mode Selected', { mode: id });
+        onClick();
+      }}
       className={`p-5 rounded-2xl cursor-pointer border-2 transition-all flex items-start gap-4 ${
         selected ? 'border-yellow-400 bg-yellow-400/5 shadow-lg shadow-yellow-400/10' : 'border-slate-700 bg-slate-800/40 hover:border-slate-500 hover:bg-slate-800'
       }`}

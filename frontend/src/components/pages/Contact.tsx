@@ -12,7 +12,7 @@ export const Contact = () => {
     e.preventDefault();
     navigator.clipboard.writeText(email);
     setCopied(true);
-    (window as any).umami?.track('Support Action', { type: 'email_copied' });
+    window.umami?.track('Support Action', { type: 'email_copied' });
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -55,7 +55,7 @@ export const Contact = () => {
             href={issuesUrl}
             target="_blank" 
             rel="noopener noreferrer nofollow"
-            onClick={() => (window as any).umami?.track('Support Action', { type: 'github_issue_opened' })}
+            onClick={() => window.umami?.track('Support Action', { type: 'github_issue_opened' })}
             className="flex items-center justify-center gap-2 w-full py-4 bg-white text-slate-900 hover:bg-slate-200 rounded-xl font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-white/10 mt-auto"
           >
             <Github size={18} />

@@ -34,10 +34,10 @@ export const Growth = () => {
 
   useEffect(() => {
     if (isDesktop) {
-      (window as any).umami?.track('Growth Dashboard Viewed', { device: 'desktop' });
+      window.umami?.track('Growth Dashboard Viewed', { device: 'desktop' });
     } else {
       const pageNames = ['Growth_Stats', 'Growth_Export'];
-      (window as any).umami?.track('Growth Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
+      window.umami?.track('Growth Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
     }
   }, [currentIndex, isDesktop]);
 
@@ -122,7 +122,7 @@ export const Growth = () => {
           <GrowthPage1_Stats nameA={nameA} nameB={nameB} gStats={gStats} copyText={copyText} isDesktop={true} />
         </div>
         <div className="flex-1 flex justify-start items-stretch">
-          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { (window as any).umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { (window as any).umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { (window as any).umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} />
+          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { window.umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { window.umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { window.umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} />
         </div>
       </div>
     </motion.div>

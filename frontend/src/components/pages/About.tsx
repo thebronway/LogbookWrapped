@@ -78,7 +78,7 @@ export const About = () => {
               href="https://buymeacoffee.com/brianconway" 
               target="_blank" 
               rel="noopener noreferrer nofollow sponsored"
-              onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'bmc', source: 'about_page' })}
+              onClick={() => window.umami?.track('Donation Clicked', { platform: 'bmc', source: 'about_page' })}
               className="flex-1 w-full bg-[#FFDD00] hover:bg-[#FFEA4D] text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-sm sm:text-lg px-2"
             >
               <Coffee className="text-black shrink-0 w-5 h-5 sm:w-6 sm:h-6" />
@@ -89,7 +89,7 @@ export const About = () => {
               href="https://paypal.me/brconway" 
               target="_blank" 
               rel="noopener noreferrer nofollow sponsored"
-              onClick={() => (window as any).umami?.track('Donation Clicked', { platform: 'paypal', source: 'about_page' })}
+              onClick={() => window.umami?.track('Donation Clicked', { platform: 'paypal', source: 'about_page' })}
               className="flex-1 w-full bg-[#00457C] hover:bg-[#005a9e] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-sm sm:text-lg px-2"
             >
               <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ export const About = () => {
                 href="https://brian.conway.im" 
                 target="_blank" 
                 rel="noopener noreferrer nofollow"
-                onClick={() => (window as any).umami?.track('Portfolio Link Clicked', { source: 'about_page' })}
+                onClick={() => window.umami?.track('Portfolio Link Clicked', { source: 'about_page' })}
                 className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors"
               >
                 brian.conway.im
