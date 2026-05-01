@@ -67,10 +67,15 @@ export const Disclaimer = () => {
         {/* Third-Party Data Section */}
         <section className="bg-slate-800/40 border border-slate-700/50 p-8 rounded-2xl">
           <Globe className="text-indigo-400 mb-4" size={28} />
-          <h2 className="text-xl font-semibold text-white mb-3">Third-Party Data</h2>
-          <p className="leading-relaxed text-slate-400">
-            Airport coordinates and geographic boundaries are sourced from public and third-party datasets (including OurAirports, Natural Earth, and CARTO). This data is provided "as is" strictly for visualization purposes and <strong className="text-slate-300">must never be used for actual flight planning or real-world navigation</strong>.
-          </p>
+          <h2 className="text-xl font-semibold text-white mb-3">Third-Party & Community Data</h2>
+          <div className="space-y-4 text-slate-400 leading-relaxed">
+            <p>
+              Airport coordinates and geographic boundaries are sourced from public datasets. This data is provided "as is" strictly for visualization purposes and <strong className="text-slate-300">must never be used for actual flight planning or real-world navigation</strong>.
+            </p>
+            <p>
+              Additionally, any "Community Averages" displayed within the application are calculated from voluntary, anonymous user submissions. While we employ spam filters to discard unrealistic data, these averages are for entertainment and comparison purposes only and may not reflect official industry statistics.
+            </p>
+          </div>
         </section>
 
         {/* Contact Link Section */}

@@ -1,12 +1,17 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-04-29* 
-*Current Version: v0.9.8*
+*Last updated: 2026-05-01* 
+*Current Version: v1.0.0*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.0
+- Added backend and db
+- Added Community Stats Page
+- Content Updates
 
 ### Release v0.9.9
 - Reduced map sizes

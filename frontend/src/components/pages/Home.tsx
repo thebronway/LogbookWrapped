@@ -51,7 +51,7 @@ export const Home = () => {
             <Plane size={32} />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Upload Your Logbook</h3>
-          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, Lifetime Review, Track a Milestone, or see your Year-over-Year Growth.<br /> All processed <strong className="text-emerald-400">100% locally</strong>.</p>
+          <p className="text-slate-400 text-sm leading-relaxed z-10">Generate your Annual Review, Lifetime Review, Track a Milestone, or see your Year-over-Year Growth.<br /> Your raw logs are parsed <strong className="text-emerald-400">100% locally</strong>.</p>
         </Link>
 
         <Link to="/demos" onClick={() => (window as any).umami?.track('Funnel Started', { path: 'demo_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-emerald-500/30 hover:border-emerald-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-1 relative overflow-hidden">
@@ -103,8 +103,8 @@ export const Home = () => {
         
         <div className="bg-slate-900/60 border-l-4 border-emerald-500 p-4 rounded-r-lg mt-6">
           <p className="text-slate-300 leading-relaxed text-sm sm:text-base">
-            <span className="font-sans font-bold text-emerald-400 uppercase tracking-widest text-xs block mb-1">100% Private</span> 
-            All processing happens completely in your web browser. No data is ever sent to a server. Your flight logs remain strictly on your device.
+            <span className="font-sans font-bold text-emerald-400 uppercase tracking-widest text-xs block mb-1">Privacy First</span> 
+            Logbook parsing happens completely in your web browser. Your raw flight logs are never sent to a server and remain strictly on your device. You can optionally choose to share anonymous, high-level totals to help build our community averages.
           </p>
           <div className="pt-2">
             <Link to="/privacy" className="text-sky-400 hover:text-sky-300 text-sm font-medium underline underline-offset-4 transition-colors">

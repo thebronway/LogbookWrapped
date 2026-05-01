@@ -11,8 +11,13 @@ export const FAQ = () => {
     },
     {
       question: "Is my logbook data private and secure?",
-      answerText: "Yes, 100%. LogbookWrapped is built on a client-side, privacy-first architecture. When you upload your CSV, your browser processes the data locally. Your raw logbook entries are never uploaded to, transmitted to, or stored on any of our servers. The moment you refresh or close your browser, all processed data is permanently erased from memory.",
-      answerUI: <>Yes, 100%. LogbookWrapped is built on a client-side, privacy-first architecture. When you upload your CSV, your browser processes the data locally. Your raw logbook entries are never uploaded to, transmitted to, or stored on any of our servers. The moment you refresh or close your browser, all processed data is permanently erased from memory. Read our <Link to="/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">Privacy Policy</Link>.</>
+      answerText: "Yes. LogbookWrapped is built on a privacy-first architecture. When you upload your CSV, your browser parses the data locally. Your raw logbook entries are never uploaded to, transmitted to, or stored on any of our servers. You have complete control over whether to anonymously share your high-level totals at the end of your story.",
+      answerUI: <>Yes. LogbookWrapped is built on a privacy-first architecture. When you upload your CSV, your browser parses the data locally. Your raw logbook entries are never uploaded to, transmitted to, or stored on any of our servers. You have complete control over whether to anonymously share your high-level totals at the end of your story. Read our <Link to="/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">Privacy Policy</Link>.</>
+    },
+    {
+      question: "How do the Community Averages work?",
+      answerText: "When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically throw away unrealistic data submissions to keep the public averages clean.",
+      answerUI: <>When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically throw away unrealistic data submissions to keep the public averages clean.</>
     },
     {
       question: "Which electronic flight bags (EFBs) and logbook formats are supported?",

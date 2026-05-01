@@ -33,6 +33,15 @@ export const Growth = () => {
   }, []);
 
   useEffect(() => {
+    if (isDesktop) {
+      (window as any).umami?.track('Growth Dashboard Viewed', { device: 'desktop' });
+    } else {
+      const pageNames = ['Growth_Stats', 'Growth_Export'];
+      (window as any).umami?.track('Growth Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
+    }
+  }, [currentIndex, isDesktop]);
+
+  useEffect(() => {
     if (isDesktop) return;
     if (currentIndex === 1) return;
 

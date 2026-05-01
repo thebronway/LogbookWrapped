@@ -10,7 +10,8 @@ import { Page6_Elements } from '../pages/story/Page6_Elements';
 import { Page7_Passport } from '../pages/story/Page7_Passport';
 import { Page8_Stats } from '../pages/story/Page8_Stats';
 import { Page9_GrowthHighlights } from '../pages/story/Page9_GrowthHighlights';
-import { Page10_Export } from '../pages/story/Page10_Export';
+import { Page10_Community } from '../pages/story/Page10_Community';
+import { Page11_Export } from '../pages/story/Page11_Export';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
@@ -22,7 +23,11 @@ interface Props {
 }
 
 export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
-  const comparisonStats = useLogbookStore(state => state.comparisonStats);
+  const { comparisonStats, dateFilter, isDemo } = useLogbookStore();
+  
+  // Only show the Community Tollbooth if they are viewing a single year
+  const isSingleYear = dateFilter?.type === 'this_year' || dateFilter?.type === 'last_year' || (dateFilter?.type === 'custom' && dateFilter.start?.substring(0,4) === dateFilter.end?.substring(0,4));
+  const showCommunityPage = isSingleYear; // Demos are now allowed to see this
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -38,12 +43,11 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
   useEffect(() => {
     if (isDesktop) {
-      // Desktop users see the dashboard all at once
       (window as any).umami?.track('Dashboard Viewed', { device: 'desktop' });
     } else {
-      // Mobile users progress through the story
       const pageNames = ['Cover', 'BigPicture', 'Fleet', 'Extremes', 'Superlatives', 'Elements', 'Passport', 'Stats'];
       if (comparisonStats) pageNames.push('Growth');
+      if (showCommunityPage) pageNames.push('Community');
       pageNames.push('Export');
       (window as any).umami?.track('Story Page Viewed', { page: pageNames[currentIndex] || `Page_${currentIndex}` });
     }
@@ -59,9 +63,10 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     <Page7_Passport stats={stats} key="p7" />,
     <Page8_Stats stats={stats} key="p8" />,
     ...(comparisonStats ? [<Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" />] : []),
-    <Page10_Export 
+    ...(showCommunityPage ? [<Page10_Community stats={stats} key="p10" />] : []),
+    <Page11_Export 
       stats={stats} 
-      key="p10"
+      key="p11"
       onOpenExport={() => setIsExportModalOpen(true)} 
       onOpenDonation={() => setIsDonationModalOpen(true)}
     />
@@ -103,7 +108,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(380px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(550px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
           {/* Row 1: Cover (pages[0]), Big Picture (pages[1]), Fleet (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[0]}
@@ -120,34 +125,27 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
             {pages[6]}
           </div>
           
-          {/* Row 2 & 3 Right Side: Extremes (pages[3]), Superlatives (pages[4]), Elements (pages[5]) stacked next to Passport */}
+          {/* Row 2 & 3 Right Side: Extremes (3), Superlatives (4), Elements (5), and Stats (7) stacked next to Passport */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[3]}
           </div>
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[4]}
           </div>
-          <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[5]}
           </div>
+          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+            {pages[7]}
+          </div>
 
-          {/* Bottom Row: Nested grid spans all 4 columns, perfectly splitting into 3 equal columns (or 2) without breaking the upper grid */}
-          <div className={`col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-2 ${comparisonStats ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} gap-6 !overflow-visible`}>
-            
-            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
-              {pages[7]}
-            </div>
-
-            {comparisonStats && (
-              <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
-                {pages[8]}
+          {/* Bottom Row: Dynamically maps the remaining components ([Growth], [Community], Export) */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-6 !overflow-visible">
+            {pages.slice(8).map((page, idx) => (
+              <div key={idx} className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
+                {page}
               </div>
-            )}
-            
-            <div className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
-              {pages[pages.length - 1]}
-            </div>
-
+            ))}
           </div>
         </div>
       </div>

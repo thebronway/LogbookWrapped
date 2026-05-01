@@ -23,7 +23,19 @@ export interface LogbookDataset {
   stats: CalculatedStats | null;
 }
 
+export interface CommunityAverages {
+  flight_time: string | number;
+  flights: string | number;
+  distance: string | number;
+  landings: string | number;
+  night_hours: string | number;
+}
+
 interface LogbookState {
+  hasSharedCommunityStats: boolean;
+  setHasSharedCommunityStats: (val: boolean) => void;
+  communityAverages: CommunityAverages | null;
+  setCommunityAverages: (avgs: CommunityAverages | null) => void;
   datasets: LogbookDataset[];
   rawFlights: FlightRecord[]; // Exposed globally for cross-linking
   flights: FlightRecord[];
@@ -52,8 +64,22 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
   errorMessage: null,
   dateFilter: { type: 'this_year' },
   isDemo: false,
+  hasSharedCommunityStats: false,
+  communityAverages: null,
 
-  setIsDemo: (val) => set({ isDemo: val }),
+  setCommunityAverages: (avgs) => set({ communityAverages: avgs }),
+  setHasSharedCommunityStats: (val) => set({ hasSharedCommunityStats: val }),
+  setIsDemo: (val) => set({ 
+    isDemo: val,
+    hasSharedCommunityStats: val,
+    communityAverages: val ? {
+      flight_time: 145.5,
+      flights: 112,
+      distance: 12500,
+      landings: 154,
+      night_hours: 18.2
+    } : null 
+  }),
 
   setDateFilter: (filter) => {
     set({ dateFilter: filter });
@@ -185,11 +211,18 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       const newDatasets: LogbookDataset[] = [];
       
       for (const file of files) {
-        const parsedFlights = await parseLogbookCSV(file);
+        const { flights: parsedFlights, efb } = await parseLogbookCSV(file);
         
         (window as any).umami?.track('Logbook Uploaded', { 
           flight_count: parsedFlights.length 
         });
+
+        // Silently ping backend for generation tracking
+        fetch('/api/generations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ isDemo: get().isDemo, efbType: efb })
+        }).catch(() => {}); // Silently ignore failures to avoid breaking the UI
 
         newDatasets.push({
           id: crypto.randomUUID(),
@@ -213,5 +246,5 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     }
   },
 
-  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, comparisonStats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' }, isDemo: false })
+  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, comparisonStats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' }, isDemo: false, hasSharedCommunityStats: false, communityAverages: null })
 }));

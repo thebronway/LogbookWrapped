@@ -12,26 +12,19 @@ interface Props {
   isExportMode?: boolean;
 }
 
-export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
+export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
   const { dateFilter, rawFlights, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const generateGrowthLink = () => {
     if (!rawFlights || rawFlights.length === 0) return null;
-    
-    // Find all unique years in the raw data
     const years = [...new Set(rawFlights.map(f => {
       const d = new Date(f.date);
       return isNaN(d.getTime()) ? null : d.getFullYear();
     }).filter(y => y !== null))] as number[];
-    
-    // Sort descending to get the most recent years
     years.sort((a, b) => b - a);
-    
-    if (years.length >= 2) {
-      return { y1: years[1].toString(), y2: years[0].toString() };
-    }
+    if (years.length >= 2) return { y1: years[1].toString(), y2: years[0].toString() };
     return null;
   };
 
@@ -41,24 +34,15 @@ export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
     if (growthYears) {
       setDateFilter({ type: 'yoy', year1: growthYears.y1, year2: growthYears.y2 });
       applyFilterAndCalculate();
-      
-      // Give the Zustand store a split second to flush the math calculations before pushing the new page
-      setTimeout(() => {
-        navigate('/growth');
-      }, 50);
+      setTimeout(() => navigate('/growth'), 50);
     }
   };
 
   const handleShareApp = async () => {
     const shareUrl = 'https://logbookwrapped.com';
-    
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: 'LogbookWrapped',
-          text: 'See your pilot logbook visualized! Check out LogbookWrapped:',
-          url: shareUrl
-        });
+        await navigator.share({ title: 'LogbookWrapped', text: 'See your pilot logbook visualized! Check out LogbookWrapped:', url: shareUrl });
       } catch (err: any) {
         if (err.name !== 'AbortError') copyToClipboard(shareUrl);
       }
@@ -77,21 +61,14 @@ export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
     }
   };
 
-  // Dynamic Title Logic
   let titleX = '';
-  if (dateFilter?.type === 'this_year') {
-    titleX = `${new Date().getFullYear()} `;
-  } else if (dateFilter?.type === 'last_year') {
-    titleX = `${new Date().getFullYear() - 1} `;
-  } else if (dateFilter?.type === 'all_time') {
-    titleX = 'All-Time ';
-  } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
+  if (dateFilter?.type === 'this_year') titleX = `${new Date().getFullYear()} `;
+  else if (dateFilter?.type === 'last_year') titleX = `${new Date().getFullYear() - 1} `;
+  else if (dateFilter?.type === 'all_time') titleX = 'All-Time ';
+  else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end) {
     if (dateFilter.start.endsWith('-01-01') && dateFilter.end.endsWith('-12-31')) {
       const startYear = dateFilter.start.substring(0, 4);
-      const endYear = dateFilter.end.substring(0, 4);
-      if (startYear === endYear) {
-        titleX = `${startYear} `;
-      }
+      if (startYear === dateFilter.end.substring(0, 4)) titleX = `${startYear} `;
     }
   }
 
@@ -102,7 +79,6 @@ export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
       {!isExportMode && (
         <div className="relative flex flex-col shrink-0 w-full max-w-sm lg:max-w-full h-auto lg:h-full bg-slate-900 rounded-2xl lg:rounded-none shadow-2xl lg:shadow-none border border-slate-800 lg:border-none overflow-hidden mb-12 lg:mb-0">
           
-          {/* Top Section: Boarding Pass Header */}
           <div className="p-8 pb-8 text-center bg-slate-800/50 sm:pt-16">
             <h2 className="text-3xl font-black text-white leading-tight tracking-tight">
               Logbook Closed.<br />
@@ -113,14 +89,12 @@ export const Page10_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
             </p>
           </div>
 
-          {/* The Tear-away Stub Line */}
           <div className="relative flex items-center justify-between w-full h-0">
             <div className="absolute -left-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_-2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
             <div className="w-full border-t-2 border-dashed border-slate-700 z-0 mx-2"></div>
             <div className="absolute -right-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
           </div>
 
-          {/* Bottom Section: Uniform Actions */}
           <div className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
             <button 
               onClick={() => {

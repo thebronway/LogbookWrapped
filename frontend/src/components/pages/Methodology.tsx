@@ -193,6 +193,19 @@ export const Methodology = () => {
           </div>
         </section>
 
+        <section className="space-y-3">
+          <h2 className="text-2xl font-bold text-white">10. Crunching Community Averages</h2>
+          <p className="leading-relaxed">
+            When you opt-in to unlock your community comparison, we collect anonymous totals to build our global averages. To protect the integrity of the data, our backend spam filters actively throw away unrealistic junk data. We also automatically group your stats by your most-flown aircraft size.
+          </p>
+          <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
+            <p className="text-sm text-blue-200/90 font-mono">
+              <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
+              Someone manipulates their browser to submit a year with 9,000,000 flight hours to try and ruin the averages. Our server-side plausibility checks detect the impossible metrics, discard the payload, and protect the community pool.
+            </p>
+          </div>
+        </section>
+
         <hr className="border-slate-700/50 my-8" />
 
         <section className="space-y-4">

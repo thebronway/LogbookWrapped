@@ -55,15 +55,15 @@ export const GrowthPage2_Export: React.FC<Props> = ({
           <hr className="border-slate-800/60 w-full my-1" />
 
           <div className="flex flex-row gap-2 w-full">
-             <button onClick={() => handleViewWrapped(nameA)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
+             <button onClick={() => { (window as any).umami?.track('Growth View Wrapped Clicked', { type: 'year_1' }); handleViewWrapped(nameA); }} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
               <Calendar size={14} className="text-purple-400 shrink-0" /> <span className="truncate">{nameA} Wrapped</span>
             </button>
-            <button onClick={() => handleViewWrapped(nameB)} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
+            <button onClick={() => { (window as any).umami?.track('Growth View Wrapped Clicked', { type: 'year_2' }); handleViewWrapped(nameB); }} className="flex-1 bg-slate-800/50 hover:bg-slate-700 text-slate-300 py-3 px-2 sm:px-4 rounded-xl font-bold flex items-center justify-center gap-1.5 sm:gap-2 transition-colors border border-slate-700/50 text-xs sm:text-sm">
               <Calendar size={14} className="text-sky-400 shrink-0" /> <span className="truncate">{nameB} Wrapped</span>
             </button>
           </div>
 
-          <button onClick={() => handleViewWrapped('all_time')} className="w-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm mb-2">
+          <button onClick={() => { (window as any).umami?.track('Growth View Wrapped Clicked', { type: 'all_time' }); handleViewWrapped('all_time'); }} className="w-full bg-slate-800/50 hover:bg-slate-700 text-slate-400 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700/50 text-sm mb-2">
             <Globe size={16} /> View All-Time Career Wrapped
           </button>
 

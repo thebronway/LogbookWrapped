@@ -40,7 +40,7 @@ export const About = () => {
         <section>
           <p>
             Welcome to LogbookWrapped, the ultimate tool for pilots wanting to visualize their aviation milestones. 
-            We believe your flight history is more than just rows in an EFB export—it's the story of your journey through the skies.
+            We believe your flight history is more than just rows in an EFB export, it's the story of your journey through the skies.
           </p>
         </section>
         <section>
@@ -56,13 +56,13 @@ export const About = () => {
           <div className="space-y-4">
             <p>
               As a pilot myself, I know how sensitive logbook data can be. Your certificates, routes, 
-              and remarks are your business. That's why LogbookWrapped is built with a 
-              <strong className="text-white"> 100% client-side privacy-first architecture</strong>.{' '}
+              and remarks are your business. That's why LogbookWrapped is built with a strict 
+              <strong className="text-white"> privacy-first architecture</strong>.{' '}
               Read our <Link to="/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors">Privacy Policy</Link>.
             </p>
             <p>
-              When you drop your CSV into the app, your browser processes the data locally. 
-              Your raw logbook entries are never shared or sent to any servers.
+              When you drop your CSV into the app, your browser parses the data locally. 
+              Your raw logbook entries are never shared, uploaded, or sent to any servers. You are always in control of whether you want to anonymously share your high-level totals with the community.
             </p>
           </div>
         </section>

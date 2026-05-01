@@ -10,6 +10,7 @@ import { Page6_Elements } from '../components/pages/story/Page6_Elements';
 import { Page7_Passport } from '../components/pages/story/Page7_Passport';
 import { Page8_Stats } from '../components/pages/story/Page8_Stats';
 import { Page9_GrowthHighlights } from '../components/pages/story/Page9_GrowthHighlights';
+import { Page10_Community } from '../components/pages/story/Page10_Community';
 import { useLogbookStore } from '../store/useLogbookStore';
 
 export const getExportPages = (stats: CalculatedStats): ExportItem[] => {
@@ -32,6 +33,15 @@ export const getExportPages = (stats: CalculatedStats): ExportItem[] => {
           exportFormat={format} 
         />
       )
+    });
+  }
+
+  if (useLogbookStore.getState().hasSharedCommunityStats) {
+    items.push({
+      id: 'export-p10',
+      name: 'Community Averages',
+      isPoster: false,
+      render: (format) => <Page10_Community stats={stats} isExportMode={true} exportFormat={format} />
     });
   }
 

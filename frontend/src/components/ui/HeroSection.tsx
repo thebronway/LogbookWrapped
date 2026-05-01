@@ -51,8 +51,8 @@ export const HeroSection = () => {
               <Shield size={24} />
             </div>
             <div className="text-left">
-              <h3 className="text-white font-semibold text-base m-0">100% Private</h3>
-              <p className="text-sm text-slate-400">100% client-side in-browser processing.</p>
+              <h3 className="text-white font-semibold text-base m-0">100% Private Logs</h3>
+              <p className="text-sm text-slate-400">Client-side parsing. Your raw logbook never leaves your device.</p>
             </div>
           </div>
           

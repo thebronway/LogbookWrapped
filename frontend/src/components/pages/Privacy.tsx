@@ -26,7 +26,7 @@ export const Privacy = () => {
             Privacy-First Architecture
           </div>
         </div>
-        <p className="text-slate-400">Last Updated: April 13, 2026</p>
+        <p className="text-slate-400">Last Updated: May 1, 2026</p>
       </header>
 
       <div className="space-y-8">
@@ -34,34 +34,44 @@ export const Privacy = () => {
           <div className="relative z-10">
             <div className="flex items-center gap-4 mb-4">
               <ShieldCheck className="text-emerald-400" size={32} />
-              <h2 className="text-2xl font-semibold text-white">1. Local Processing Guarantee</h2>
+              <h2 className="text-2xl font-semibold text-white">1. Local Logbook Parsing</h2>
             </div>
             <p className="text-lg leading-relaxed mb-4">
               The core feature of LogbookWrapped, parsing and visualizing your Electronic Flight Bag (EFB) CSV file, is performed <span className="text-white font-medium">entirely on your local device</span>. 
             </p>
             <p className="text-slate-400">
-              Your raw logbook data is <strong>never uploaded to, transmitted to, or stored on our servers.</strong> The heavy lifting happens inside your browser's memory and is wiped the moment you close the tab.
+              Your raw logbook entries (names, tail numbers, flight tracks, dates, remarks, etc.) are <strong>never uploaded to, transmitted to, or stored on our servers.</strong> The heavy lifting happens inside your browser's memory.
             </p>
           </div>
           <ShieldCheck className="absolute -bottom-4 -right-4 text-slate-700/10" size={160} />
+        </section>
+
+        <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+          <div className="flex items-center gap-3 mb-4">
+            <BarChart3 className="text-blue-400" size={24} />
+            <h2 className="text-xl font-semibold text-white">2. Optional Community Sharing</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-slate-400">
+            At the end of your annual story, you have the <strong>opt-in choice</strong> to share your yearly totals to help build public community averages. If you explicitly choose to unlock this feature, we securely transmit only high-level anonymous integers: <em>Year, Total Flight Time, Total Flights, Distance, Landings, Night Hours, and Aircraft Size Category.</em> No identifiable logbook data is ever attached to these totals.
+          </p>
         </section>
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Analytics */}
           <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
             <BarChart3 className="text-purple-400 mb-4" size={24} />
-            <h2 className="text-xl font-semibold text-white mb-2">2. Analytics Tracking</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">3. Telemetry & Analytics</h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              We use basic, privacy-friendly web analytics to track general site visits and performance. These metrics are strictly anonymized and cannot be tied back to your identity, your uploaded CSV, or your flight history.
+              We use privacy-friendly web analytics to track general site visits. Additionally, when a logbook is successfully parsed locally, we record an anonymous telemetry ping containing the EFB software format used (e.g., ForeFlight). These metrics cannot be tied back to your identity.
             </p>
           </section>
 
           {/* Data Retention */}
           <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
             <Trash2 className="text-orange-400 mb-4" size={24} />
-            <h2 className="text-xl font-semibold text-white mb-2">3. Data Retention</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">4. Data Retention</h2>
             <p className="text-sm leading-relaxed text-slate-400">
-              Because we have no backend database for user logs, our data retention policy is simple: <strong>Zero</strong>. The moment you refresh the page or close your browser, all processed logbook data is permanently erased from memory.
+              Because we have no backend database for user logs, our data retention policy for your logbook is simple: <strong>Zero</strong>. The moment you close your browser, all processed logbook data is permanently erased from memory.
             </p>
           </section>
         </div>

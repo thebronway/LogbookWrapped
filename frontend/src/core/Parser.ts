@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import { normalizeFlightData, detectEFBProfile } from './Normalizer';
 import { FlightRecord } from './types';
 
-export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
+export const parseLogbookCSV = (file: File): Promise<{flights: FlightRecord[], efb: string}> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -54,14 +54,14 @@ export const parseLogbookCSV = (file: File): Promise<FlightRecord[]> => {
             return reject(new Error("The CSV was parsed but contains no flight rows."));
           }
           
-          const headers = Object.keys(results.data[0]);
+          const headers = Object.keys(results.data[0] as object);
           if (!headers.some(h => h.toLowerCase().includes('date'))) {
             return reject(new Error("Missing required 'Date' column. Ensure you exported a flight log, not an aircraft list."));
           }
 
           try {
             const normalized = normalizeFlightData(results.data, preParsedAircraftMap);
-            resolve(normalized);
+            resolve({ flights: normalized, efb: detectedEFB });
           } catch (error) {
             reject(new Error(`Normalization Error: ${error instanceof Error ? error.message : 'Invalid CSV structure'}`));
           }

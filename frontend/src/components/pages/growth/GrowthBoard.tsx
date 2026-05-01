@@ -31,8 +31,8 @@ export const GrowthBoard: React.FC<Props> = ({
       className={`flex flex-col h-full w-full bg-gradient-to-br from-purple-900 via-slate-950 to-blue-900 text-white overflow-hidden ${containerClasses}`}
     >
       <div className={`flex flex-col items-start gap-2 text-left shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`}>
-        <h1 className="text-2xl font-black text-indigo-400 tracking-tight leading-tight">
-          My LogbookWrapped <br /> Growth Report.
+        <h1 className="text-2xl font-black text-purple-400 tracking-tight leading-tight">
+          My LogbookWrapped <br /> <span className="text-sky-400">Growth Report.</span>
         </h1>
       </div>
         
@@ -65,6 +65,7 @@ export const GrowthBoard: React.FC<Props> = ({
 
 const StatRow = ({ cat, format, delay }: { cat: GrowthCategory, format: 'story'|'post', delay: number }) => {
   const isUp = cat.valueB > cat.valueA;
+  const isTie = cat.valueB === cat.valueA;
   const py = format === 'post' ? 'py-1.5' : 'py-1 flex-1';
   const valSize = format === 'post' ? 'text-lg' : 'text-xl';
   
@@ -82,7 +83,11 @@ const StatRow = ({ cat, format, delay }: { cat: GrowthCategory, format: 'story'|
       
       <div className="text-center w-1/3 font-bold text-slate-500 text-[9px] uppercase tracking-widest flex flex-col items-center gap-0.5">
         {cat.label}
-        {cat.valueB !== cat.valueA && (
+        {isTie ? (
+          <span className="text-[8px] px-1.5 py-[1px] rounded-full font-black bg-slate-500/20 text-slate-400">
+            ➖ {cat.delta.toLocaleString()}
+          </span>
+        ) : (
           <span className={`text-[8px] px-1.5 py-[1px] rounded-full font-black ${isUp ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
             {isUp ? '▲' : '▼'} {cat.delta.toLocaleString()}
           </span>
