@@ -62,7 +62,7 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
       className={paddingClass}
     >
       <h2 className={titleClass}>
-        {titlePrefix}<br />By The Numbers.
+        {titlePrefix}<br /><span className="text-blue-400">By The Numbers.</span>
       </h2>
       <div className={gapClass}>
         {statRows.map((row: any, i) => {

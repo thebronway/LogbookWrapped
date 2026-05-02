@@ -19,9 +19,9 @@ export const Page5_Superlatives: React.FC<Props> = ({ stats, exportFormat = 'sto
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-tl from-fuchsia-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-10' : 'text-3xl mb-10')} font-black tracking-tight text-fuchsia-400 leading-tight`}>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-xl mb-10' : 'text-2xl mb-10')} font-black tracking-tight text-fuchsia-400 leading-tight`}>
         {line1}<br />
-        Superlatives.
+        <span className="text-pink-400">Superlatives.</span>
       </h2>
       <div className="space-y-10">
         <motion.div initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>

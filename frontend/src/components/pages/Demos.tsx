@@ -141,7 +141,7 @@ export const Demos = () => {
           desc="Visualize an entire flying career. See how the engine handles thousands of hours of high-volume operations."
           actions={[
             { label: "All-Time Wrapped", primary: true, icon: Globe, filter: { type: 'all_time' } },
-            { label: "25 vs 26 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2025', year2: '2026' } }
+            { label: "2016 vs 2026 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2016', year2: '2026' } }
           ]}
         />
         <DemoCard 

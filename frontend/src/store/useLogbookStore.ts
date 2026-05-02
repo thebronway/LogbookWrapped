@@ -3,6 +3,19 @@ import { FlightRecord, CalculatedStats, AirportDB } from '../core/types';
 import { parseLogbookCSV } from '../core/Parser';
 import { calculateStats } from '../core/MathEngine';
 
+// Polyfill for crypto.randomUUID() — not available in Safari < 15.4
+const generateId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Fallback: RFC 4122 v4 UUID
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
 export type DateFilterType = 'this_year' | 'last_year' | 'all_time' | 'custom' | 'milestone' | 'yoy';
 
 export interface DateFilter {
@@ -103,31 +116,42 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       const y1 = Math.min(inputY1, inputY2);
       const y2 = Math.max(inputY1, inputY2);
 
-      const f1 = baseFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y1);
-      const f2 = baseFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === y2);
+      // Multi-year: build a dataset for every year in the range
+      const allYears = Array.from({ length: y2 - y1 + 1 }, (_, i) => y1 + i);
+      const yearDatasets: LogbookDataset[] = [];
+      const missingYears: number[] = [];
 
-      const stats1 = f1.length > 0 ? calculateStats(f1, airportDB) : null;
-      const stats2 = f2.length > 0 ? calculateStats(f2, airportDB) : null;
+      for (const yr of allYears) {
+        const flights = baseFlights.filter(f => !isNaN(new Date(f.date).getTime()) && new Date(f.date).getFullYear() === yr);
+        if (flights.length === 0) {
+          missingYears.push(yr);
+        } else {
+          yearDatasets.push({
+            ...dsBase,
+            id: `yoy${yr}`,
+            ownerName: yr.toString(),
+            flights,
+            stats: calculateStats(flights, airportDB),
+            rawFlights: baseFlights
+          });
+        }
+      }
 
-      if (!stats1 && !stats2) {
-        set({ status: 'error', errorMessage: `No flights found in ${y1} or ${y2}. A Growth Report requires flights logged in both years.` });
-        return;
-      } else if (!stats1) {
-        set({ status: 'error', errorMessage: `No flights found in ${y1}. A Growth Report requires flights logged in both years.` });
-        return;
-      } else if (!stats2) {
-        set({ status: 'error', errorMessage: `No flights found in ${y2}. A Growth Report requires flights logged in both years.` });
+      if (yearDatasets.length < 2) {
+        set({ status: 'error', errorMessage: `Not enough years with data in the range ${y1}–${y2}. A Growth Report requires flights in at least two years.` });
         return;
       }
 
+      if (missingYears.length > 0) {
+        // Warn but continue — some intermediate years might be empty
+        console.warn(`YOY: no flights found in year(s) ${missingYears.join(', ')} — those years will be skipped.`);
+      }
+
       set({
-        datasets: [
-          { ...dsBase, id: 'yoy1', ownerName: y1.toString(), flights: f1, stats: stats1, rawFlights: baseFlights },
-          { ...dsBase, id: 'yoy2', ownerName: y2.toString(), flights: f2, stats: stats2, rawFlights: baseFlights }
-        ],
+        datasets: yearDatasets,
         rawFlights: baseFlights,
-        flights: f1,
-        stats: stats1,
+        flights: yearDatasets[0].flights,
+        stats: yearDatasets[0].stats,
         status: 'success'
       });
       return;
@@ -184,7 +208,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     set({ 
       datasets: [{
         ...dsBase,
-        id: crypto.randomUUID(),
+        id: generateId(),
         ownerName: undefined, 
         flights: filtered,
         stats: computedStats,
@@ -225,7 +249,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
         }).catch(() => {}); // Silently ignore failures to avoid breaking the UI
 
         newDatasets.push({
-          id: crypto.randomUUID(),
+          id: generateId(),
           fileName: file.name,
           rawFlights: parsedFlights,
           flights: [],

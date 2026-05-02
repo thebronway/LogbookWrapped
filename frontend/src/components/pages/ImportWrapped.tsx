@@ -9,12 +9,13 @@ export const ImportWrapped: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const allowedOrigins = [
+      'https://files.conway.im',
+      'https://logbookwrapped.conway.im',
+      'https://dev.logbookwrapped.com',
+    ];
+
     const handleMessage = async (event: MessageEvent) => {
-      const allowedOrigins = [
-        'https://files.conway.im',
-        'https://logbookwrapped.conway.im',
-      ];
-      
       if (!allowedOrigins.includes(event.origin)) {
         console.warn(`[ImportWrapped] Blocked message from unapproved origin: ${event.origin}`);
         return;
@@ -48,7 +49,9 @@ export const ImportWrapped: React.FC = () => {
     window.addEventListener("message", handleMessage);
 
     if (window.opener) {
-        window.opener.postMessage({ type: 'LOGBOOK_WRAPPED_READY' }, '*');
+        for (const origin of allowedOrigins) {
+          window.opener.postMessage({ type: 'LOGBOOK_WRAPPED_READY' }, origin);
+        }
     }
 
     return () => window.removeEventListener("message", handleMessage);

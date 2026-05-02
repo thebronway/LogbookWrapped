@@ -28,9 +28,9 @@ export const Page1_Cover: React.FC<Props> = ({ stats, exportFormat = 'story' }) 
       exit={{ opacity: 0 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl md:text-3xl mb-8' : 'text-3xl md:text-4xl mb-8 md:mb-12')} font-black tracking-tight text-blue-400 leading-tight`}>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-8' : 'text-3xl mb-8 md:mb-12')} font-black tracking-tight text-blue-400 leading-tight`}>
         {line1}
-        {!isMilestone && <><br/>In The Sky.</>}
+        {!isMilestone && <><br/><span className="text-sky-400">In The Sky.</span></>}
       </h2>
 
       <div className="space-y-5 md:space-y-10">

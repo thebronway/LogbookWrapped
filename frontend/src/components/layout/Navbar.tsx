@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useLogbookStore } from '../../store/useLogbookStore';
@@ -6,6 +6,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const resetStore = useLogbookStore((state) => state.resetStore);
+  const navRef = useRef<HTMLElement>(null);
 
   const closeMenu = () => setIsMobileMenuOpen(false);
 
@@ -14,8 +15,20 @@ export const Navbar = () => {
     resetStore();
   };
 
+  // Close mobile menu when clicking outside the nav
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        closeMenu();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMobileMenuOpen]);
+
   return (
-    <header className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/50">
+    <header ref={navRef} className="sticky top-0 z-50 w-full bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/50">
       <nav className="w-full p-4 flex justify-between items-center max-w-6xl mx-auto relative">
         <Link to="/" onClick={handleLogoClick} className="flex items-center gap-3 hover:opacity-80 transition-opacity z-50">
           <img src="/logo/logo.webp" alt="LogbookWrapped Logo" className="w-20 h-20 object-contain" />

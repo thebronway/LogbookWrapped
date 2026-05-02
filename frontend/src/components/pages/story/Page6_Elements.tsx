@@ -19,9 +19,9 @@ export const Page6_Elements: React.FC<Props> = ({ stats, exportFormat = 'story' 
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-cyan-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-8' : 'text-3xl mb-8')} font-black tracking-tight text-cyan-400 leading-tight`}>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-xl mb-8' : 'text-2xl mb-8')} font-black tracking-tight text-cyan-400 leading-tight`}>
         {line1}<br />
-        In The Elements.
+        <span className="text-sky-400">In The Elements.</span>
       </h2>
       <div className="space-y-8">
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>

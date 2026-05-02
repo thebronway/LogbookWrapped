@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { X, Share2, Archive, Loader2, Download } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Share2, Archive, Loader2, Download, AlertCircle } from 'lucide-react';
 import { ExportItem } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
 import { generateBlob, downloadZipBundle, shareOrDownloadImage, triggerDownload } from '../../core/ExportEngine';
@@ -13,12 +13,31 @@ interface Props {
 
 export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export to Social Media" }) => {
   const [isExporting, setIsExporting] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState('');
   const [readyBlobs, setReadyBlobs] = useState<Record<string, Blob>>({});
+  const [failedBlobs, setFailedBlobs] = useState<Set<string>>(new Set());
   const [selectedFormat, setSelectedFormat] = useState<'story' | 'post'>('story');
 
   const normalPagesCount = items.filter(p => !p.isPoster).length;
   const isSingleItem = items.length === 1;
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Forward wheel events from anywhere in the modal to the scrollable content area
+  const handleModalWheel = (e: React.WheelEvent) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ top: e.deltaY, behavior: 'auto' });
+    }
+  };
+
+  // Lock background scroll while modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -35,14 +54,18 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
           const blobPost = await generateBlob(`${item.id}-post`, 'post');
           
           if (isMounted) {
-            setReadyBlobs(prev => ({ 
-                ...prev, 
-                ...(blobStory ? { [`${item.id}-story`]: blobStory } : {}),
-                ...(blobPost ? { [`${item.id}-post`]: blobPost } : {})
+            setReadyBlobs(prev => ({
+              ...prev,
+              ...(blobStory ? { [`${item.id}-story`]: blobStory } : {}),
+              ...(blobPost ? { [`${item.id}-post`]: blobPost } : {}),
             }));
+            if (!blobStory || !blobPost) {
+              setFailedBlobs(prev => new Set(prev).add(item.id));
+            }
           }
         } catch (err) {
           console.error(`Failed to generate blobs for ${item.id}`, err);
+          if (isMounted) setFailedBlobs(prev => new Set(prev).add(item.id));
         }
       }
     };
@@ -54,10 +77,11 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
     if (isSingleItem) return;
     window.umami?.track('Export Action', { type: 'zip_all' });
     setIsExporting(true);
+    setExportError(null);
     try {
       await downloadZipBundle(items, readyBlobs, setLoadingText);
     } catch (err) {
-      alert('Failed to generate ZIP bundle.');
+      setExportError('Failed to generate ZIP bundle. Please try downloading images individually.');
     } finally {
       setIsExporting(false);
     }
@@ -79,7 +103,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   };
 
   return (
-    <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300" onWheel={handleModalWheel}>
       
       {/* LAYER 1: The Engine Sandbox (Invisible) */}
       <div className="absolute top-0 left-0 w-[450px] h-[800px] pointer-events-none z-[1] opacity-0 overflow-hidden">
@@ -124,16 +148,32 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
           </div>
         </div>
 
-        <div className={`flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24 ${isSingleItem ? 'flex justify-center items-start' : ''}`}>
+        {/* Inline ZIP error banner */}
+        {exportError && (
+          <div className="w-full max-w-6xl mx-auto mb-4 flex items-start gap-2 text-red-400 bg-red-400/10 border border-red-400/20 p-3 rounded-xl text-sm">
+            <AlertCircle size={16} className="shrink-0 mt-0.5" />
+            <span>{exportError}</span>
+          </div>
+        )}
+
+        <div ref={scrollRef} className={`flex-1 w-full max-w-6xl mx-auto overflow-y-auto pr-2 pb-24 ${isSingleItem ? 'flex justify-center items-start' : ''}`}>
           <div className={isSingleItem ? 'w-full max-w-sm mt-4' : 'grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6'}>
             {items.map((item, idx) => {
               const isReady = readyBlobs[`${item.id}-${selectedFormat}`];
-              
+              const hasFailed = failedBlobs.has(item.id);
+
               return (
-              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border border-slate-800 hover:border-slate-700 transition-colors shadow-lg col-span-1 ${isSingleItem ? 'w-full' : ''}`}>
+              <div key={idx} className={`flex flex-col gap-3 bg-slate-900/80 p-4 rounded-2xl border transition-colors shadow-lg col-span-1 ${hasFailed ? 'border-red-800/60' : 'border-slate-800 hover:border-slate-700'} ${isSingleItem ? 'w-full' : ''}`}>
                 <div className="text-sm font-medium text-slate-300 text-center">{item.name}</div>
                 
                 <PreviewCard page={item} format={selectedFormat} />
+
+                {hasFailed && (
+                  <div className="flex items-center gap-1.5 text-red-400 text-xs">
+                    <AlertCircle size={13} className="shrink-0" />
+                    <span>Generation failed. Try refreshing and exporting again.</span>
+                  </div>
+                )}
 
                 <div className="flex gap-2 mt-auto w-full">
                   <button 
@@ -141,14 +181,14 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
                     disabled={isExporting || !isReady}
                     className={`flex-1 flex justify-center items-center gap-1 sm:gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-slate-700 hover:bg-slate-600 shadow-md' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span className="hidden sm:inline">Save</span></>}
+                    {!isReady && !hasFailed ? <Loader2 size={16} className="animate-spin" /> : <><Download size={16} /> <span className="hidden sm:inline">Save</span></>}
                   </button>
                   <button 
                     onClick={() => handleShareSingle(item.id, item.name)}
                     disabled={isExporting || !isReady}
                     className={`flex-1 flex justify-center items-center gap-1 sm:gap-2 py-3 rounded-lg transition-colors text-sm font-medium text-white ${isReady ? 'bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-900/20' : 'bg-slate-800 cursor-not-allowed opacity-70'}`}
                   >
-                    {!isReady ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span className="hidden sm:inline">Share</span></>}
+                    {!isReady && !hasFailed ? <Loader2 size={16} className="animate-spin" /> : <><Share2 size={16} /> <span className="hidden sm:inline">Share</span></>}
                   </button>
                 </div>
               </div>

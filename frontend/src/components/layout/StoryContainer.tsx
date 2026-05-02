@@ -108,7 +108,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(550px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(650px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
           {/* Row 1: Cover (pages[0]), Big Picture (pages[1]), Fleet (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[0]}

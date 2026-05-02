@@ -75,7 +75,8 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
 
   const StatRow = ({ label, myVal, commVal, unit, isDecimal, delay }: any) => {
     const isPost = exportFormat === 'post';
-    const py = isPost ? 'py-1.5' : 'py-1 flex-1';
+    // Post mode: use py-3 (vs Page9's py-1.5) to compensate for having 5 rows instead of 6
+    const py = isPost ? 'py-3' : 'py-1 flex-1';
     const valSize = isPost ? 'text-lg' : 'text-xl';
     
     const myFormatted = isDecimal ? myVal.toFixed(1) : Math.round(myVal).toLocaleString();

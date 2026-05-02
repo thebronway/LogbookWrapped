@@ -8,7 +8,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 type ConfigMode = 'annual' | 'milestone' | 'all_time' | 'yoy';
 
 export const Config = () => {
-  const { datasets, dateFilter, setDateFilter, applyFilterAndCalculate, status } = useLogbookStore();
+  const { datasets, dateFilter, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const navigate = useNavigate();
   const [mode, setMode] = useState<ConfigMode>('annual');
   const [error, setError] = useState<string | null>(null);
@@ -42,26 +42,25 @@ export const Config = () => {
     }
 
     window.umami?.track('Generate Wrapped Clicked', {
-      mode: mode, 
+      mode: mode,
       filter_type: dateFilter.type,
       file_count: datasets.length,
-      milestone_title: mode === 'milestone' ? dateFilter.label : undefined,
-      yoy_year1: mode === 'yoy' ? dateFilter.year1 : undefined,
-      yoy_year2: mode === 'yoy' ? dateFilter.year2 : undefined,
-      annual_year: mode === 'annual' && dateFilter.start ? dateFilter.start.substring(0, 4) : undefined
+      ...(mode === 'milestone' && dateFilter.label ? { milestone_title: dateFilter.label } : {}),
+      ...(mode === 'yoy' && dateFilter.year1 ? { yoy_year1: dateFilter.year1 } : {}),
+      ...(mode === 'yoy' && dateFilter.year2 ? { yoy_year2: dateFilter.year2 } : {}),
+      ...(mode === 'annual' && dateFilter.start ? { annual_year: dateFilter.start.substring(0, 4) } : {}),
     });
 
     applyFilterAndCalculate();
-    
-    setTimeout(() => {
-      const currentStatus = useLogbookStore.getState().status;
-      if (currentStatus === 'error') {
-        setError(useLogbookStore.getState().errorMessage || 'No flights found in this date range.');
-      } else {
-        // Replace history so clicking 'back' from the dashboard goes directly to Home
-        navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
-      }
-    }, 100);
+
+    // applyFilterAndCalculate is synchronous — read state immediately after it runs
+    const { status: newStatus, errorMessage: newErrorMessage } = useLogbookStore.getState();
+    if (newStatus === 'error') {
+      setError(newErrorMessage || 'No flights found in this date range.');
+    } else {
+      // Replace history so clicking 'back' from the dashboard goes directly to Home
+      navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
+    }
   };
 
   interface OptionCardProps {
@@ -130,7 +129,7 @@ export const Config = () => {
               onClick={() => { setMode('all_time'); setDateFilter({ type: 'all_time' }); }} 
             />
             <OptionCard 
-              id="yoy" icon={TrendingUp} title="Year over Year" desc="See your growth across two different years." 
+              id="yoy" icon={TrendingUp} title="Year over Year" desc="See your growth across multiple years of flying." 
               selected={mode === 'yoy'} 
               onClick={() => { setMode('yoy'); setDateFilter({ type: 'yoy', year1: currentYear.toString(), year2: (currentYear - 1).toString() }); }} 
             />
@@ -224,7 +223,7 @@ export const Config = () => {
           {mode === 'yoy' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-sky-300">Year 1</label>
+                <label className="block text-sm font-bold text-sky-300">Start Year</label>
                 <select 
                   value={dateFilter.year1 || currentYear.toString()}
                   onChange={(e) => setDateFilter({ ...dateFilter, year1: e.target.value })}
@@ -234,7 +233,7 @@ export const Config = () => {
                 </select>
               </div>
               <div className="space-y-2">
-                <label className="block text-sm font-bold text-purple-300">Year 2</label>
+                <label className="block text-sm font-bold text-purple-300">End Year</label>
                 <select 
                   value={dateFilter.year2 || (currentYear - 1).toString()}
                   onChange={(e) => setDateFilter({ ...dateFilter, year2: e.target.value })}

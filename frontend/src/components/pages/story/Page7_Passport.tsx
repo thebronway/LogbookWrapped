@@ -255,7 +255,7 @@ export const Page7_Passport: React.FC<Props> = ({ stats, isExportMode, exportFor
           }`}
         >
             <h2 className={`${exportFormat === 'post' ? 'text-2xl' : (isLongTitle ? 'text-2xl' : 'text-3xl')} font-black text-yellow-400 m-0 tracking-tight leading-tight px-1`}>
-              {titlePrefix}<br />Passport.
+              {titlePrefix}<br /><span className="text-amber-400">Passport.</span>
             </h2>
         </motion.div>
 

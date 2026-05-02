@@ -10,7 +10,25 @@ const port = process.env.PORT || 3000;
 // Since Nginx is reverse-proxying requests, we need this so rate-limiting uses the real client IP
 app.set('trust proxy', 1);
 
-app.use(cors());
+const allowedOrigins = [
+  'https://logbookwrapped.com',
+  'https://www.logbookwrapped.com',
+  'https://dev.logbookwrapped.com',
+  'https://logbookwrapped.conway.im',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., same-origin server calls, curl) 
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS policy: origin '${origin}' is not allowed.`));
+    }
+  },
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+}));
 app.use(express.json());
 
 // Database connection

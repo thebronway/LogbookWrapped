@@ -17,9 +17,9 @@ export const Page4_Extremes: React.FC<Props> = ({ stats, exportFormat = 'story' 
     <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-b from-slate-900 via-red-950 to-slate-900 text-white ${exportFormat === 'post' ? 'p-6' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-2xl mb-10' : 'text-3xl mb-10')} font-black tracking-tight text-red-500 leading-tight`}>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-xl mb-10' : 'text-2xl mb-10')} font-black tracking-tight text-red-500 leading-tight`}>
         {line1}<br />
-        Extremes.
+        <span className="text-rose-400">Extremes.</span>
       </h2>
       <div className="space-y-10">
         <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>

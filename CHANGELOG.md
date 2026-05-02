@@ -1,12 +1,18 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-05-01* 
-*Current Version: v1.0.1*
+*Current Version: v1.0.2*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.2
+- Growth report over years
+- Content updates
+- Demo updates
+- UI updates
 
 ### Release v1.0.1
 - Bugfixes
