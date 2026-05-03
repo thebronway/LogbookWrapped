@@ -1,5 +1,8 @@
 export type AirportDB = Record<string, [number, number, string, string?]>;
 
+/** [longitude, latitude] — D3/GeoJSON convention (NOT the common Leaflet [lat, lon] order) */
+export type LonLat = [number, number];
+
 export interface FlightRecord {
   date: string;
   route: string;
@@ -52,11 +55,12 @@ export interface CalculatedStats {
   flightsPerMonth: number;
   busiestMonth: string;
   homeBaseLandings: number;
+  activeMonths: number;
   mapData: {
-    nodes: [number, number][]; // [longitude, latitude]
-    edges: [[number, number], [number, number]][]; // [[lon1, lat1], [lon2, lat2]]
+    nodes: LonLat[]; // [longitude, latitude] — D3/GeoJSON convention
+    edges: [LonLat, LonLat][]; // [[lon1, lat1], [lon2, lat2]]
     bounds: [number, number, number, number] | null; // [minLon, minLat, maxLon, maxLat]
-    homeBaseCoords: [number, number] | null; // [longitude, latitude]
+    homeBaseCoords: LonLat | null; // [longitude, latitude]
   };
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Github, MessageSquare, Bug, Mail, Copy, Check } from 'lucide-react';
+import { Github, Mail, Copy, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Contact = () => {
@@ -37,9 +37,7 @@ export const Contact = () => {
         </p>
       </header>
 
-      {/* Quick Action Grid */}
       <div className="grid gap-8 md:grid-cols-2 mb-12">
-        {/* GitHub Card (Primary) */}
         <div className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col shadow-xl">
           <Github className="text-white mb-6" size={32} />
           <h3 className="text-xl text-white font-bold mb-3">Open a GitHub Issue</h3>
@@ -63,7 +61,6 @@ export const Contact = () => {
           </a>
         </div>
 
-        {/* Email Card */}
         <div className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 flex flex-col shadow-xl">
           <Mail className="text-indigo-400 mb-6" size={32} />
           <h3 className="text-xl text-white font-bold mb-3">Send us an Email</h3>
@@ -77,7 +74,6 @@ export const Contact = () => {
             </div>
           </div>
           <div className="mt-auto flex flex-col gap-3 w-full">
-            {/* Clickable email display to copy */}
             <button
               onClick={handleCopy}
               className="group flex items-center justify-between w-full bg-slate-900/60 hover:bg-slate-800/80 border border-slate-700/50 hover:border-slate-600/80 rounded-xl p-3 sm:p-4 transition-all active:scale-[0.98] text-left"

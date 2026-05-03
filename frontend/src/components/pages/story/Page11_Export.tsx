@@ -6,13 +6,15 @@ import { useLogbookStore } from '../../../store/useLogbookStore';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  stats: CalculatedStats;
+  // `stats` is kept in the interface for API symmetry with other story pages,
+  // even though this final page doesn't currently render any of them.
+  stats?: CalculatedStats;
   onOpenExport?: () => void;
   onOpenDonation?: () => void;
   isExportMode?: boolean;
 }
 
-export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDonation, isExportMode }) => {
+export const Page11_Export: React.FC<Props> = ({ onOpenExport, onOpenDonation, isExportMode }) => {
   const { dateFilter, rawFlights, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
@@ -95,7 +97,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
             <div className="absolute -right-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
           </div>
 
-          <div className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
+          <div data-no-nav className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
             <button 
               onClick={() => {
                 window.umami?.track('Export Modal Opened');

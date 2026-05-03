@@ -15,7 +15,7 @@ import { Page11_Export } from '../pages/story/Page11_Export';
 import { useLogbookStore } from '../../store/useLogbookStore';
 import { ExportModal } from '../ui/ExportModal';
 import { DonationModal } from '../ui/DonationModal';
-import { getExportPages } from '../../config/ExportPages';
+import { getExportPages } from '../../core/ExportPages';
 
 interface Props {
   stats: CalculatedStats;
@@ -23,13 +23,16 @@ interface Props {
 }
 
 export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
-  const { comparisonStats, dateFilter, isDemo } = useLogbookStore();
-  
-  // Community stats submission only makes sense for a single calendar year
-  const isSingleYear = dateFilter?.type === 'this_year' || dateFilter?.type === 'last_year' || (dateFilter?.type === 'custom' && dateFilter.start?.substring(0,4) === dateFilter.end?.substring(0,4));
-  const showCommunityPage = isSingleYear;
+  const { comparisonStats, dateFilter } = useLogbookStore();
+
+  // Community stats submission only makes sense for a single calendar year —
+  // multi-year and custom ranges don't map to the community comparison pool.
+  const showCommunityPage =
+    dateFilter?.type === 'this_year' ||
+    dateFilter?.type === 'last_year' ||
+    (dateFilter?.type === 'custom' && dateFilter.start?.substring(0, 4) === dateFilter.end?.substring(0, 4));
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
@@ -61,24 +64,31 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
   };
 
-  const pages = [
-    <Page1_Cover stats={stats} key="p1" />,
-    <Page2_BigPicture stats={stats} key="p2" />,
-    <Page3_Fleet stats={stats} key="p3" />,
-    <Page4_Extremes stats={stats} key="p4" />,
-    <Page5_Superlatives stats={stats} key="p5" />,
-    <Page6_Elements stats={stats} key="p6" />,
-    <Page7_Passport stats={stats} key="p7" />,
-    <Page8_Stats stats={stats} key="p8" />,
-    ...(comparisonStats ? [<Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" />] : []),
-    ...(showCommunityPage ? [<Page10_Community stats={stats} key="p10" onSkip={() => setCurrentIndex(prev => prev + 1)} />] : []),
-    <Page11_Export 
-      stats={stats} 
-      key="p11"
-      onOpenExport={() => setIsExportModalOpen(true)} 
-      onOpenDonation={() => setIsDonationModalOpen(true)}
-    />
-  ];
+  // Named page elements shared between the mobile story sequence and the
+  // desktop dashboard grid.
+  const p1  = <Page1_Cover stats={stats} key="p1" />;
+  const p2  = <Page2_BigPicture stats={stats} key="p2" />;
+  const p3  = <Page3_Fleet stats={stats} key="p3" />;
+  const p4  = <Page4_Extremes stats={stats} key="p4" />;
+  const p5  = <Page5_Superlatives stats={stats} key="p5" />;
+  const p6  = <Page6_Elements stats={stats} key="p6" />;
+  const p7  = <Page7_Passport stats={stats} key="p7" />;
+  const p8  = <Page8_Stats stats={stats} key="p8" />;
+  const p9  = comparisonStats ? <Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" /> : null;
+  const p10 = showCommunityPage ? <Page10_Community stats={stats} key="p10" onSkip={() => setCurrentIndex(prev => prev + 1)} /> : null;
+  const p11 = <Page11_Export stats={stats} key="p11" onOpenExport={() => setIsExportModalOpen(true)} onOpenDonation={() => setIsDonationModalOpen(true)} />;
+
+  // Mobile: sequential story array
+  const pages = [p1, p2, p3, p4, p5, p6, p7, p8, ...(p9 ? [p9] : []), ...(p10 ? [p10] : []), p11];
+
+  // Desktop Row 3 contains the optional/export pages after Stats. When fewer
+  // than 3 natural row-3 cards exist, Stats (p8) drops down to fill the row
+  // and Elements (p6) expands into the vacated slot in Row 2.
+  const row3Natural = [p9, p10, p11].filter(Boolean) as React.ReactElement[];
+  const statsMovesToRow3 = row3Natural.length < 3;
+  const row3Items: React.ReactElement[] = statsMovesToRow3
+    ? [...row3Natural.filter(p => p !== p11), p8, p11]
+    : row3Natural;
 
   useEffect(() => {
     if (isDesktop) return;
@@ -106,34 +116,50 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(650px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
+
+          {/* ── Row 1 ─────────────────────────────────────────────── */}
+          {/* Cover (wide) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[0]}
+            {p1}
           </div>
+          {/* Big Picture */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[1]}
+            {p2}
           </div>
+          {/* Fleet */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[2]}
+            {p3}
           </div>
-          {/* Passport spans 2 rows so it sits under Cover */}
+
+          {/* ── Row 2 ─────────────────────────────────────────────── */}
+          {/* Passport — spans 2 rows so rows 2 & 3 right-side cards sit beside it */}
           <div className="col-span-1 lg:col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[6]}
+            {p7}
           </div>
+          {/* Extremes */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[3]}
+            {p4}
           </div>
+          {/* Superlatives */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[4]}
+            {p5}
           </div>
-          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[5]}
+          {/* Elements — expands to col-span-2 when Stats has moved to Row 3 */}
+          <div className={`col-span-1 ${statsMovesToRow3 ? 'lg:col-span-2' : 'lg:col-span-1'} row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative`}>
+            {p6}
           </div>
-          <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
-            {pages[7]}
-          </div>
-          {/* Bottom row: Growth (optional), Community (optional), Export */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-6 !overflow-visible">
-            {pages.slice(8).map((page, idx) => (
+          {/* Stats — only rendered in Row 2 when it is NOT moving to Row 3 */}
+          {!statsMovesToRow3 && (
+            <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
+              {p8}
+            </div>
+          )}
+
+          {/* ── Row 3 ─────────────────────────────────────────────── */}
+          {/* Dynamic bottom row (2 or 3 cards). Grid columns match item count
+              so cards always span the full width. */}
+          <div className={`col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 gap-6 !overflow-visible ${row3Items.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}`}>
+            {row3Items.map((page, idx) => (
               <div key={idx} className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
                 {page}
               </div>
@@ -150,7 +176,14 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       
-      <div className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none">
+      <div
+        className="fixed inset-0 z-[100] w-full h-[100dvh] bg-black overflow-hidden flex flex-col touch-none"
+        onPointerDown={(e) => {
+          // Let interactive elements manage their own pointer events.
+          if ((e.target as HTMLElement).closest('[data-no-nav], button, a, input, select, textarea')) return;
+          e.clientX < window.innerWidth / 2 ? handlePrev() : handleNext();
+        }}
+      >
         
         <style>{`
           @keyframes fillProgress {
@@ -165,16 +198,18 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         <div className="absolute top-0 left-0 w-full z-50 flex gap-1 p-3 pt-4">
           {pages.map((_, idx) => (
             <div key={idx} className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden bg-slate-800/50">
-              <div 
+              {/* Completed: full. Active: 10s live fill. Last page (Export): pulses awaiting action. Future: empty. */}
+              <div
+                key={`progress-${idx}-${currentIndex}`}
                 className={`h-full bg-white ${
-                  idx < currentIndex 
-                    ? 'w-full' // Completed pages remain instantly full
-                    : idx === currentIndex && idx !== pages.length - 1 
-                      ? 'w-0 animate-progress' // Active playing page gets the 8s live fill
+                  idx < currentIndex
+                    ? 'w-full'
+                    : idx === currentIndex && idx !== pages.length - 1
+                      ? 'w-0 animate-progress'
                       : idx === currentIndex && idx === pages.length - 1
-                        ? 'w-full animate-pulse' // Last page (Export) pulses to show it's waiting for user action
-                        : 'w-0' // Future pages remain empty
-                }`} 
+                        ? 'w-full animate-pulse'
+                        : 'w-0'
+                }`}
               />
             </div>
           ))}
@@ -182,29 +217,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
       <button onClick={onClose} className="absolute top-8 right-4 z-[100] bg-black/50 p-2 rounded-full text-white/70 hover:text-white hover:bg-black/80 transition-all backdrop-blur-md border border-yellow-400/30">
         <X size={20} />
       </button>
-
-        {/* Touch navigation zones */}
-        {currentIndex === pages.length - 1 ? (
-          // Last page (Export): small corner zones only — page has interactive buttons
-          <>
-            <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handlePrev} />
-            <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handleNext} />
-            <div className="absolute left-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handlePrev} />
-            <div className="absolute right-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handleNext} />
-          </>
-        ) : showCommunityPage && currentIndex === pages.length - 2 ? (
-          // Community page (Page10): top strip only — bottom half has Share/Skip buttons
-          <>
-            <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/4 w-1/2" onClick={handlePrev} />
-            <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/4 w-1/2" onClick={handleNext} />
-          </>
-        ) : (
-          // All other pages: full height zones
-          <>
-            <div className="absolute left-0 top-0 z-40 cursor-pointer h-full w-1/3" onClick={handlePrev} />
-            <div className="absolute right-0 top-0 z-40 cursor-pointer h-full w-2/3" onClick={handleNext} />
-          </>
-        )}
 
       <div className="w-full h-full relative z-10">
         {pages[currentIndex]}

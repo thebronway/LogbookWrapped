@@ -1,12 +1,19 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-05-02* 
-*Current Version: v1.0.3*
+*Last updated: 2026-05-03* 
+*Current Version: v1.0.4*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.4
+- Fixed touch area issues for mobile stories
+- Row 2/3 dyanamic areas on desktop
+- Growth Page ui issues fixes
+- Community Page fixes
+- Dashboard Page Fixes
 
 ### Release v1.0.3
 - Bug fixes

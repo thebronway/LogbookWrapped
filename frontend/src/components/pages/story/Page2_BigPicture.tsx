@@ -22,7 +22,7 @@ export const Page2_BigPicture: React.FC<Props> = ({ stats, exportFormat = 'story
       exit={{ opacity: 0 }}
       className={`flex flex-col justify-center h-full w-full bg-gradient-to-tr from-orange-950 via-slate-900 to-slate-900 text-white ${exportFormat === 'post' ? 'px-6 pt-6 pb-12' : 'p-8'}`}
     >
-      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-xl mb-6' : 'text-2xl mb-6') : (isLongLine1 ? 'text-xl mb-12' : 'text-2xl mb-12')} font-black tracking-tight text-orange-400 leading-tight`}>
+      <h2 className={`${exportFormat === 'post' ? (isLongLine1 ? 'text-2xl mb-6' : 'text-3xl mb-6') : (isLongLine1 ? 'text-2xl mb-12' : 'text-3xl mb-12')} font-black tracking-tight text-orange-400 leading-tight`}>
         {line1}<br />
         <span className="text-amber-400">Big Picture.</span>
       </h2>

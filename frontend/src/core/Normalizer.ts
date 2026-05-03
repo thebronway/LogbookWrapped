@@ -20,7 +20,8 @@ const standardizeAircraftType = (rawType: string): string => {
   if (!rawType) return 'UNKNOWN';
 
   const cleanType = rawType.toUpperCase().replace(/[-\s_]/g, '');
-  const availableProfiles = Object.keys(AIRCRAFT_PROFILES);
+  // Sort longest keys first so more-specific profiles (e.g. "PA28R") match before shorter ones (e.g. "PA28")
+  const availableProfiles = Object.keys(AIRCRAFT_PROFILES).sort((a, b) => b.length - a.length);
 
   // Substring match: "C172P" → "C172"
   for (const profile of availableProfiles) {

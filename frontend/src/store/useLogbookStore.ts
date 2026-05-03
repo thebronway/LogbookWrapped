@@ -239,14 +239,18 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
           flight_count: parsedFlights.length 
         });
 
+        // Fire-and-forget telemetry — aborted after 5 s to avoid lingering requests
+        const genAbort = new AbortController();
+        setTimeout(() => genAbort.abort(), 5000);
         fetch('/api/generations', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'X-App-Token': import.meta.env.VITE_API_TOKEN ?? '',
           },
-          body: JSON.stringify({ isDemo: get().isDemo, efbType: efb })
-        }).catch(() => {}); // Fire-and-forget — never break the upload flow
+          body: JSON.stringify({ isDemo: get().isDemo, efbType: efb }),
+          signal: genAbort.signal,
+        }).catch(() => {}); // Never break the upload flow
 
         newDatasets.push({
           id: generateId(),

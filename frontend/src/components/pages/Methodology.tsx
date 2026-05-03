@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Mail } from 'lucide-react';
@@ -223,7 +223,6 @@ export const Methodology = () => {
         </section>
       </div>
 
-      {/* Call to Action */}
       <section className="flex flex-col items-center justify-center pt-8 mt-16">
         <p className="mb-6 text-center text-lg text-slate-300">
           Pilots find crazy edge cases every day. Is a rule not working right? <br className="hidden sm:block" /> 

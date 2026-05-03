@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -141,7 +141,7 @@ export const Demos = () => {
           desc="Visualize an entire flying career. See how the engine handles thousands of hours of high-volume operations."
           actions={[
             { label: "All-Time Wrapped", primary: true, icon: Globe, filter: { type: 'all_time' } },
-            { label: "2016 vs 2026 Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2016', year2: '2026' } }
+            { label: "All-Time Growth", primary: false, icon: TrendingUp, filter: { type: 'yoy', year1: '2016', year2: '2026' } }
           ]}
         />
         <DemoCard 
@@ -172,7 +172,6 @@ export const Demos = () => {
         />
       </div>
 
-      {/* Call to Action Section */}
       <div className="mt-4 md:mt-8 flex flex-col items-center gap-4 bg-slate-800/40 p-8 md:p-10 rounded-3xl border border-slate-700/50 w-full max-w-3xl mx-auto shadow-xl text-center">
         <h3 className="text-2xl md:text-3xl font-black text-white leading-tight">
           Ready for takeoff?

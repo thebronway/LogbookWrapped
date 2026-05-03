@@ -13,7 +13,7 @@ import { Disclaimer } from './components/pages/Disclaimer';
 import { Contact } from './components/pages/Contact';
 import { Methodology } from './components/pages/Methodology';
 import { Export } from './components/pages/Export';
-import { AircraftProfilesTable } from './components/pages/AircraftProfilesTable';
+import { AircraftProfiles } from './components/pages/AircraftProfiles';
 import { NotFound } from './components/pages/NotFound';
 import { ImportWrapped } from './components/pages/ImportWrapped';
 import { Dev } from './components/pages/Dev';
@@ -41,7 +41,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/methodology" element={<Methodology />} />
             <Route path="/export" element={<Export />} />
-            <Route path="/aircraftprofiles" element={<AircraftProfilesTable />} />
+            <Route path="/aircraftprofiles" element={<AircraftProfiles />} />
             <Route path="/mywrapped" element={<ImportWrapped />} />
             <Route path="/dev" element={<Dev />} />
             <Route path="/faq" element={<FAQ />} />

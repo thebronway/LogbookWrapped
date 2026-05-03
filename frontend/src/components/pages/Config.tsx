@@ -13,6 +13,7 @@ export const Config = () => {
   const [mode, setMode] = useState<ConfigMode>('annual');
   const [error, setError] = useState<string | null>(null);
   const [milestoneType, setMilestoneType] = useState<string>('None');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -41,6 +42,8 @@ export const Config = () => {
       }
     }
 
+    setIsGenerating(true);
+
     window.umami?.track('Generate Wrapped Clicked', {
       mode: mode,
       filter_type: dateFilter.type,
@@ -53,12 +56,13 @@ export const Config = () => {
 
     applyFilterAndCalculate();
 
-      // Read state directly — applyFilterAndCalculate is synchronous
-      const { status: newStatus, errorMessage: newErrorMessage } = useLogbookStore.getState();
-      if (newStatus === 'error') {
-        setError(newErrorMessage || 'No flights found in this date range.');
-      } else {
-        navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
+    // Read state directly — applyFilterAndCalculate is synchronous
+    const { status: newStatus, errorMessage: newErrorMessage } = useLogbookStore.getState();
+    if (newStatus === 'error') {
+      setIsGenerating(false);
+      setError(newErrorMessage || 'No flights found in this date range.');
+    } else {
+      navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
     }
   };
 
@@ -262,9 +266,10 @@ export const Config = () => {
 
         <button 
           onClick={handleGenerate}
-          className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all hover:-translate-y-1 bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20"
+          disabled={isGenerating}
+          className="w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2 transition-all bg-yellow-400 text-black shadow-lg shadow-yellow-500/20 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 hover:-translate-y-1 hover:bg-yellow-300"
         >
-          {mode === 'yoy' ? 'Analyze My Growth' : 'Generate My Wrapped'}
+          {isGenerating ? 'Generating...' : (mode === 'yoy' ? 'Analyze My Growth' : 'Generate My Wrapped')}
           <ArrowUpRight size={24} />
         </button>
 

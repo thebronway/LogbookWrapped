@@ -1,4 +1,4 @@
-import { FlightRecord, CalculatedStats, AirportDB, GrowthStats, GrowthCategory } from './types';
+import { FlightRecord, CalculatedStats, AirportDB, GrowthStats, GrowthCategory, LonLat } from './types';
 import { AIRCRAFT_PROFILES } from './AircraftProfiles';
 import { analyzeFlightRoute } from './NavigationEngine';
 import { createMapTracker, processFlightMapData } from './MapBuilder';
@@ -15,6 +15,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     mostUsedTailNumber: 'Unknown', mostUsedTailNumberCount: 0, favoriteRoute: 'None',
     favoriteRouteCount: 0, mostVisitedState: 'Unknown', mostVisitedStateCount: 0, uniqueStatesCount: 0,
     averageFlightTime: 0, flightsPerMonth: 0, busiestMonth: '', homeBaseLandings: 0,
+    activeMonths: 0,
     mapData: { nodes: [], edges: [], bounds: null, homeBaseCoords: null }
   };
 
@@ -98,20 +99,21 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
 
   if (stats.homeBase !== "Unknown" && airportDB[stats.homeBase]) {
     const coords = airportDB[stats.homeBase];
-    stats.mapData.homeBaseCoords = [coords[1], coords[0]];
+    stats.mapData.homeBaseCoords = [coords[1], coords[0]] as LonLat;
   }
 
   mapTracker.airports.forEach(apt => {
     const coords = airportDB[apt];
-    if (coords) stats.mapData.nodes.push([coords[1], coords[0]]);
+    if (coords) stats.mapData.nodes.push([coords[1], coords[0]] as LonLat);
   });
 
   if (stats.mapData.nodes.length > 0) {
     stats.mapData.bounds = [mapTracker.minLon, mapTracker.minLat, mapTracker.maxLon, mapTracker.maxLat];
   }
 
+  stats.activeMonths = winners.activeMonths ?? 0;
   stats.averageFlightTime = stats.totalFlights > 0 ? stats.totalHours / stats.totalFlights : 0;
-  stats.flightsPerMonth = winners.activeMonths > 0 ? stats.totalFlights / winners.activeMonths : 0;
+  stats.flightsPerMonth = stats.activeMonths > 0 ? stats.totalFlights / stats.activeMonths : 0;
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;
 
   // Round accumulated floats to avoid IEEE 754 artifacts (e.g. 1.2000000000001)

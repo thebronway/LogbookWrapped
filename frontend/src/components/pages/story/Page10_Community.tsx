@@ -12,7 +12,10 @@ interface Props {
   onSkip?: () => void;
 }
 
-export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story', isExportMode = false, onSkip }) => {
+export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false, onSkip }) => {
+  // `exportFormat` prop is still accepted via the Props interface for API
+  // compatibility with other pages, but it's no longer needed here — the
+  // flex-1 + pb-10 pattern handles both story and post canvases uniformly.
   const { communityAverages, setCommunityAverages, dateFilter, hasSharedCommunityStats, setHasSharedCommunityStats } = useLogbookStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState(0);
@@ -82,31 +85,29 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
   };
 
   const StatRow = ({ label, myVal, commVal, unit, isDecimal, delay }: any) => {
-    const isPost = exportFormat === 'post';
-    // Post mode: use py-3 (vs Page9's py-1.5) to compensate for having 5 rows instead of 6
-    const py = isPost ? 'py-3' : 'py-1 flex-1';
-    const valSize = isPost ? 'text-lg' : 'text-xl';
-    
+    // Uniform layout: flex-1 lets rows share available height evenly on any
+    // canvas size (desktop dashboard card, mobile story, 800px story export,
+    // 562px post export). Matches the GrowthBoard pattern.
     const myFormatted = isDecimal ? myVal.toFixed(1) : Math.round(myVal).toLocaleString();
     const commFormatted = isDecimal ? commVal.toFixed(1) : Math.round(commVal).toLocaleString();
-    
+
     const isTie = myVal === commVal;
     const isUp = myVal > commVal;
     const diff = Math.abs(myVal - commVal);
     const diffFormatted = isDecimal ? diff.toFixed(1) : Math.round(diff).toLocaleString();
 
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay }}
-        className={`flex justify-between items-center ${py} border-b border-white/5 last:border-0`}
+        className="flex justify-between items-center flex-1 min-h-0 py-1 border-b border-white/5 last:border-0"
       >
-        <div className={`text-center w-1/3 font-black ${valSize} text-yellow-400 leading-tight`}>
-          {myFormatted} 
+        <div className="text-center w-1/3 font-black text-xl text-yellow-400 leading-tight">
+          {myFormatted}
           <span className="text-[10px] font-normal opacity-70 tracking-normal block">{unit || '\u00A0'}</span>
         </div>
-        
+
         <div className="text-center w-1/3 font-bold text-slate-500 text-[9px] uppercase tracking-widest flex flex-col items-center gap-0.5">
           {label}
           {isTie ? (
@@ -119,9 +120,9 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
             </span>
           )}
         </div>
-        
-        <div className={`text-center w-1/3 font-black ${valSize} text-emerald-400 leading-tight`}>
-          {commFormatted} 
+
+        <div className="text-center w-1/3 font-black text-xl text-emerald-400 leading-tight">
+          {commFormatted}
           <span className="text-[10px] font-normal opacity-70 tracking-normal block">{unit || '\u00A0'}</span>
         </div>
       </motion.div>
@@ -130,7 +131,9 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
 
   if (isExportMode && !hasSharedCommunityStats) return null;
 
-  const containerClasses = isExportMode ? (exportFormat === 'post' ? 'p-5 pt-6' : 'p-6 pt-16') : 'p-5 sm:p-6';
+  // Export mode uses pb-10 to reserve space above the ExportWrapper watermark
+  // (same pattern as GrowthBoard / MultiYearHighLowCard).
+  const containerClasses = isExportMode ? 'p-5 pt-6 pb-10' : 'p-5 sm:p-6';
 
   return (
     <div className={`flex flex-col h-full w-full bg-gradient-to-br from-emerald-900 via-slate-950 to-yellow-900 text-white overflow-hidden ${containerClasses}`}>
@@ -184,12 +187,12 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
             {error && <div className="mb-4 text-sm text-rose-400 bg-rose-900/20 p-3 rounded-lg text-center border border-rose-900/50">{error}</div>}
 
             {success ? (
-              <div className="w-full relative z-50 bg-emerald-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg">
+              <div data-no-nav className="w-full relative z-50 bg-emerald-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg">
                 <CheckCircle2 size={20} /> Unlocked Successfully!
               </div>
             ) : (
               <>
-                <div onPointerDown={(e) => e.stopPropagation()} className="flex flex-col w-full">
+                <div data-no-nav className="flex flex-col w-full">
                   <button
                     onClick={handleUnlock}
                     disabled={isSubmitting}
@@ -216,39 +219,43 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
           </motion.div>
         )}
 
-        {/* --- STATE 2: UNLOCKED (EXACT GROWTH BOARD STYLING) --- */}
+        {/* --- STATE 2: UNLOCKED (matches GrowthBoard layout pattern) --- */}
         {hasSharedCommunityStats && communityAverages && (
-          <motion.div 
+          <motion.div
             key="unlocked"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`flex flex-col h-full w-full ${isExportMode ? '' : 'max-w-md mx-auto'}`}
+            className="flex flex-col h-full w-full"
           >
-            <div className={`flex flex-col items-start gap-2 text-left shrink-0 ${isExportMode ? "mb-6 mt-2" : "mb-8 sm:mb-6 mt-8 sm:mt-2"}`}>
+            <div className={`flex flex-col items-start gap-2 text-left shrink-0 ${isExportMode ? 'mb-5 mt-1' : 'mb-8 sm:mb-6 mt-8 sm:mt-2'}`}>
               <h1 className="text-2xl font-black text-yellow-400 tracking-tight leading-tight">
                 My {yearStr} LogbookWrapped <br /> <span className="text-emerald-400">VS The Community.</span>
               </h1>
             </div>
-              
-            <div className={`w-full flex flex-col bg-slate-900/40 border border-slate-700/50 rounded-3xl ${exportFormat === 'post' ? 'p-5' : 'p-6 flex-1 mb-8'} shadow-2xl relative overflow-hidden`}>
-              
-              <div className={`flex justify-between items-center ${exportFormat === 'post' ? 'mb-4' : 'mb-8 shrink-0'} relative`}>
+
+            {/* Outer card — flex-1 min-h-0 so it fills remaining vertical space on any canvas */}
+            <div
+              className="w-full flex flex-col flex-1 min-h-0 bg-slate-900/40 border border-slate-700/50 rounded-3xl p-5 shadow-2xl relative overflow-hidden"
+              style={{ WebkitMaskImage: '-webkit-radial-gradient(white, black)' }}
+            >
+              <div className="flex justify-between items-center mb-4 shrink-0 relative">
                 <div className="text-center flex-1 z-10 w-1/3">
-                  <h2 className={`${exportFormat === 'post' ? 'text-xl' : 'text-2xl'} font-black text-yellow-400 truncate`}>You</h2>
+                  <h2 className="text-2xl font-black text-yellow-400 truncate">You</h2>
                 </div>
-                <div className={`text-slate-600 font-black ${exportFormat === 'post' ? 'text-lg' : 'text-xl'} italic z-10 w-1/3 text-center`}>VS</div>
+                <div className="text-slate-600 font-black text-xl italic z-10 w-1/3 text-center">VS</div>
                 <div className="text-center flex-1 z-10 w-1/3">
-                  <h2 className={`${exportFormat === 'post' ? 'text-xl' : 'text-2xl'} font-black text-emerald-400 truncate`}>
+                  <h2 className="text-2xl font-black text-emerald-400 truncate">
                     <span className="hidden sm:inline">Average</span>
                     <span className="inline sm:hidden">Avg</span>
                   </h2>
                 </div>
-                
+
                 <div className="absolute -left-10 -top-10 w-40 h-40 bg-yellow-500/20 rounded-full blur-3xl -z-10" />
                 <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -z-10" />
               </div>
 
-              <div className={`flex flex-col flex-1 justify-between bg-slate-800/50 rounded-2xl border border-slate-700/30 relative z-10 ${exportFormat === 'post' ? 'p-2' : 'p-4'}`}>
+              {/* Stat rows — flex-1 min-h-0 so the 5 rows share available height evenly */}
+              <div className="flex flex-col flex-1 min-h-0 justify-between bg-slate-800/50 rounded-2xl border border-slate-700/30 relative z-10 p-3">
                 <StatRow label="Flight Time" myVal={stats.totalHours} commVal={Number(communityAverages.flight_time)} unit="hrs" isDecimal={true} delay={0.1} />
                 <StatRow label="Flights" myVal={stats.totalFlights} commVal={Number(communityAverages.flights)} delay={0.2} />
                 <StatRow label="Distance" myVal={stats.totalDistanceNm} commVal={Number(communityAverages.distance)} unit="nm" delay={0.3} />

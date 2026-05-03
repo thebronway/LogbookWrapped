@@ -1,5 +1,4 @@
-import React from 'react';
-import { CalculatedStats, ExportItem } from '../core/types';
+import { CalculatedStats, ExportItem } from './types';
 
 import { Page1_Cover } from '../components/pages/story/Page1_Cover';
 import { Page2_BigPicture } from '../components/pages/story/Page2_BigPicture';

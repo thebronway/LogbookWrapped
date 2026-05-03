@@ -1,11 +1,10 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { AIRCRAFT_PROFILES } from '../../core/AircraftProfiles';
 import { Link } from 'react-router-dom';
 import { Mail, ChevronDown } from 'lucide-react';
 
-export const AircraftProfilesTable = () => {
+export const AircraftProfiles = () => {
   const allProfiles = Object.entries(AIRCRAFT_PROFILES);
   
   const small = allProfiles.filter(([, profile]) => profile.type === 'small').sort((a, b) => a[0].localeCompare(b[0]));
@@ -14,22 +13,14 @@ export const AircraftProfilesTable = () => {
   const experimental = allProfiles.filter(([, profile]) => profile.type === 'experimental').sort((a, b) => a[0].localeCompare(b[0]));
   const unknown = allProfiles.filter(([, profile]) => profile.type === 'unknown').sort((a, b) => a[0].localeCompare(b[0]));
 
-  /**
-   * FIX: Robust scroll handler
-   * Uses manual pixel calculation instead of scrollIntoView to prevent "stuck" bugs.
-   */
+  // Manual pixel-offset scroll (avoids scrollIntoView's intermittent "stuck"
+  // behavior when the sticky header overlaps the target).
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
-    if (element) {
-      const offset = 100; // Pixels to leave above the header
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    if (!element) return;
+    const headerOffset = 100;
+    const offsetPosition = element.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
   };
 
   const renderTable = (id: string, title: string, data: [string, any][]) => (
@@ -88,7 +79,6 @@ export const AircraftProfilesTable = () => {
         </div>
       </div>
 
-      {/* Jump Links with Pixel-Perfect Scrolling */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500">
           <ChevronDown size={14} />
