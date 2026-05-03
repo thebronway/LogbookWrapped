@@ -15,21 +15,21 @@ export const detectEFBProfile = (headers: string[]): { profile: any, name: strin
   return { profile: null, name: "Unknown" };
 };
 
-// Dynamically matches messy inputs to your core database without hardcoding
+// Fuzzy-matches raw aircraft type strings (e.g. "C172P", "172N") to known ICAO profile keys
 const standardizeAircraftType = (rawType: string): string => {
   if (!rawType) return 'UNKNOWN';
 
   const cleanType = rawType.toUpperCase().replace(/[-\s_]/g, '');
   const availableProfiles = Object.keys(AIRCRAFT_PROFILES);
 
-  // Direct or Substring Match (e.g., "C172P" includes "C172")
+  // Substring match: "C172P" → "C172"
   for (const profile of availableProfiles) {
     if (cleanType.includes(profile)) {
       return profile;
     }
   }
 
-  // Numeric "Missing Prefix" Match (e.g., "172N" matching "C172")
+  // Numeric-only match for missing manufacturer prefix: "172N" → "C172"
   for (const profile of availableProfiles) {
     const numericPart = profile.replace(/\D/g, '');
     if (numericPart.length >= 2 && cleanType.includes(numericPart)) {
@@ -53,7 +53,7 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
     isKnownProfile = true;
   }
 
-  // FUZZY MATCHER FOR CUSTOM SPREADSHEETS
+  // Unknown EFB format — attempt to fuzzy-match column headers to known field names
   if (!isKnownProfile) {
     const findCol = (aliases: string[]) => {
       const lowerHeaders = headers.map(h => h.toLowerCase().trim());

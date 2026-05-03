@@ -25,9 +25,9 @@ interface Props {
 export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   const { comparisonStats, dateFilter, isDemo } = useLogbookStore();
   
-  // Only show the Community Tollbooth if they are viewing a single year
+  // Community stats submission only makes sense for a single calendar year
   const isSingleYear = dateFilter?.type === 'this_year' || dateFilter?.type === 'last_year' || (dateFilter?.type === 'custom' && dateFilter.start?.substring(0,4) === dateFilter.end?.substring(0,4));
-  const showCommunityPage = isSingleYear; // Demos are now allowed to see this
+  const showCommunityPage = isSingleYear;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -53,6 +53,14 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     }
   }, [currentIndex, isDesktop]);
 
+  const handleNext = () => {
+    if (currentIndex < pages.length - 1) setCurrentIndex(prev => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
+  };
+
   const pages = [
     <Page1_Cover stats={stats} key="p1" />,
     <Page2_BigPicture stats={stats} key="p2" />,
@@ -63,7 +71,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     <Page7_Passport stats={stats} key="p7" />,
     <Page8_Stats stats={stats} key="p8" />,
     ...(comparisonStats ? [<Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" />] : []),
-    ...(showCommunityPage ? [<Page10_Community stats={stats} key="p10" />] : []),
+    ...(showCommunityPage ? [<Page10_Community stats={stats} key="p10" onSkip={() => setCurrentIndex(prev => prev + 1)} />] : []),
     <Page11_Export 
       stats={stats} 
       key="p11"
@@ -72,28 +80,17 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     />
   ];
 
-  const handleNext = () => {
-    if (currentIndex < pages.length - 1) setCurrentIndex(prev => prev + 1);
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
-  };
-
-  // Auto-advance timer
   useEffect(() => {
-    if (isDesktop) return; // Don't auto-advance the desktop bento dashboard
-    
+    if (isDesktop) return;
     if (currentIndex === pages.length - 1) return;
 
     const timer = setTimeout(() => {
       setCurrentIndex(prev => prev + 1);
-    }, 10000); // 8 seconds per slide
+    }, 10000);
 
     return () => clearTimeout(timer);
   }, [currentIndex, isDesktop, pages.length]);
 
-  {/* Desktop Layout */}
   if (isDesktop) {
     return (
       <>
@@ -109,7 +106,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[minmax(650px,auto)] px-4 [&>div]:overflow-y-auto [&>div]:overflow-x-hidden">
-          {/* Row 1: Cover (pages[0]), Big Picture (pages[1]), Fleet (pages[2]) */}
           <div className="col-span-1 lg:col-span-2 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[0]}
           </div>
@@ -119,13 +115,10 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[2]}
           </div>
-          
-          {/* Row 2 & 3: Passport (pages[6]) rendered here so it sits under Cover */}
+          {/* Passport spans 2 rows so it sits under Cover */}
           <div className="col-span-1 lg:col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[6]}
           </div>
-          
-          {/* Row 2 & 3 Right Side: Extremes (3), Superlatives (4), Elements (5), and Stats (7) stacked next to Passport */}
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[3]}
           </div>
@@ -138,8 +131,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
           <div className="col-span-1 lg:col-span-1 row-span-1 rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative">
             {pages[7]}
           </div>
-
-          {/* Bottom Row: Dynamically maps the remaining components ([Growth], [Community], Export) */}
+          {/* Bottom row: Growth (optional), Community (optional), Export */}
           <div className="col-span-1 md:col-span-2 lg:col-span-4 grid grid-cols-1 md:grid-cols-3 gap-6 !overflow-visible">
             {pages.slice(8).map((page, idx) => (
               <div key={idx} className="rounded-3xl overflow-hidden shadow-2xl bg-black border border-slate-800 relative min-h-[700px] overflow-y-auto overflow-x-hidden">
@@ -153,7 +145,6 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
     );
   }
 
-  {/* Mobile Layout */}
   return (
     <>
       {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
@@ -192,23 +183,28 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
         <X size={20} />
       </button>
 
-      {/* Invisible Touch Zones */}
-      {currentIndex === pages.length - 1 ? (
-        <>
-          {/* Last Page: Touch zones only at the top (33%) and at the bottom (15%) */}
-          <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handlePrev} />
-          <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handleNext} />
-          
-          <div className="absolute left-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handlePrev} />
-          <div className="absolute right-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handleNext} />
-        </>
-      ) : (
-        <>
-          {/* Normal Pages: Full height, Left 1/3 and Right 2/3 */}
-          <div className="absolute left-0 top-0 z-40 cursor-pointer h-full w-1/3" onClick={handlePrev} />
-          <div className="absolute right-0 top-0 z-40 cursor-pointer h-full w-2/3" onClick={handleNext} />
-        </>
-      )}
+        {/* Touch navigation zones */}
+        {currentIndex === pages.length - 1 ? (
+          // Last page (Export): small corner zones only — page has interactive buttons
+          <>
+            <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handlePrev} />
+            <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/3 w-1/2" onClick={handleNext} />
+            <div className="absolute left-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handlePrev} />
+            <div className="absolute right-0 bottom-0 z-40 cursor-pointer h-[15%] w-1/2" onClick={handleNext} />
+          </>
+        ) : showCommunityPage && currentIndex === pages.length - 2 ? (
+          // Community page (Page10): top strip only — bottom half has Share/Skip buttons
+          <>
+            <div className="absolute left-0 top-0 z-40 cursor-pointer h-1/4 w-1/2" onClick={handlePrev} />
+            <div className="absolute right-0 top-0 z-40 cursor-pointer h-1/4 w-1/2" onClick={handleNext} />
+          </>
+        ) : (
+          // All other pages: full height zones
+          <>
+            <div className="absolute left-0 top-0 z-40 cursor-pointer h-full w-1/3" onClick={handlePrev} />
+            <div className="absolute right-0 top-0 z-40 cursor-pointer h-full w-2/3" onClick={handleNext} />
+          </>
+        )}
 
       <div className="w-full h-full relative z-10">
         {pages[currentIndex]}

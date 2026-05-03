@@ -23,19 +23,18 @@ export const parseLogbookCSV = (file: File): Promise<{flights: FlightRecord[], e
       let csvTextToParse = text;
       const preParsedAircraftMap: Record<string, string> = {};
 
-      // Slice off everything above the actual flight logs
+      // ForeFlight exports include a metadata header and aircraft table above the flight log.
+      // We extract the aircraft type map from that header before slicing it off.
       if (text.includes('ForeFlight Logbook Import') || text.includes('Aircraft Table')) {
         const aircraftTableStart = text.indexOf('AircraftID,TypeCode');
         const flightsMarker = 'Date,AircraftID';
         const flightHeaderIndex = text.indexOf(flightsMarker);
         
-        // Extract the aircraft types from the ForeFlight metadata header before slicing
         if (aircraftTableStart !== -1 && flightHeaderIndex !== -1 && aircraftTableStart < flightHeaderIndex) {
           const aircraftTableText = text.substring(aircraftTableStart, flightHeaderIndex);
           const lines = aircraftTableText.split('\n');
           lines.forEach(line => {
             const cols = line.split(',');
-            // Map column 0 (Tail) to column 1 (Type)
             if (cols.length >= 2 && cols[0] !== 'AircraftID') {
               const tail = cols[0].trim();
               let type = cols[1].trim();

@@ -12,7 +12,7 @@ export const getDistanceNm = (lat1: number, lon1: number, lat2: number, lon2: nu
 };
 
 export const analyzeFlightRoute = (f: FlightRecord, airportDB: AirportDB, profileSpeed: number) => {
-  // If flight time is 0 (e.g., sim session or mistake), grant a massive budget so we don't drop the route
+  // Zero flight time (sim sessions, data errors) gets an uncapped distance budget to preserve the route
   const maxFlightDistance = f.totalTime > 0 ? (f.totalTime * profileSpeed * 2.0) : 99999;
   const ignoredTokens = new Set(['DCT', 'DIR', 'GPS', 'RNAV', 'ILS', 'LOC', 'VOR', 'NDB', 'VFR', 'IFR', 'VECT', 'VTF', 'RADAR']);
 

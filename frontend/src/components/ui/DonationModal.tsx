@@ -68,7 +68,7 @@ const DonationModalInner: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <a
               href="https://buymeacoffee.com/brianconway"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               onClick={() => window.umami?.track('Donation Clicked', { platform: 'bmc' })}
               className="w-full bg-[#FFDD00] hover:bg-[#FFEA4D] text-black py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-lg"
             >

@@ -125,7 +125,7 @@ export const Page11_Export: React.FC<Props> = ({ stats, onOpenExport, onOpenDona
               className="w-full bg-slate-800 hover:bg-slate-700 text-yellow-400 py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors border border-slate-700"
             >
               <HandCoins size={18} />
-              Help Keep the App Airbone
+              Help Keep the App Airborne
             </button>
 
             <button 

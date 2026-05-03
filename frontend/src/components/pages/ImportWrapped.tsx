@@ -10,9 +10,10 @@ export const ImportWrapped: React.FC = () => {
 
   useEffect(() => {
     const allowedOrigins = [
-      'https://files.conway.im',
-      'https://logbookwrapped.conway.im',
+      'https://logbookwrapped.com',
       'https://dev.logbookwrapped.com',
+      'https://logbookwrapped.conway.im',
+      'https://dev.logbookwrapped.conway.im',
     ];
 
     const handleMessage = async (event: MessageEvent) => {
@@ -31,8 +32,7 @@ export const ImportWrapped: React.FC = () => {
 
           const virtualFile = new File([csvData], "imported_logbook.csv", { type: "text/csv" });
           
-          // Use processFiles (array) and pass `true` to bypass the Config page
-          await processFiles([virtualFile], true);
+          await processFiles([virtualFile], true); // true = bypass Config page
           
           if (filter?.type === 'yoy') {
             navigate('/growth');
@@ -59,7 +59,7 @@ export const ImportWrapped: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
-      <div className="w-24 h-24 mb-8">
+      <div className="relative w-24 h-24 mb-8">
         <RadarLoader />
       </div>
       {error ? (

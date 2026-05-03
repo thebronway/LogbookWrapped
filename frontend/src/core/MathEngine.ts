@@ -1,4 +1,4 @@
-import { FlightRecord, CalculatedStats, AirportDB } from './types';
+import { FlightRecord, CalculatedStats, AirportDB, GrowthStats, GrowthCategory } from './types';
 import { AIRCRAFT_PROFILES } from './AircraftProfiles';
 import { analyzeFlightRoute } from './NavigationEngine';
 import { createMapTracker, processFlightMapData } from './MapBuilder';
@@ -13,7 +13,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     totalNight: 0, totalIMC: 0, totalSimulated: 0, totalActualAndSim: 0, totalApproaches: 0, estimatedFuelBurn: 0,
     hasInternational: false, mostUsedAirframe: 'Unknown', mostUsedAirframeCount: 0,
     mostUsedTailNumber: 'Unknown', mostUsedTailNumberCount: 0, favoriteRoute: 'None',
-    favoriteRouteCount: 0, mostVisitedState: 'Unknown', mostVisitedStateCount: 0,
+    favoriteRouteCount: 0, mostVisitedState: 'Unknown', mostVisitedStateCount: 0, uniqueStatesCount: 0,
     averageFlightTime: 0, flightsPerMonth: 0, busiestMonth: '', homeBaseLandings: 0,
     mapData: { nodes: [], edges: [], bounds: null, homeBaseCoords: null }
   };
@@ -21,7 +21,6 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const mapTracker = createMapTracker();
   const supTracker = createSuperlativeTracker();
 
-  // THE SINGLE LOOP
   flights.forEach(f => {
     stats.totalHours += f.totalTime;
     stats.totalLandings += f.landings;
@@ -95,6 +94,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   , "Unknown");
   stats.mostVisitedState = topState;
   stats.mostVisitedStateCount = mapTracker.stateCounts[topState] || 0;
+  stats.uniqueStatesCount = Object.keys(mapTracker.stateCounts).length;
 
   if (stats.homeBase !== "Unknown" && airportDB[stats.homeBase]) {
     const coords = airportDB[stats.homeBase];
@@ -114,7 +114,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   stats.flightsPerMonth = winners.activeMonths > 0 ? stats.totalFlights / winners.activeMonths : 0;
   if (stats.shortestFlight === 9999) stats.shortestFlight = 0;
 
-  // Clean up JavaScript floating point artifacts
+  // Round accumulated floats to avoid IEEE 754 artifacts (e.g. 1.2000000000001)
   stats.totalHours = Number(stats.totalHours.toFixed(1));
   stats.totalNight = Number(stats.totalNight.toFixed(1));
   stats.totalIMC = Number(stats.totalIMC.toFixed(1));

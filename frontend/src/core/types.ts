@@ -47,6 +47,7 @@ export interface CalculatedStats {
   favoriteRouteCount: number;
   mostVisitedState: string;
   mostVisitedStateCount: number;
+  uniqueStatesCount: number;
   averageFlightTime: number;
   flightsPerMonth: number;
   busiestMonth: string;

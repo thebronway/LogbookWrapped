@@ -11,7 +11,7 @@ export const generateBlob = async (elementId: string, format: 'story' | 'post'):
       backgroundColor: '#020617',
       width: 450,
       height: format === 'post' ? 562 : 800,
-      skipFonts: true, // Ignores Tailwind's phantom border rendering
+      skipFonts: true, // Prevents Tailwind phantom border rendering in html-to-image
     });
   } catch (error) {
     console.error(`Failed to generate blob for ${elementId}:`, error);

@@ -3,12 +3,12 @@ import { FlightRecord, CalculatedStats, AirportDB } from '../core/types';
 import { parseLogbookCSV } from '../core/Parser';
 import { calculateStats } from '../core/MathEngine';
 
-// Polyfill for crypto.randomUUID() — not available in Safari < 15.4
+// crypto.randomUUID() is not available in Safari < 15.4
 const generateId = (): string => {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
-  // Fallback: RFC 4122 v4 UUID
+  // Fallback RFC 4122 v4 UUID
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
@@ -50,7 +50,7 @@ interface LogbookState {
   communityAverages: CommunityAverages | null;
   setCommunityAverages: (avgs: CommunityAverages | null) => void;
   datasets: LogbookDataset[];
-  rawFlights: FlightRecord[]; // Exposed globally for cross-linking
+  rawFlights: FlightRecord[];
   flights: FlightRecord[];
   stats: CalculatedStats | null;
   comparisonStats: CalculatedStats | null;
@@ -104,19 +104,18 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
 
     const currentYear = new Date().getFullYear();
     
-    // Always pull from the pure global rawFlights to prevent dataset filtering corruption
+    // Always source from global rawFlights to avoid double-filtering on re-runs
     const baseFlights = globalRawFlights.length > 0 ? globalRawFlights : datasets[0].rawFlights;
-    const dsBase = datasets[0]; // Used just to copy over the base properties like fileName
+    const dsBase = datasets[0];
 
     if (dateFilter.type === 'yoy') {
       const inputY1 = parseInt(dateFilter.year1 || currentYear.toString());
       const inputY2 = parseInt(dateFilter.year2 || (currentYear - 1).toString());
 
-      // UX Fix: Always force the older year to be Year 1 (Left) and the newer to be Year 2 (Right)
+      // Normalize order so the older year is always Year 1 (left) regardless of user selection
       const y1 = Math.min(inputY1, inputY2);
       const y2 = Math.max(inputY1, inputY2);
 
-      // Multi-year: build a dataset for every year in the range
       const allYears = Array.from({ length: y2 - y1 + 1 }, (_, i) => y1 + i);
       const yearDatasets: LogbookDataset[] = [];
       const missingYears: number[] = [];
@@ -143,8 +142,7 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       }
 
       if (missingYears.length > 0) {
-        // Warn but continue — some intermediate years might be empty
-        console.warn(`YOY: no flights found in year(s) ${missingYears.join(', ')} — those years will be skipped.`);
+        console.warn(`YOY: no flights found in year(s) ${missingYears.join(', ')} — skipped.`);
       }
 
       set({
@@ -241,12 +239,14 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
           flight_count: parsedFlights.length 
         });
 
-        // Silently ping backend for generation tracking
         fetch('/api/generations', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'X-App-Token': import.meta.env.VITE_API_TOKEN ?? '',
+          },
           body: JSON.stringify({ isDemo: get().isDemo, efbType: efb })
-        }).catch(() => {}); // Silently ignore failures to avoid breaking the UI
+        }).catch(() => {}); // Fire-and-forget — never break the upload flow
 
         newDatasets.push({
           id: generateId(),

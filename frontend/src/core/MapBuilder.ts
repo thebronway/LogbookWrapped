@@ -58,7 +58,6 @@ export const processFlightMapData = (f: FlightRecord, flightLegs: string[], airp
     const coords = airportDB[apt.toUpperCase()];
     if (coords) {
       const [lat, lon] = coords;
-      // Rough CONUS bounding box
       const isConus = lat >= 24.3 && lat <= 49.4 && lon >= -125.0 && lon <= -66.9;
       if (!isConus) tracker.hasInternational = true;
     }

@@ -23,14 +23,13 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   const isSingleItem = items.length === 1;
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Forward wheel events from anywhere in the modal to the scrollable content area
+  // Forwards wheel events to the inner scroll container so the modal scrolls from anywhere
   const handleModalWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ top: e.deltaY, behavior: 'auto' });
     }
   };
 
-  // Lock background scroll while modal is open
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -42,7 +41,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   useEffect(() => {
     let isMounted = true;
     const generateAll = async () => {
-      // Allow 2s for D3 maps and geographical data to fully render
+      // Wait for D3 maps to finish rendering before capturing
       await new Promise(r => setTimeout(r, 2000));
       
       for (const item of items) {
@@ -105,7 +104,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
   return (
     <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300" onWheel={handleModalWheel}>
       
-      {/* LAYER 1: The Engine Sandbox (Invisible) */}
+      {/* Off-screen render sandbox — html-to-image needs the DOM nodes to exist */}
       <div className="absolute top-0 left-0 w-[450px] h-[800px] pointer-events-none z-[1] opacity-0 overflow-hidden">
         {items.filter(p => !p.isPoster).map((item, idx) => (
           <React.Fragment key={`sandbox-${idx}`}>
@@ -119,10 +118,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
         ))}
       </div>
 
-      {/* LAYER 2: The Solid Blocker */}
       <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-3xl z-[2]" />
-
-      {/* LAYER 3: The Actual Modal UI */}
       <div className="relative z-[10] flex flex-col h-full w-full p-4 sm:p-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0 gap-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{title}</h2>
@@ -148,7 +144,6 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
           </div>
         </div>
 
-        {/* Inline ZIP error banner */}
         {exportError && (
           <div className="w-full max-w-6xl mx-auto mb-4 flex items-start gap-2 text-red-400 bg-red-400/10 border border-red-400/20 p-3 rounded-xl text-sm">
             <AlertCircle size={16} className="shrink-0 mt-0.5" />

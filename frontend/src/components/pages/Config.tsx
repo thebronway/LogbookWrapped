@@ -53,13 +53,12 @@ export const Config = () => {
 
     applyFilterAndCalculate();
 
-    // applyFilterAndCalculate is synchronous — read state immediately after it runs
-    const { status: newStatus, errorMessage: newErrorMessage } = useLogbookStore.getState();
-    if (newStatus === 'error') {
-      setError(newErrorMessage || 'No flights found in this date range.');
-    } else {
-      // Replace history so clicking 'back' from the dashboard goes directly to Home
-      navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
+      // Read state directly — applyFilterAndCalculate is synchronous
+      const { status: newStatus, errorMessage: newErrorMessage } = useLogbookStore.getState();
+      if (newStatus === 'error') {
+        setError(newErrorMessage || 'No flights found in this date range.');
+      } else {
+        navigate(mode === 'yoy' ? '/growth' : '/wrapped', { replace: true });
     }
   };
 

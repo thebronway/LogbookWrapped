@@ -9,9 +9,10 @@ interface Props {
   stats: CalculatedStats;
   exportFormat?: 'story' | 'post';
   isExportMode?: boolean;
+  onSkip?: () => void;
 }
 
-export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story', isExportMode = false }) => {
+export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story', isExportMode = false, onSkip }) => {
   const { communityAverages, setCommunityAverages, dateFilter, hasSharedCommunityStats, setHasSharedCommunityStats } = useLogbookStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState(0);
@@ -40,25 +41,32 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
       distance: stats.totalDistanceNm,
       landings: stats.totalLandings,
       night_hours: stats.totalNight,
-      states_count: stats.mostVisitedStateCount > 0 ? 1 : 0, 
+      states_count: stats.uniqueStatesCount,
       dominant_size: autoSize
     };
 
     try {
       const res = await fetch('/api/stats', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-App-Token': import.meta.env.VITE_API_TOKEN ?? '',
+        },
         body: JSON.stringify(payload)
       });
 
-      if (!res.ok) throw new Error('Failed to connect to server');
+      if (res.status === 429) throw new Error('Too many requests — please wait a moment and try again.');
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => null);
+        throw new Error(errBody?.error || `Server error (${res.status}). Try again or skip.`);
+      }
       const data = await res.json();
 
       setLoadingPhase(2); // Crunching Numbers
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.floor(Math.random() * 400) + 100));
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.floor(Math.random() * 500)));
       
       setLoadingPhase(3); // Comparing Averages
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.floor(Math.random() * 400) + 100));
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.floor(Math.random() * 500)));
 
       if (data.averages) setCommunityAverages(data.averages);
 
@@ -67,7 +75,7 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
       setTimeout(() => setHasSharedCommunityStats(true), 1000);
 
     } catch (err) {
-      setError("Couldn't reach server. Try again or skip.");
+      setError(err instanceof Error ? err.message : "Couldn't reach server. Try again or skip.");
       setIsSubmitting(false);
       setLoadingPhase(0);
     }
@@ -181,26 +189,28 @@ export const Page10_Community: React.FC<Props> = ({ stats, exportFormat = 'story
               </div>
             ) : (
               <>
-                <button
-                  onClick={handleUnlock}
-                  disabled={isSubmitting}
-                  className="w-full relative z-50 bg-yellow-600 hover:bg-yellow-500 disabled:opacity-80 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-yellow-900/20 text-lg hover:scale-[1.02] active:scale-95"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 size={20} className="animate-spin" />
-                      {loadingPhase === 1 ? 'Transmitting...' : loadingPhase === 2 ? 'Crunching Numbers...' : 'Comparing Averages...'}
-                    </>
-                  ) : (
-                    <><Send size={20} /> Share & Unlock</>
-                  )}
-                </button>
-                <button 
-                  onClick={() => window.umami?.track('Community Stats Skipped')}
-                  className="w-full relative z-50 mt-3 bg-transparent border border-slate-700 hover:bg-slate-800/50 text-slate-400 hover:text-slate-300 font-bold py-4 rounded-xl transition-all flex items-center justify-center text-lg"
-                >
-                  Skip for now
-                </button>
+                <div onPointerDown={(e) => e.stopPropagation()} className="flex flex-col w-full">
+                  <button
+                    onClick={handleUnlock}
+                    disabled={isSubmitting}
+                    className="w-full relative z-50 bg-yellow-600 hover:bg-yellow-500 disabled:opacity-80 text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-yellow-900/20 text-lg hover:scale-[1.02] active:scale-95 touch-manipulation"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 size={20} className="animate-spin" />
+                        {loadingPhase === 1 ? 'Transmitting...' : loadingPhase === 2 ? 'Crunching Numbers...' : 'Comparing Averages...'}
+                      </>
+                    ) : (
+                      <><Send size={20} /> Share & Unlock</>
+                    )}
+                  </button>
+                  <button 
+                    onClick={() => { window.umami?.track('Community Stats Skipped'); if (onSkip) onSkip(); else setHasSharedCommunityStats(true); }}
+                    className="w-full lg:hidden relative z-50 mt-3 bg-transparent border border-slate-700 hover:bg-slate-800/50 text-slate-400 hover:text-slate-300 font-bold py-4 rounded-xl transition-all flex items-center justify-center text-lg touch-manipulation"
+                  >
+                    Skip for now
+                  </button>
+                </div>
               </>
             )}
           </motion.div>

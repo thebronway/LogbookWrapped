@@ -6,8 +6,6 @@ interface Props {
   nameA: string;
   nameB: string;
   gStats: GrowthStats;
-  copyText: string;
-  isDesktop?: boolean;
 }
 
 export const GrowthPage1_Stats: React.FC<Props> = ({ nameA, nameB, gStats }) => {

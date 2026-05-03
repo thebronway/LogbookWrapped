@@ -88,7 +88,7 @@ export const HeroSection = () => {
             style={{ 
               transform: 'translateZ(0)', 
               WebkitTransform: 'translateZ(0)',
-              WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+              WebkitMaskImage: 'radial-gradient(white, black)'
             }}
           >
             {SCREENSHOTS.map((src, index) => (
