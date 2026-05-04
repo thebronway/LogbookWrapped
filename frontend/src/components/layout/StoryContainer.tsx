@@ -23,14 +23,16 @@ interface Props {
 }
 
 export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
-  const { comparisonStats, dateFilter } = useLogbookStore();
+  const { comparisonStats, dateFilter, isSharedView } = useLogbookStore();
 
-  // Community stats submission only makes sense for a single calendar year —
-  // multi-year and custom ranges don't map to the community comparison pool.
+  // Community stats submission only makes sense for a single calendar year
+  // AND only when the viewer owns the data. Shared-view viewers see a
+  // snapshot, so the tollbooth would be meaningless for them.
   const showCommunityPage =
-    dateFilter?.type === 'this_year' ||
-    dateFilter?.type === 'last_year' ||
-    (dateFilter?.type === 'custom' && dateFilter.start?.substring(0, 4) === dateFilter.end?.substring(0, 4));
+    !isSharedView &&
+    (dateFilter?.type === 'this_year' ||
+      dateFilter?.type === 'last_year' ||
+      (dateFilter?.type === 'custom' && dateFilter.start?.substring(0, 4) === dateFilter.end?.substring(0, 4)));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -76,7 +78,14 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   const p8  = <Page8_Stats stats={stats} key="p8" />;
   const p9  = comparisonStats ? <Page9_GrowthHighlights stats={stats} comparisonStats={comparisonStats} key="p9" /> : null;
   const p10 = showCommunityPage ? <Page10_Community stats={stats} key="p10" onSkip={() => setCurrentIndex(prev => prev + 1)} /> : null;
-  const p11 = <Page11_Export stats={stats} key="p11" onOpenExport={() => setIsExportModalOpen(true)} onOpenDonation={() => setIsDonationModalOpen(true)} />;
+  const p11 = (
+    <Page11_Export
+      stats={stats}
+      key="p11"
+      onOpenExport={() => setIsExportModalOpen(true)}
+      onOpenDonation={() => setIsDonationModalOpen(true)}
+    />
+  );
 
   // Mobile: sequential story array
   const pages = [p1, p2, p3, p4, p5, p6, p7, p8, ...(p9 ? [p9] : []), ...(p10 ? [p10] : []), p11];
@@ -104,7 +113,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
   if (isDesktop) {
     return (
       <>
-        {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
+        {isExportModalOpen && <ExportModal items={getExportPages(stats)} stats={stats} onClose={() => setIsExportModalOpen(false)} />}
         {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
         
         <div className="w-full max-w-[1600px] mx-auto py-8 animate-in fade-in duration-500">
@@ -173,7 +182,7 @@ export const StoryContainer: React.FC<Props> = ({ stats, onClose }) => {
 
   return (
     <>
-      {isExportModalOpen && <ExportModal items={getExportPages(stats)} onClose={() => setIsExportModalOpen(false)} />}
+      {isExportModalOpen && <ExportModal items={getExportPages(stats)} stats={stats} onClose={() => setIsExportModalOpen(false)} />}
       {isDonationModalOpen && <DonationModal isOpen={isDonationModalOpen} onClose={() => setIsDonationModalOpen(false)} />}
       
       <div

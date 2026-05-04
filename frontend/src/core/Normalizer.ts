@@ -1,6 +1,20 @@
-import { FlightRecord } from './types';
+import { FlightRecord, ApproachTypeCounts } from './types';
 import { PROFILES } from './EFBProfiles';
 import { AIRCRAFT_PROFILES } from './AircraftProfiles';
+
+// Classify a raw approach description (e.g. "ILS RWY 24", "RNAV (GPS) RWY 01",
+// "VOR/DME-A") into one of the buckets we surface on Page 6. Returns null if
+// no description is present so the caller can skip typed counting.
+const classifyApproachType = (desc: string): keyof ApproachTypeCounts | null => {
+  if (!desc) return null;
+  const d = desc.toUpperCase();
+  if (d.includes('ILS')) return 'ILS';
+  if (d.includes('RNAV') || d.includes('GPS') || d.includes('LPV') || d.includes('LNAV') || d.includes('RNP')) return 'RNAV';
+  if (d.includes('VOR')) return 'VOR';
+  if (d.includes('LOC') || d.includes('LDA') || d.includes('SDF')) return 'LOC';
+  if (d.includes('NDB')) return 'NDB';
+  return 'other';
+};
 
 export const detectEFBProfile = (headers: string[]): { profile: any, name: string } => {
   if (headers.includes('AircraftID') || headers.includes('TypeCode')) 
@@ -128,13 +142,40 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
     let rawAircraftType = row[profile.aircraftType] || tailToTypeMap[aircraftId];
     const aircraftType = standardizeAircraftType(rawAircraftType);
 
-    let totalApproaches = profile.approaches ? (parseInt(row[profile.approaches]) || 0) : 0;
-    if (totalApproaches === 0) {
-      for (let i = 1; i <= 10; i++) {
-        const appCol = row[`Approach${i}`] || row[`Approach ${i}`];
-        if (appCol) totalApproaches += (typeof appCol === 'string' && appCol.includes(';')) ? (parseInt(appCol.split(';')[0]) || 1) : (parseInt(appCol) || 1);
+    // Approach totals + optional per-type breakdown.
+    // ForeFlight exports individual approach columns ("Approach1"..."Approach10")
+    // in the semicolon-delimited format `count;description;runway;airport;;`.
+    // When the description is present we bucket by type; otherwise we just sum
+    // the count and leave approachTypes undefined so the UI hides the chips.
+    let totalApproaches = 0;
+    let approachTypes: ApproachTypeCounts | undefined;
+    let sawTypedApproach = false;
+
+    for (let i = 1; i <= 10; i++) {
+      const appCol = row[`Approach${i}`] || row[`Approach ${i}`];
+      if (!appCol) continue;
+      if (typeof appCol === 'string' && appCol.includes(';')) {
+        const parts = appCol.split(';');
+        const count = parseInt(parts[0]) || 1;
+        const desc = parts[1] || '';
+        totalApproaches += count;
+        const bucket = classifyApproachType(desc);
+        if (bucket) {
+          sawTypedApproach = true;
+          if (!approachTypes) approachTypes = { ILS: 0, RNAV: 0, VOR: 0, LOC: 0, NDB: 0, other: 0 };
+          approachTypes[bucket] += count;
+        }
+      } else {
+        totalApproaches += parseInt(appCol) || 1;
       }
     }
+
+    // Fallback to the single-column approach count (Garmin, MyFlightbook, etc.)
+    // when no per-flight Approach1..N columns were populated.
+    if (totalApproaches === 0 && profile.approaches) {
+      totalApproaches = parseInt(row[profile.approaches]) || 0;
+    }
+    if (!sawTypedApproach) approachTypes = undefined;
 
     return {
       date: row[profile.date] || 'Unknown Date',
@@ -151,6 +192,7 @@ export const normalizeFlightData = (rawRows: any[], preParsedAircraftMap?: Recor
       instrument: parseFloat(row[profile.instrument]) || 0,
       simulated: profile.simulated ? (parseFloat(row[profile.simulated]) || 0) : 0,
       approaches: totalApproaches,
+      approachTypes,
     };
   }).filter(flight => flight.totalTime > 0 && flight.date !== 'Unknown Date');
 };

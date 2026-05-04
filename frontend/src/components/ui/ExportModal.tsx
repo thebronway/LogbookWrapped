@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Share2, Archive, Loader2, Download, AlertCircle } from 'lucide-react';
-import { ExportItem } from '../../core/types';
+import { X, Share2, Archive, Loader2, Download, AlertCircle, Link as LinkIcon } from 'lucide-react';
+import { CalculatedStats, ExportItem } from '../../core/types';
 import { ExportWrapper } from '../layout/ExportWrapper';
 import { generateBlob, downloadZipBundle, shareOrDownloadImage, triggerDownload } from '../../core/ExportEngine';
 import { PreviewCard } from './PreviewCard';
+import { ShareLinkModal } from './ShareLinkModal';
 
 interface Props {
   items: ExportItem[];
   onClose: () => void;
   title?: string;
+  // When provided, a "Share as Link" button appears in the header. Omitted
+  // for flows (e.g. Growth exports) where a linkable snapshot isn't meaningful.
+  stats?: CalculatedStats;
 }
 
-export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export to Social Media" }) => {
+export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Share Your LogbookWrapped", stats }) => {
+  const [isShareLinkOpen, setIsShareLinkOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
   const [loadingText, setLoadingText] = useState('');
@@ -103,8 +108,11 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
 
   return (
     <div className="fixed inset-0 z-[999] overflow-hidden flex flex-col touch-auto animate-in fade-in duration-300" onWheel={handleModalWheel}>
+      {isShareLinkOpen && stats && (
+        <ShareLinkModal stats={stats} onClose={() => setIsShareLinkOpen(false)} />
+      )}
       
-      {/* Off-screen render sandbox — html-to-image needs the DOM nodes to exist */}
+      {/* Off-screen render sandbox: html-to-image needs live DOM nodes */}
       <div className="absolute top-0 left-0 w-[450px] h-[800px] pointer-events-none z-[1] opacity-0 overflow-hidden">
         {items.filter(p => !p.isPoster).map((item, idx) => (
           <React.Fragment key={`sandbox-${idx}`}>
@@ -120,10 +128,29 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
 
       <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-3xl z-[2]" />
       <div className="relative z-[10] flex flex-col h-full w-full p-4 sm:p-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0 gap-4">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{title}</h2>
-          
-          <div className="flex items-center gap-4 w-full sm:w-auto">
+        {/* Mobile: title + close stack on row 1, share/slider/close on row 2.
+            Desktop (sm+): everything inline on one row. */}
+        <div className="w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center justify-between gap-4 w-full sm:w-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{title}</h2>
+            <button onClick={onClose} disabled={isExporting} className="sm:hidden bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shadow-lg shrink-0">
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+            {stats && (
+              <button
+                onClick={() => {
+                  window.umami?.track('Share Link Modal Opened', { source: 'export_modal' });
+                  setIsShareLinkOpen(true);
+                }}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold whitespace-nowrap bg-yellow-400 hover:bg-yellow-300 text-black shadow-lg shadow-yellow-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+              >
+                <LinkIcon size={15} />
+                Share as Link
+              </button>
+            )}
             <div className="flex bg-slate-900 rounded-lg p-1 border border-slate-700 w-full sm:w-auto shadow-inner">
               <button
                 onClick={() => setSelectedFormat('story')}
@@ -138,7 +165,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Export t
                 Post (4:5)
               </button>
             </div>
-            <button onClick={onClose} disabled={isExporting} className="bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shrink-0 ml-auto sm:ml-0 shadow-lg">
+            <button onClick={onClose} disabled={isExporting} className="hidden sm:inline-flex bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shrink-0 shadow-lg">
               <X size={20} />
             </button>
           </div>

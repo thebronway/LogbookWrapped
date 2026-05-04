@@ -16,6 +16,7 @@ import { Export } from './components/pages/Export';
 import { AircraftProfiles } from './components/pages/AircraftProfiles';
 import { NotFound } from './components/pages/NotFound';
 import { ImportWrapped } from './components/pages/ImportWrapped';
+import { SharedView } from './components/pages/SharedView';
 import { Dev } from './components/pages/Dev';
 import { FAQ } from './components/pages/FAQ';
 import { ScrollToTop } from './components/layout/ScrollToTop';
@@ -43,6 +44,7 @@ function App() {
             <Route path="/export" element={<Export />} />
             <Route path="/aircraftprofiles" element={<AircraftProfiles />} />
             <Route path="/mywrapped" element={<ImportWrapped />} />
+            <Route path="/s" element={<SharedView />} />
             <Route path="/dev" element={<Dev />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/upload" element={<Upload />} />

@@ -18,6 +18,19 @@ export interface FlightRecord {
   instrument: number; // Actual IMC
   simulated: number; // Simulated IMC
   approaches: number;
+  // Optional per-type breakdown (populated when the EFB export includes
+  // approach type descriptions, e.g. ForeFlight's "1;ILS RWY 24;24;KXYZ;;").
+  // Undefined when the EFB only gives a raw count (e.g. Garmin Pilot).
+  approachTypes?: ApproachTypeCounts;
+}
+
+export interface ApproachTypeCounts {
+  ILS: number;
+  RNAV: number; // Includes GPS / LPV / LNAV
+  VOR: number;
+  LOC: number; // Localizer / LOC BC
+  NDB: number;
+  other: number;
 }
 
 export interface CalculatedStats {
@@ -40,6 +53,8 @@ export interface CalculatedStats {
   totalSimulated: number;
   totalActualAndSim: number;
   totalApproaches: number;
+  approachBreakdown?: ApproachTypeCounts; // Undefined when no typed data was parsed
+  nightPercent: number; // Share of totalHours flown at night, 0-100
   estimatedFuelBurn: number; // Avg 10 gal/hr assumed for light GA
   hasInternational: boolean;
   mostUsedAirframe: string;

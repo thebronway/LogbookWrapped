@@ -62,7 +62,7 @@ export const About = () => {
             </p>
             <p>
               When you drop your CSV into the app, your browser parses the data locally. 
-              Your raw logbook entries are never shared, uploaded, or sent to any servers. You are always in control of whether you want to anonymously share your high-level totals with the community.
+              Your raw logbook entries are never shared, uploaded, or sent to any servers. You are always in control of whether you want to anonymously share your high-level totals with the community. And if you want to show a friend your Wrapped, the optional <Link to="/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2 transition-colors">shareable link</Link> encodes your stats directly into the URL itself, without ever uploading them.
             </p>
           </div>
         </section>

@@ -20,6 +20,11 @@ export const FAQ = () => {
       answerUI: <>When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically throw away unrealistic data submissions to keep the public averages clean.</>
     },
     {
+      question: "Can I share my LogbookWrapped with someone else?",
+      answerText: "Yes. From the Share screen you can generate a personal link that opens a read-only view of your Wrapped. Your aggregated stats (totals, superlatives, and route coordinates) are compressed and encoded directly into the URL itself, so no data is uploaded to our servers. The feature is opt-in and requires you to confirm a consent screen before the link is created. Anyone you send the URL to can see the snapshot, so share it the same way you'd share any other social-media post.",
+      answerUI: <>Yes. From the Share screen you can generate a personal link that opens a read-only view of your Wrapped. Your aggregated stats (totals, superlatives, and route coordinates) are compressed and encoded <strong>directly into the URL itself</strong>, so no data is uploaded to our servers. The feature is opt-in and requires you to confirm a consent screen before the link is created. Anyone you send the URL to can see the snapshot, so share it the same way you'd share any other social-media post. Read our <Link to="/privacy" className="text-blue-400 hover:text-blue-300 underline underline-offset-2">Privacy Policy</Link> for details.</>
+    },
+    {
       question: "Which electronic flight bags (EFBs) and logbook formats are supported?",
       answerText: "Our parser automatically fuzzy-matches and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.",
       answerUI: <>Our parser automatically fuzzy-matches and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.</>

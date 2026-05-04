@@ -1,12 +1,30 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-05-03* 
-*Current Version: v1.0.4*
+*Current Version: v1.0.5*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.5
+- Page 6 (Elements): Approach type breakdown chips (ILS / RNAV / VOR / LOC / NDB / Other) from ForeFlight typed descriptions
+- Page 6 (Elements): Night flying % sub-line under The Night Owl
+- Page 8 (Stats): Night hours shown as `X Hrs Night (Y%)` when night data is present
+- Page 10 (Community): Percentile badge ("Top X% · More flight time than Y% of 2026 pilots")
+- Page 10 (Community): VS layout swapped to Western reading order (Average on left, You on right); glow colors follow
+- Page 10 (Community): Added `Community Page Viewed` and `Community Stats Error` Umami events for full funnel tracking
+- Shareable hash link (`/s#...`): client-side encoded, no server storage, consent-gated, renders full read-only story carousel with "Create your own" CTA
+- ExportModal: renamed header to **Share Your LogbookWrapped**, added inline yellow **Share as Link** button next to the Story/Post toggle, and reflowed the mobile header so the close (X) sits above the format slider with a full-width share button
+- ShareLinkModal: recolored entirely to the site-standard yellow accent so it reads as a first-class primary action
+- Page 11 & SharedView floating CTA: switched "Create Your Own LogbookWrapped" to yellow for visual consistency with the rest of the app
+- Demo flow: when viewing a demo, Page 11 now swaps its Share/Donate/Growth buttons for the same "Create Your Own" pitch used on shared views, with a dedicated Demo sample footer note
+- Demos page: redesigned the persona cards to show two visually distinct report slots (Yearly Wrapped vs Growth Report) with dedicated colors, eyebrow labels, and short descriptions instead of two near-identical buttons
+- Privacy Policy: added Section 3 "Optional Shareable Link" explaining the client-side hash encoding (nothing uploaded, consent-gated, ~100 m rounded coords)
+- FAQ: added a new "Can I share my LogbookWrapped with someone else?" entry
+- About: added a sentence in "Why Privacy Matters" noting the optional share link also keeps data off our servers
+- Code cleanup: trimmed verbose JSDoc / inline comments across ExportModal, ShareLinkModal, SharedView, Page11_Export, and Demos
 
 ### Release v1.0.4
 - Fixed touch area issues for mobile stories

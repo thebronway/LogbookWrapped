@@ -135,7 +135,29 @@ app.post('/api/stats', statsRateLimiter, validateToken, async (req, res) => {
       [parsedYear, safeSize]
     );
 
-    res.status(200).json({ success: true, averages: avgResult.rows[0] });
+    // Percentile rank on flight_time within the same cohort. Returned as
+    // "top N%" (1 = highest, 100 = lowest). Only meaningful when the cohort
+    // is large enough — below the threshold we return null so the UI hides
+    // the badge rather than showing a misleading "Top 50%" from a pool of 2.
+    const MIN_COHORT = 5;
+    let percentile = null;
+    const submittedHours = Number(flight_time) || 0;
+    const rankResult = await pool.query(
+      `SELECT
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE flight_time > $3)::int AS above
+       FROM community_stats
+       WHERE year = $1 AND dominant_size = $2`,
+      [parsedYear, safeSize, submittedHours]
+    );
+    const { total, above } = rankResult.rows[0];
+    if (total >= MIN_COHORT) {
+      // +1 keeps the pilot themselves out of the denominator offset; clamp [1,100]
+      const raw = ((above + 1) / total) * 100;
+      percentile = Math.max(1, Math.min(100, Math.round(raw)));
+    }
+
+    res.status(200).json({ success: true, averages: avgResult.rows[0], percentile });
   } catch (error) {
     console.error('Stats Insert Error:', error);
     res.status(500).json({ success: false });

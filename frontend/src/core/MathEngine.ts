@@ -1,4 +1,4 @@
-import { FlightRecord, CalculatedStats, AirportDB, GrowthStats, GrowthCategory, LonLat } from './types';
+import { FlightRecord, CalculatedStats, AirportDB, GrowthStats, GrowthCategory, LonLat, ApproachTypeCounts } from './types';
 import { AIRCRAFT_PROFILES } from './AircraftProfiles';
 import { analyzeFlightRoute } from './NavigationEngine';
 import { createMapTracker, processFlightMapData } from './MapBuilder';
@@ -10,7 +10,7 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     uniqueAircraftTypes: 0, uniqueTailNumbers: 0, shortestFlight: 9999,
     shortestFlightDate: '', shortestFlightRoute: '', longestFlight: 0,
     longestFlightRoute: '', longestFlightDate: '', totalLandings: 0, uniqueAirports: 0,
-    totalNight: 0, totalIMC: 0, totalSimulated: 0, totalActualAndSim: 0, totalApproaches: 0, estimatedFuelBurn: 0,
+    totalNight: 0, totalIMC: 0, totalSimulated: 0, totalActualAndSim: 0, totalApproaches: 0, nightPercent: 0, estimatedFuelBurn: 0,
     hasInternational: false, mostUsedAirframe: 'Unknown', mostUsedAirframeCount: 0,
     mostUsedTailNumber: 'Unknown', mostUsedTailNumberCount: 0, favoriteRoute: 'None',
     favoriteRouteCount: 0, mostVisitedState: 'Unknown', mostVisitedStateCount: 0, uniqueStatesCount: 0,
@@ -22,6 +22,12 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   const mapTracker = createMapTracker();
   const supTracker = createSuperlativeTracker();
 
+  // Accumulate per-type approach counts only when at least one flight supplied
+  // typed data; otherwise leave stats.approachBreakdown undefined so the UI
+  // chips hide.
+  const approachBreakdown: ApproachTypeCounts = { ILS: 0, RNAV: 0, VOR: 0, LOC: 0, NDB: 0, other: 0 };
+  let sawTypedApproach = false;
+
   flights.forEach(f => {
     stats.totalHours += f.totalTime;
     stats.totalLandings += f.landings;
@@ -29,6 +35,16 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     stats.totalIMC += f.instrument;
     stats.totalSimulated += f.simulated;
     stats.totalApproaches += f.approaches || 0;
+
+    if (f.approachTypes) {
+      sawTypedApproach = true;
+      approachBreakdown.ILS += f.approachTypes.ILS;
+      approachBreakdown.RNAV += f.approachTypes.RNAV;
+      approachBreakdown.VOR += f.approachTypes.VOR;
+      approachBreakdown.LOC += f.approachTypes.LOC;
+      approachBreakdown.NDB += f.approachTypes.NDB;
+      approachBreakdown.other += f.approachTypes.other;
+    }
 
     const profile = AIRCRAFT_PROFILES[f.aircraftType.toUpperCase()] || AIRCRAFT_PROFILES['UNKNOWN'];
     stats.estimatedFuelBurn += (f.totalTime * profile.gph);
@@ -119,6 +135,10 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
   // Round accumulated floats to avoid IEEE 754 artifacts (e.g. 1.2000000000001)
   stats.totalHours = Number(stats.totalHours.toFixed(1));
   stats.totalNight = Number(stats.totalNight.toFixed(1));
+  stats.nightPercent = stats.totalHours > 0
+    ? Number(((stats.totalNight / stats.totalHours) * 100).toFixed(0))
+    : 0;
+  if (sawTypedApproach) stats.approachBreakdown = approachBreakdown;
   stats.totalIMC = Number(stats.totalIMC.toFixed(1));
   stats.totalSimulated = Number(stats.totalSimulated.toFixed(1));
   stats.totalActualAndSim = Number((stats.totalIMC + stats.totalSimulated).toFixed(1));

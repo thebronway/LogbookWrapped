@@ -25,7 +25,18 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
   const isLongTitle = titlePrefix.length > 20;
 
   let statRows = [
-    { type: 'single', label: 'Total Time', value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`, sub: [`${stats.averageFlightTime} Hrs/Flight`, `${stats.totalNight} Hrs Night`] },
+    {
+      type: 'single',
+      label: 'Total Time',
+      value: `${stats.totalHours} Hour${stats.totalHours === 1 ? '' : 's'}`,
+      // Append a "X% night" sub only when there's night data to report
+      sub: [
+        `${stats.averageFlightTime} Hrs/Flight`,
+        stats.totalNight > 0 && stats.nightPercent > 0
+          ? `${stats.totalNight} Hrs Night (${stats.nightPercent}%)`
+          : `${stats.totalNight} Hrs Night`,
+      ],
+    },
     { type: 'single', label: 'Total Flights', value: `${stats.totalFlights} Flights`, sub: [`${stats.flightsPerMonth} Flights/Month`, `Busiest: ${stats.busiestMonth}`] },
     { type: 'single', label: 'Distance Flown', value: `${stats.totalDistanceNm?.toLocaleString()} NM` },
     { type: 'single', label: 'Landings', value: `${stats.totalLandings} Landings`, sub: `${stats.totalApproaches} Approach${stats.totalApproaches === 1 ? '' : 'es'}` },

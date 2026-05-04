@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { ShieldCheck, BarChart3, Github, Lock, Trash2, Mail } from 'lucide-react';
+import { ShieldCheck, BarChart3, Github, Lock, Trash2, Mail, Link as LinkIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -26,7 +26,7 @@ export const Privacy = () => {
             Privacy-First Architecture
           </div>
         </div>
-        <p className="text-slate-400">Last Updated: May 1, 2026</p>
+        <p className="text-slate-400">Last Updated: May 3, 2026</p>
       </header>
 
       <div className="space-y-8">
@@ -56,11 +56,21 @@ export const Privacy = () => {
           </p>
         </section>
 
+        <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+          <div className="flex items-center gap-3 mb-4">
+            <LinkIcon className="text-yellow-400" size={24} />
+            <h2 className="text-xl font-semibold text-white">3. Optional Shareable Link</h2>
+          </div>
+          <p className="text-sm leading-relaxed text-slate-400">
+            From the Share screen you can generate a personal URL (of the form <code className="text-yellow-300">/s#...</code>) that opens a read-only view of your Wrapped. The feature is <strong>opt-in</strong> and requires you to confirm a consent screen before the link is created. Your aggregated stats (totals, superlatives, and route map coordinates rounded to ~100&nbsp;m precision) are compressed and encoded <strong>directly into the URL hash fragment</strong>. Because browsers never transmit the fragment to servers, <strong>no data is uploaded to us</strong> when you generate or open a share link. Anyone you give the URL to can see the snapshot, so treat it like any other social-media post.
+          </p>
+        </section>
+
         <div className="grid gap-6 md:grid-cols-2">
           {/* Analytics */}
           <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
             <BarChart3 className="text-purple-400 mb-4" size={24} />
-            <h2 className="text-xl font-semibold text-white mb-2">3. Telemetry & Analytics</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">4. Telemetry & Analytics</h2>
             <p className="text-sm leading-relaxed text-slate-400">
               We use privacy-friendly web analytics to track general site visits. Additionally, when a logbook is successfully parsed locally, we record an anonymous telemetry ping containing the EFB software format used (e.g., ForeFlight). These metrics cannot be tied back to your identity.
             </p>
@@ -69,7 +79,7 @@ export const Privacy = () => {
           {/* Data Retention */}
           <section className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
             <Trash2 className="text-orange-400 mb-4" size={24} />
-            <h2 className="text-xl font-semibold text-white mb-2">4. Data Retention</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">5. Data Retention</h2>
             <p className="text-sm leading-relaxed text-slate-400">
               Because we have no backend database for user logs, our data retention policy for your logbook is simple: <strong>Zero</strong>. The moment you close your browser, all processed logbook data is permanently erased from memory.
             </p>

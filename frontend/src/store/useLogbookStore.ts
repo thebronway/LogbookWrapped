@@ -44,11 +44,18 @@ export interface CommunityAverages {
   night_hours: string | number;
 }
 
+// Percentile rank in the same year + size bucket, expressed as
+// "Top X% of pilots by flight_time" (1 = best, 100 = worst). Null when the
+// pool is too small (< 5 contributors) to be meaningful.
+export type CommunityPercentile = number | null;
+
 interface LogbookState {
   hasSharedCommunityStats: boolean;
   setHasSharedCommunityStats: (val: boolean) => void;
   communityAverages: CommunityAverages | null;
   setCommunityAverages: (avgs: CommunityAverages | null) => void;
+  communityPercentile: CommunityPercentile;
+  setCommunityPercentile: (pct: CommunityPercentile) => void;
   datasets: LogbookDataset[];
   rawFlights: FlightRecord[];
   flights: FlightRecord[];
@@ -60,10 +67,16 @@ interface LogbookState {
   dateFilter: DateFilter;
   isDemo: boolean;
   setIsDemo: (val: boolean) => void;
+  // True when the current session was hydrated from a /s#... share link. In
+  // shared view we hide the community tollbooth, the export modal, and any
+  // CTA that would require the viewer's own logbook.
+  isSharedView: boolean;
   setDateFilter: (filter: DateFilter) => void;
   processFiles: (files: File[], bypassConfig?: boolean) => Promise<void>;
   resetStore: () => void;
   applyFilterAndCalculate: () => void;
+  /** Hydrate the store from a decoded CalculatedStats (shared-link viewer). */
+  hydrateFromShared: (stats: CalculatedStats) => void;
 }
 
 export const useLogbookStore = create<LogbookState>((set, get) => ({
@@ -77,11 +90,14 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
   errorMessage: null,
   dateFilter: { type: 'this_year' },
   isDemo: false,
+  isSharedView: false,
   hasSharedCommunityStats: false,
   communityAverages: null,
+  communityPercentile: null,
 
   setCommunityAverages: (avgs) => set({ communityAverages: avgs }),
   setHasSharedCommunityStats: (val) => set({ hasSharedCommunityStats: val }),
+  setCommunityPercentile: (pct) => set({ communityPercentile: pct }),
   setIsDemo: (val) => set({ 
     isDemo: val,
     hasSharedCommunityStats: val,
@@ -91,7 +107,8 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
       distance: 12500,
       landings: 154,
       night_hours: 18.2
-    } : null 
+    } : null,
+    communityPercentile: val ? 18 : null,
   }),
 
   setDateFilter: (filter) => {
@@ -274,5 +291,26 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     }
   },
 
-  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, comparisonStats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' }, isDemo: false, hasSharedCommunityStats: false, communityAverages: null })
+  hydrateFromShared: (sharedStats) => {
+    // Mirror the shape processFiles would have produced so downstream pages
+    // render identically. We skip the dataset/rawFlights plumbing because a
+    // viewer never re-filters the data; they see the sender's snapshot.
+    set({
+      datasets: [],
+      rawFlights: [],
+      flights: [],
+      stats: sharedStats,
+      comparisonStats: null,
+      status: 'success',
+      errorMessage: null,
+      isDemo: false,
+      isSharedView: true,
+      // A shared link already represents a chosen window, so the community
+      // card is meaningless, so suppress it by marking "already shared" locally.
+      hasSharedCommunityStats: true,
+      communityAverages: null,
+      communityPercentile: null,
+    });
+  },
+  resetStore: () => set({ datasets: [], rawFlights: [], flights: [], stats: null, comparisonStats: null, status: 'idle', errorMessage: null, dateFilter: { type: 'this_year' }, isDemo: false, isSharedView: false, hasSharedCommunityStats: false, communityAverages: null, communityPercentile: null })
 }));

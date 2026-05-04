@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v1.0.4-blue.svg)
+![Version](https://img.shields.io/badge/version-v1.0.5-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -49,6 +49,7 @@
 * **Fleet Diversity:** Analytical breakdown of used airframes, unique tail numbers, and aircraft normalization.
 * **Aviation Extremes:** Automatic identification of favorite routes, shortest flights, and longest distances.
 * **Community Averages:** Opt-in to share anonymous, high-level totals (hours, landings, flights) to see how you stack up against the global pilot community.
+* **Shareable Link:** Opt-in `/s#...` URL that encodes a read-only snapshot of your stats directly into the link. No server storage, no accounts, nothing uploaded.
 * **Methodology-Driven Logic:** Transparent [parsing methodology](https://logbookwrapped.com/logbook) and [supported aircraft profiles](https://logbookwrapped.com/aircraftprofiles).
 * **Privacy-First:** 100% client-side parsing. Your raw logbook entries never touch a server. Read our [privacy policy](https://logbookwrapped.com/privacy).
 * **Smart Mapping:** Normalization engine that auto-detects EFB providers and cleans aircraft inputs.

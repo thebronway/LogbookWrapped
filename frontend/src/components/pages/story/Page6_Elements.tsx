@@ -28,13 +28,29 @@ export const Page6_Elements: React.FC<Props> = ({ stats, exportFormat = 'story' 
           <p className="text-cyan-500 text-sm font-bold uppercase tracking-widest mb-1">The Night Owl</p>
           <p className="text-3xl font-bold mb-1"><AnimatedCounter value={stats.totalNight} decimals={1} /> Hours</p>
           <p className="text-cyan-200/50 text-sm font-mono mb-2">{nightCopy}</p>
+          {stats.totalNight > 0 && stats.nightPercent > 0 && (
+            <p className="text-cyan-200/50 text-sm font-mono">{stats.nightPercent}% of your total flight time.</p>
+          )}
         </motion.div>
         
         <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-cyan-400 text-sm font-bold uppercase tracking-widest mb-1">In The Clouds</p>
           <p className="text-3xl font-bold mb-1"><AnimatedCounter value={stats.totalIMC} decimals={1} /> Hours Actual</p>
           <p className="text-sky-200/50 text-sm font-mono">{stats.totalSimulated} Hours Simulated</p>
-          <p className="text-sky-200/50 text-sm font-mono mb-2">{stats.totalApproaches} IFR Approaches</p>
+          {stats.totalApproaches > 0 && (
+            <p className="text-sky-200/50 text-sm font-mono mb-2">{stats.totalApproaches} IFR Approach{stats.totalApproaches === 1 ? '' : 'es'}</p>
+          )}
+          {stats.totalApproaches > 0 && stats.approachBreakdown && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {(['ILS', 'RNAV', 'VOR', 'LOC', 'NDB', 'other'] as const)
+                .filter(k => (stats.approachBreakdown as any)[k] > 0)
+                .map(k => (
+                  <span key={k} className="px-2 py-0.5 rounded-full bg-cyan-900/40 border border-cyan-800/50 text-cyan-200/80 text-[10px] font-mono uppercase tracking-wider">
+                    {k === 'other' ? 'Other' : k} · {(stats.approachBreakdown as any)[k]}
+                  </span>
+                ))}
+            </div>
+          )}
         </motion.div>
 
         <motion.div 

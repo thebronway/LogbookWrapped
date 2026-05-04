@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, ShieldCheck, CheckCircle2, Loader2 } from 'lucide-react';
 import { CalculatedStats } from '../../../core/types';
@@ -16,11 +16,22 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
   // `exportFormat` prop is still accepted via the Props interface for API
   // compatibility with other pages, but it's no longer needed here — the
   // flex-1 + pb-10 pattern handles both story and post canvases uniformly.
-  const { communityAverages, setCommunityAverages, dateFilter, hasSharedCommunityStats, setHasSharedCommunityStats } = useLogbookStore();
+  const { communityAverages, setCommunityAverages, communityPercentile, setCommunityPercentile, dateFilter, hasSharedCommunityStats, setHasSharedCommunityStats } = useLogbookStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loadingPhase, setLoadingPhase] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  // Fire a one-time view event when the locked tollbooth is actually shown
+  // to a human (not during PNG export, not if the user already shared in a
+  // previous session). This gives us a denominator for the share/skip/ignore
+  // funnel — without it we can't tell how many users silently navigated past.
+  useEffect(() => {
+    if (!isExportMode && !hasSharedCommunityStats) {
+      window.umami?.track('Community Page Viewed');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   let yearStr = new Date().getFullYear().toString();
   if (dateFilter.type === 'last_year') yearStr = (new Date().getFullYear() - 1).toString();
@@ -72,13 +83,20 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
       await new Promise(resolve => setTimeout(resolve, 1000 + Math.floor(Math.random() * 500)));
 
       if (data.averages) setCommunityAverages(data.averages);
+      // Backend returns null when the cohort is too small (<5 contributors);
+      // the UI badge below checks for non-null before rendering.
+      if (typeof data.percentile === 'number' || data.percentile === null) {
+        setCommunityPercentile(data.percentile);
+      }
 
       setSuccess(true);
       setLoadingPhase(0);
       setTimeout(() => setHasSharedCommunityStats(true), 1000);
 
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Couldn't reach server. Try again or skip.");
+      const message = err instanceof Error ? err.message : "Couldn't reach server. Try again or skip.";
+      window.umami?.track('Community Stats Error', { message: message.substring(0, 120) });
+      setError(message);
       setIsSubmitting(false);
       setLoadingPhase(0);
     }
@@ -103,8 +121,11 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
         transition={{ delay }}
         className="flex justify-between items-center flex-1 min-h-0 py-1 border-b border-white/5 last:border-0"
       >
-        <div className="text-center w-1/3 font-black text-xl text-yellow-400 leading-tight">
-          {myFormatted}
+        {/* Left: community average (baseline) — Western reading order puts
+            the reference point first so the user's own number lands last as
+            the reveal. Color identity stays locked to the column. */}
+        <div className="text-center w-1/3 font-black text-xl text-emerald-400 leading-tight">
+          {commFormatted}
           <span className="text-[10px] font-normal opacity-70 tracking-normal block">{unit || '\u00A0'}</span>
         </div>
 
@@ -121,8 +142,9 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
           )}
         </div>
 
-        <div className="text-center w-1/3 font-black text-xl text-emerald-400 leading-tight">
-          {commFormatted}
+        {/* Right: the pilot's own number — reveal position */}
+        <div className="text-center w-1/3 font-black text-xl text-yellow-400 leading-tight">
+          {myFormatted}
           <span className="text-[10px] font-normal opacity-70 tracking-normal block">{unit || '\u00A0'}</span>
         </div>
       </motion.div>
@@ -231,6 +253,12 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
               <h1 className="text-2xl font-black text-yellow-400 tracking-tight leading-tight">
                 My {yearStr} LogbookWrapped <br /> <span className="text-emerald-400">VS The Community.</span>
               </h1>
+              {communityPercentile !== null && communityPercentile !== undefined && (
+                <span className="px-2.5 py-0.5 rounded-full bg-yellow-500/15 border border-yellow-500/40 text-yellow-300 text-[11px] font-bold tracking-wide">
+                  <span className="uppercase tracking-widest">Top {communityPercentile}%</span>
+                  <span className="opacity-70 normal-case"> · More flight time than {100 - communityPercentile}% of {yearStr} pilots</span>
+                </span>
+              )}
             </div>
 
             {/* Outer card — flex-1 min-h-0 so it fills remaining vertical space on any canvas */}
@@ -240,18 +268,20 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
             >
               <div className="flex justify-between items-center mb-4 shrink-0 relative">
                 <div className="text-center flex-1 z-10 w-1/3">
-                  <h2 className="text-2xl font-black text-yellow-400 truncate">You</h2>
-                </div>
-                <div className="text-slate-600 font-black text-xl italic z-10 w-1/3 text-center">VS</div>
-                <div className="text-center flex-1 z-10 w-1/3">
                   <h2 className="text-2xl font-black text-emerald-400 truncate">
                     <span className="hidden sm:inline">Average</span>
                     <span className="inline sm:hidden">Avg</span>
                   </h2>
                 </div>
+                <div className="text-slate-600 font-black text-xl italic z-10 w-1/3 text-center">VS</div>
+                <div className="text-center flex-1 z-10 w-1/3">
+                  <h2 className="text-2xl font-black text-yellow-400 truncate">You</h2>
+                </div>
 
-                <div className="absolute -left-10 -top-10 w-40 h-40 bg-yellow-500/20 rounded-full blur-3xl -z-10" />
-                <div className="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -z-10" />
+                {/* Decorative blur glows — swapped to match the new column
+                    order (emerald on left / yellow on right). */}
+                <div className="absolute -left-10 -top-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl -z-10" />
+                <div className="absolute -right-10 -top-10 w-40 h-40 bg-yellow-500/20 rounded-full blur-3xl -z-10" />
               </div>
 
               {/* Stat rows — flex-1 min-h-0 so the 5 rows share available height evenly */}

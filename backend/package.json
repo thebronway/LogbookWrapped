@@ -1,6 +1,6 @@
 {
   "name": "logbookwrapped-backend",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "LogbookWrapped Backend",
   "main": "src/server.js",
   "type": "module",
