@@ -133,7 +133,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Share Yo
         <div className="w-full max-w-6xl mx-auto mb-6 sm:mb-8 mt-4 sm:mt-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center justify-between gap-4 w-full sm:w-auto">
             <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{title}</h2>
-            <button onClick={onClose} disabled={isExporting} className="sm:hidden bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shadow-lg shrink-0">
+            <button onClick={onClose} disabled={isExporting} className="sm:hidden bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shadow-lg shrink-0 border border-yellow-400/30 hover:border-yellow-400/60">
               <X size={20} />
             </button>
           </div>
@@ -165,7 +165,7 @@ export const ExportModal: React.FC<Props> = ({ items, onClose, title = "Share Yo
                 Post (4:5)
               </button>
             </div>
-            <button onClick={onClose} disabled={isExporting} className="hidden sm:inline-flex bg-slate-800 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shrink-0 shadow-lg">
+            <button onClick={onClose} disabled={isExporting} className="hidden sm:inline-flex bg-slate-800/80 hover:bg-slate-700 p-2.5 rounded-full text-white transition-all disabled:opacity-50 shrink-0 shadow-lg border border-yellow-400/30 hover:border-yellow-400/60">
               <X size={20} />
             </button>
           </div>

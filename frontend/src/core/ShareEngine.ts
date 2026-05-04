@@ -1,23 +1,5 @@
 import { CalculatedStats } from './types';
 
-/**
- * v1.0.5 shareable link: client-side encoded snapshot of CalculatedStats.
- *
- * The URL is of the form:   /s#v1.<base64url-compressed-json>
- *
- * Nothing touches the server. The recipient's browser decompresses the hash
- * and hydrates the store for a read-only viewer mode.
- *
- * Size strategy:
- *   - mapData.nodes / edges are stored as [lon, lat] number pairs which are
- *     the bulk of the payload. We round them to 3 decimal places (≈110 m
- *     precision, plenty for a zoomed-out route map) before encoding.
- *   - Everything else in CalculatedStats is tiny (~40 fields of numbers /
- *     short strings) so we don't pre-process it.
- *   - DecompressionStream / CompressionStream are native in all modern
- *     browsers; no third-party compression dep needed.
- */
-
 const VERSION = 'v1';
 
 /** Round a coordinate pair to 3 decimals (≈110 m) in place-returning form. */
@@ -67,10 +49,6 @@ const pipeThrough = async (input: Uint8Array, stream: TransformStream): Promise<
   return new Uint8Array(await compressedBlob.arrayBuffer());
 };
 
-/**
- * Encode a CalculatedStats object into a URL hash fragment suitable for
- * pasting after `/s#`. Returns the fragment WITHOUT the leading `#`.
- */
 export const encodeStatsToHash = async (stats: CalculatedStats): Promise<string> => {
   const json = JSON.stringify(slimStats(stats));
   const raw = new TextEncoder().encode(json);
@@ -78,11 +56,6 @@ export const encodeStatsToHash = async (stats: CalculatedStats): Promise<string>
   return `${VERSION}.${toBase64Url(compressed)}`;
 };
 
-/**
- * Decode a hash fragment (with or without a leading `#`) back into a
- * CalculatedStats object. Throws on corrupt / wrong-version input; callers
- * should wrap in try/catch and show a user-friendly error.
- */
 export const decodeHashToStats = async (hash: string): Promise<CalculatedStats> => {
   const clean = hash.startsWith('#') ? hash.slice(1) : hash;
   const dot = clean.indexOf('.');

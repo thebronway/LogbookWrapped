@@ -1,12 +1,19 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-05-03* 
-*Current Version: v1.0.5*
+*Current Version: v1.0.6*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.6
+- ShareLinkModal: title, icon badge, "What's in the link" heading, and ✓ checkmarks recolored to green; Generate button stays yellow
+- ShareLinkModal: fixed background scroll-through when opened from ExportModal
+- ShareLinkModal: added framer-motion scale+fade card entrance animation
+- DonationModal: refactored from full-screen takeover to a centered card overlay with backdrop, scroll lock, and scroll stop propagation
+- ExportModal, ShareLinkModal, DonationModal: X buttons now use yellow border accent consistent with the story close button
 
 ### Release v1.0.5
 - Page 6 (Elements): Approach type breakdown chips (ILS / RNAV / VOR / LOC / NDB / Other) from ForeFlight typed descriptions

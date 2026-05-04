@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { X, Link as LinkIcon, ShieldCheck, Copy, Check, Loader2, AlertCircle, Share2 } from 'lucide-react';
 import { CalculatedStats } from '../../core/types';
 import { encodeStatsToHash, buildShareUrl } from '../../core/ShareEngine';
@@ -8,11 +9,6 @@ interface Props {
   onClose: () => void;
 }
 
-/**
- * Client-side share-link modal. Two-phase flow:
- *   consent → generating → (ready | error)
- * No data leaves the browser. The hash is produced and pasted locally.
- */
 export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
   const [phase, setPhase] = useState<'consent' | 'generating' | 'ready' | 'error'>('consent');
   const [shareUrl, setShareUrl] = useState<string>('');
@@ -68,13 +64,19 @@ export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 animate-in fade-in duration-200" onWheel={(e) => e.stopPropagation()}>
       <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xl" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-7">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="relative z-10 w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-7"
+      >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 bg-slate-800 hover:bg-slate-700 p-2 rounded-full text-white/70 hover:text-white transition-all"
+          className="absolute top-3 right-3 bg-slate-800/80 hover:bg-slate-700 p-2 rounded-full text-white/70 hover:text-white transition-all border border-yellow-400/30 hover:border-yellow-400/60"
           aria-label="Close"
         >
           <X size={18} />
@@ -83,26 +85,25 @@ export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
         {phase === 'consent' && (
           <>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 bg-yellow-400/15 border border-yellow-400/40 rounded-xl">
-                <LinkIcon size={20} className="text-yellow-400" />
+              <div className="p-2.5 bg-green-400/15 border border-green-400/40 rounded-xl">
+                <LinkIcon size={20} className="text-green-400" />
               </div>
-              <h2 className="text-xl font-black text-white">Generate Share Link</h2>
+              <h2 className="text-xl font-black text-green-400">Generate Shareable Link</h2>
             </div>
 
             <p className="text-slate-400 text-sm leading-relaxed mb-5">
               Create a personal URL anyone can open to see your Wrapped in read-only mode.
-              <strong className="text-white"> Nothing is uploaded to our servers</strong>. The stats
-              are encoded directly into the link itself.
+              <strong className="text-white"> Nothing is uploaded to our servers</strong>. The stats are encoded directly into the link itself.
             </p>
 
             <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-4 mb-5">
-              <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
-                <ShieldCheck size={13} className="text-yellow-400" /> What's in the link
+              <h3 className="text-[11px] font-bold text-green-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <ShieldCheck size={13} className="text-green-400" /> What's in the link
               </h3>
               <ul className="text-xs text-slate-400 space-y-1.5">
-                <li className="flex gap-2"><span className="text-yellow-400">✓</span> Your aggregated totals (hours, flights, landings, distance)</li>
-                <li className="flex gap-2"><span className="text-yellow-400">✓</span> Top-level superlatives (favorite route, most-used airframe)</li>
-                <li className="flex gap-2"><span className="text-yellow-400">✓</span> Route map coordinates (rounded to ~100 m precision)</li>
+                <li className="flex gap-2"><span className="text-green-400">✓</span> Your aggregated totals (hours, flights, landings, distance)</li>
+                <li className="flex gap-2"><span className="text-green-400">✓</span> Top-level superlatives (favorite route, most-used airframe)</li>
+                <li className="flex gap-2"><span className="text-green-400">✓</span> Route map coordinates (rounded to ~100 m precision)</li>
                 <li className="flex gap-2"><span className="text-rose-500">✗</span> No individual flight records</li>
                 <li className="flex gap-2"><span className="text-rose-500">✗</span> No tail numbers or aircraft IDs</li>
                 <li className="flex gap-2"><span className="text-rose-500">✗</span> No name, email, or personal identifiers</li>
@@ -151,8 +152,8 @@ export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
         {phase === 'ready' && (
           <>
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2.5 bg-yellow-400/15 border border-yellow-400/40 rounded-xl">
-                <Check size={20} className="text-yellow-400" />
+              <div className="p-2.5 bg-green-400/15 border border-green-400/40 rounded-xl">
+                <Check size={20} className="text-green-400" />
               </div>
               <h2 className="text-xl font-black text-white">Your link is ready</h2>
             </div>
@@ -169,7 +170,7 @@ export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={handleCopy}
-                className={`py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${copied ? 'bg-yellow-400 text-black shadow-lg shadow-yellow-500/20' : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'}`}
+                className={`py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${copied ? 'bg-green-400 text-black shadow-lg shadow-green-500/20' : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'}`}
               >
                 {copied ? <><Check size={16} /> Copied!</> : <><Copy size={16} /> Copy Link</>}
               </button>
@@ -191,7 +192,7 @@ export const ShareLinkModal: React.FC<Props> = ({ stats, onClose }) => {
             </div>
           </>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
