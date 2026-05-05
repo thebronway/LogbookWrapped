@@ -17,6 +17,8 @@ export const Page8_Stats: React.FC<Props> = ({ stats, isExportMode, exportFormat
   else if (dateFilter?.type === 'last_year') titlePrefix = `My ${new Date().getFullYear() - 1} LogbookWrapped`;
   else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0,4) === dateFilter.end.substring(0,4)) {
     titlePrefix = `My ${dateFilter.start.substring(0, 4)} LogbookWrapped`;
+  } else if (dateFilter?.type === 'custom') {
+    titlePrefix = 'My LogbookWrapped';
   } else if (dateFilter?.type === 'milestone') {
     const label = dateFilter.label || '';
     const acronymMap: Record<string, string> = { 'Private Pilot License': 'PPL', 'Instrument Rating': 'IFR', 'Commercial Pilot License': 'CPL', 'Multi-Engine Rating': 'Multi-Engine', 'First Solo': 'First Solo' };

@@ -16,8 +16,8 @@ export const FAQ = () => {
     },
     {
       question: "How do the Community Averages work?",
-      answerText: "When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically throw away unrealistic data submissions to keep the public averages clean.",
-      answerUI: <>When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically throw away unrealistic data submissions to keep the public averages clean.</>
+      answerText: "When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically discard unrealistic data submissions to keep the public averages clean.",
+      answerUI: <>When generating an annual wrapped, you can choose to unlock the Community Comparison feature. If you explicitly opt in, we securely record just your anonymous high-level totals (hours, landings, flights) grouped by aircraft size. Our backend spam filters automatically discard unrealistic data submissions to keep the public averages clean.</>
     },
     {
       question: "Can I share my LogbookWrapped with someone else?",
@@ -26,8 +26,8 @@ export const FAQ = () => {
     },
     {
       question: "Which electronic flight bags (EFBs) and logbook formats are supported?",
-      answerText: "Our parser automatically fuzzy-matches and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.",
-      answerUI: <>Our parser automatically fuzzy-matches and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.</>
+      answerText: "Our parser automatically recognizes and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.",
+      answerUI: <>Our parser automatically recognizes and supports standard CSV exports from major EFBs including ForeFlight, Garmin Pilot, MyFlightbook, and LogTen Pro.</>
     },
     {
       question: "How does the app handle missing data in my logbook?",

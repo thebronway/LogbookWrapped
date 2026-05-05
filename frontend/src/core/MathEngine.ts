@@ -72,7 +72,9 @@ export const calculateStats = (flights: FlightRecord[], airportDB: AirportDB): C
     supTracker.tailNumbers.add(f.aircraftId);
     supTracker.aircraftTypeCounts[f.aircraftType] = (supTracker.aircraftTypeCounts[f.aircraftType] || 0) + 1;
     supTracker.tailNumberCounts[f.aircraftId] = (supTracker.tailNumberCounts[f.aircraftId] || 0) + 1;
-    supTracker.destLandings[f.destination.toUpperCase()] = (supTracker.destLandings[f.destination.toUpperCase()] || 0) + (f.landings || 0);
+    const _destEntry = airportDB[f.destination.toUpperCase()];
+    const _destKey = _destEntry ? (_destEntry[2] || f.destination.toUpperCase()) : f.destination.toUpperCase();
+    supTracker.destLandings[_destKey] = (supTracker.destLandings[_destKey] || 0) + (f.landings || 0);
     
     if (f.departure && f.destination) {
       const routeStr = `${f.departure} to ${f.destination}`;

@@ -1,7 +1,7 @@
 # Logbook Wrapped
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Version](https://img.shields.io/badge/version-v1.0.6-blue.svg)
+![Version](https://img.shields.io/badge/version-v1.0.7-blue.svg)
 ![Privacy](https://img.shields.io/badge/privacy-100%25_client--side-green.svg)
 
 ### A privacy-first web app that transforms EFB logbook exports into shareable aviation stories.
@@ -10,8 +10,10 @@
 
 > **Note:** Logbook parsing happens entirely in your web browser. Your raw flight logs are never sent to a server. You can optionally choose to share anonymous, high-level totals to unlock community averages.
 
-## Try it yourself: [Live Site](https://logbookwrapped.com/)
-**GitHub:** [thebronway/LogbookWrapped](https://github.com/thebronway/LogbookWrapped)  
+### Links
+* **Visit the  Site:** [LogbookWrapped.com](https://logbookwrapped.com/)
+* **View a** [2026 LogbookWrapped Demo](https://logbookwrapped.com/s#v1.H4sIAAAAAAAAE41WS2_jKhj9KxVrhhowxniXtKqmczNp1fZ2E2VBE5JYk5hcG3c0GvW_X2Eg8SPT8cry8cf53gf_BkYbuf-q67ICGaEYJdBBd_t8uzMVyDCJINjpg5rKSoEM_PPwNAPe6DavjCxWan4AGRZRFEFQF_l_tZrk5aqUG_Py66gsccBfZL6f14c3VTq02unSqMo4byCLEOuDt9JYt-Sa0GuSgP7nJ12bENaV0Vc-vL0uti3exIbWwcac867xNeHOdZP0TBbrvNg2peGthI-6tPUizNvNnes4QalH7r_fgIzEiPj35_xQ76VRa5Bx6rHJytRyPynWz_kBZIKfjCfHY6nlamfrKSIICkv_qMqVKgzIbJNUZfKDpbur1X5alwXISEqpLelOVveFUWUhTa4LuQfZRu4rBcFBV-bfSq0nebkp5cGm-zghKRh-udF10VTy_OncTZCBOSZ0MgWXvraObuS7LnOj_lD-zmd_rBlAS_qaV7lR62fj2nI3A0Pcn6FJHDrTwFXAIZDvqpRb5Tr8ktuUMRIQbNzAP6ryuy7MDmQ4guCtrnJVGY-Ab3WhrkjUzEJYid44yJXJ31VzoIEgOMjjrTQSZL9Bode2fYvFlxQjSikkKWJxsoSLL2mEaJJCwlEsWANgFDEBiUA4pR4gkBKECW9eCWKWgSPBkwCw2AL0xJBGwvpISWCIKbcAEf4E4cS6SNx7jCiLIY1QHGEfVCQSSBKU-BgIIiRuguIOoIhwbo_wlPgjSYytDxwFgIsmCoZdWAzFDFKMKMGek9tEbSIhs4RwC_AkJEIosxScxx6gAlsOzJyTBFER2-pQHzlGQmAbuSD-nXNm3zGjPqzYlo-hJE49gHlzAgu-XEKg1lvXrL92awkXlxvYOuRsBjydJgebQd8v8Px5NoJFZ1jGxNIZKGfz-YydbPpjN_A14BkZT9_Xhfq1RjzYDKZ-TB_OmxFMursyLuLzPoXEP9kwZzJYujGeOosZ5q-3qyMjPu_zKeTuio_h6ciAsxkow7i8WuoR8uoJyjielugEnp4OXZzTXu5trXImffUaV-WWwgVPPdEbx9MSxsAz0MoBzwVJHqjXhY1oae5JUwYyPIz5M6k--eqq95jcOwrvbC6I_phNP18MwaR_VYxhaV0nwaZ3w4yb09YtFLrVu5jG8XQur0UfGvIsIXjTdbG2V5wrJRWCO79cQKcnjInEFThiIl2e_3putC790Q7tBwTS_6hOSyV_rPXPwv753M-eQRZB8DSfvLr_19eHpwaZPdw0z_nttHlqs7P_k9HHx_-ylGRanQwAAA)
+* **GitHub:** [thebronway/LogbookWrapped](https://github.com/thebronway/LogbookWrapped)
 
 ## Screenshots
 

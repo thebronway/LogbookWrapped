@@ -26,10 +26,25 @@ export const Contact = () => {
         <title>Contact Us | LogbookWrapped</title>
         <meta name="description" content="Get in touch with the LogbookWrapped team for feedback, bug reports, or to request a new EFB export format. We're here to help pilots tell their stories." />
         <link rel="canonical" href="https://logbookwrapped.com/contact" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ContactPage",
+            "name": "Contact LogbookWrapped",
+            "url": "https://logbookwrapped.com/contact",
+            "mainEntity": {
+              "@type": "Organization",
+              "name": "LogbookWrapped",
+              "email": "contact@logbookwrapped.com",
+              "url": "https://logbookwrapped.com"
+            }
+          })}
+        </script>
       </Helmet>
 
       <header className="mb-12 text-center">
-        <h1 className="text-4xl font-bold text-white mb-6">Let's Connect</h1>
+        <h1 className="text-4xl font-bold text-white mb-2">Contact LogbookWrapped</h1>
+        <p className="text-2xl font-semibold text-slate-400 mb-6">Let's Connect</p>
         <p className="text-xl leading-relaxed max-w-2xl mx-auto">
           Whether you're missing an airport profile, think our math assumptions are a bit off, 
           or just want to chat about aviation and logbooks, we want to hear from you. 
@@ -46,7 +61,7 @@ export const Contact = () => {
               Found a bug, missing an aircraft profile, or want to request a new feature? LogbookWrapped is 100% open-source, and our development process is completely transparent.
             </p>
             <p>
-              Check our public tracker to see if your idea has already been posted, or create a new issue for our team to look at.
+              Check our public tracker to see if your idea has already been posted, or create a new issue for our team to review.
             </p>
           </div>
           <a 

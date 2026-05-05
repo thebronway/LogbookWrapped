@@ -61,6 +61,8 @@ export const getTitleData = (dateFilter: any, isPage1: boolean = false) => {
     line1 = 'My All-Time Logbook';
   } else if (dateFilter?.type === 'custom' && dateFilter.start && dateFilter.end && dateFilter.start.substring(0,4) === dateFilter.end.substring(0,4)) {
     line1 = `My ${dateFilter.start.substring(0, 4)} Logbook`;
+  } else if (dateFilter?.type === 'custom') {
+    line1 = 'My LogbookWrapped';
   } else if (isMilestone) {
     const label = dateFilter.label || '';
     if (isPage1) {

@@ -14,7 +14,7 @@ export const Methodology = () => {
       className="max-w-4xl mx-auto py-16 px-6 sm:px-8 text-slate-300"
     >
       <Helmet>
-        <title>Methodology | How We Parse Your Logbook | LogbookWrapped</title>
+        <title>Logbook Parsing Methodology | LogbookWrapped</title>
         <meta name="description" content="Technical details on how our engine cleans, patches, and interprets your pilot logbook data to calculate accurate aviation statistics and visualizations." />
         <link rel="canonical" href="https://logbookwrapped.com/methodology" />
         <script type="application/ld+json">
@@ -37,7 +37,7 @@ export const Methodology = () => {
                 "url": "https://logbookwrapped.com/logo/logo.webp"
               }
             },
-            "datePublished": "2024-01-01T08:00:00+08:00",
+            "datePublished": "2024-01-01T00:00:00+00:00",
             "dateModified": new Date().toISOString()
           })}
         </script>
@@ -91,7 +91,7 @@ export const Methodology = () => {
           <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
             <p className="text-sm text-blue-200/90 font-mono">
               <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
-              You log tail number N7368F but forget to fill in the aircraft type (C172), and in previous entries you logged N7368F as a C172. We assume that the airframe hasn't changed for that tail number as log it as such.
+              You log tail number N7368F but forget to fill in the aircraft type (C172), and in previous entries you logged N7368F as a C172. We assume that the airframe hasn't changed for that tail number and log it as such.
             </p>
           </div>
         </section>
@@ -130,7 +130,7 @@ export const Methodology = () => {
           <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
             <p className="text-sm text-blue-200/90 font-mono">
               <span className="font-sans font-bold text-blue-400 uppercase tracking-widest text-xs block mb-1">Example</span>
-              You write "DCT" (Direct) in your route. Coincidentally, "DCT" is the official code for Duncan Town Airport in the Bahamas, so we drop that drop the route.
+              You write "DCT" (Direct) in your route. Coincidentally, "DCT" is the official code for Duncan Town Airport in the Bahamas, so we drop the route.
             </p>
           </div>
         </section>
@@ -196,7 +196,7 @@ export const Methodology = () => {
         <section className="space-y-3">
           <h2 className="text-2xl font-bold text-white">10. Crunching Community Averages</h2>
           <p className="leading-relaxed">
-            When you opt-in to unlock your community comparison, we collect anonymous totals to build our global averages. To protect the integrity of the data, our backend spam filters actively throw away unrealistic junk data. We also automatically group your stats by your most-flown aircraft size.
+            When you opt-in to unlock your community comparison, we collect anonymous totals to build our global averages. To protect the integrity of the data, our backend spam filters actively discard unrealistic submissions. We also automatically group your stats by your most-flown aircraft size.
           </p>
           <div className="bg-slate-900/60 border-l-4 border-blue-500 p-4 rounded-r-lg">
             <p className="text-sm text-blue-200/90 font-mono">

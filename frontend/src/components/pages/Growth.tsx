@@ -143,6 +143,7 @@ export const Growth = () => {
               onShareApp={() => { window.umami?.track('App Shared'); handleMyShareApp(); }}
               handleViewWrapped={handleViewWrapped}
               isDesktop={true}
+              isDemo={isDemo}
             />
           </div>
         </div>
@@ -166,6 +167,7 @@ export const Growth = () => {
         totalSlides={totalSlides}
         hasHighLow={hasHighLow}
         highLowSlideIdx={highLowSlideIdx}
+        isDemo={isDemo}
       />
     );
 
@@ -264,7 +266,7 @@ export const Growth = () => {
           <GrowthPage1_Stats nameA={nameA} nameB={nameB} gStats={gStats} />
         </div>
         <div className="flex-1 flex justify-start items-stretch">
-          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { window.umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { window.umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { window.umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} />
+          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => { window.umami?.track('Growth Export Opened'); setShowExport(true); }} onOpenDonation={() => { window.umami?.track('Donation Modal Opened', { source: 'growth_desktop' }); setShowDonation(true); }} onShareApp={() => { window.umami?.track('App Shared'); handleShareApp(); }} handleViewWrapped={handleViewWrapped} isDesktop={true} isDemo={isDemo} />
         </div>
       </div>
     </motion.div>
@@ -310,7 +312,7 @@ export const Growth = () => {
         {currentIndex === 0 ? (
           <GrowthPage1_Stats nameA={nameA} nameB={nameB} gStats={gStats} />
         ) : (
-          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => setShowExport(true)} onOpenDonation={() => setShowDonation(true)} onShareApp={handleShareApp} handleViewWrapped={handleViewWrapped} />
+          <GrowthPage2_Export nameA={nameA} nameB={nameB} copied={copied} onOpenExport={() => setShowExport(true)} onOpenDonation={() => setShowDonation(true)} onShareApp={handleShareApp} handleViewWrapped={handleViewWrapped} isDemo={isDemo} />
         )}
       </div>
     </div>

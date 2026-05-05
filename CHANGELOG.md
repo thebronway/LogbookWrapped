@@ -1,12 +1,23 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-05-03* 
-*Current Version: v1.0.6*
+*Last updated: 2026-05-05* 
+*Current Version: v1.0.7*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.7
+- Bug fix: Page 1 (Cover) PPL milestone showing 0 landings; corrected key mismatch (`destLandings` vs `departureCounts`) in MathEngine
+- Bug fix: Page 11 Growth button using wrong year labels and incorrect order
+- Bug fix: "My [Year]" title appearing incorrectly on custom date ranges without a milestone name
+- Page 2 (Big Picture): scaled down NM distance stat to match the visual weight of surrounding stats
+- Page 10 (Community): rewrote tollbooth copy; title "See How You Stack Up", body leads with "Help build the community average", button renamed "Share to Unlock", table header updated to "Anonymous Data That Will Be Shared"
+- Home page: added "View a Sample Dashboard" button below the iPhone preview carousel
+- Page 11 (Export): refactored into sub-components (ExportCTA_Owner, ExportCTA_SharedDemo)
+- SEO/AEO: improved meta descriptions on Home and Demos; added JSON-LD schemas to Contact (ContactPage) and Privacy (WebPage); fixed SoftwareApplication schema missing `url` on Home; fixed Methodology title length and `datePublished` timezone; added 4th demo card to Demos ItemList schema
+- Copy/grammar: fixed "as log it" typo, duplicate "drop that drop", and several other grammar/copy issues across Methodology, HeroSection, About, FAQ, Contact, and Demos
 
 ### Release v1.0.6
 - ShareLinkModal: title, icon badge, "What's in the link" heading, and ✓ checkmarks recolored to green; Generate button stays yellow

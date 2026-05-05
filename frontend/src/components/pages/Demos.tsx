@@ -153,7 +153,8 @@ export const Demos = () => {
             "itemListElement": [
               { "@type": "ListItem", "position": 1, "name": "Annual Review Demo" },
               { "@type": "ListItem", "position": 2, "name": "Career Pilot Demo" },
-              { "@type": "ListItem", "position": 3, "name": "Student Pilot Milestone Demo" }
+              { "@type": "ListItem", "position": 3, "name": "Student Pilot Milestone Demo" },
+              { "@type": "ListItem", "position": 4, "name": "Cross Country Pilot Demo" }
             ]
           })}
         </script>
@@ -224,7 +225,7 @@ export const Demos = () => {
           Ready for takeoff?
         </h3>
         <p className="text-slate-300 text-lg mb-2">
-          After trying out the demo hangar, drop in your own logbook export to see your stats.
+          After trying out the demo hangar, upload your own logbook export to see your stats.
         </p>
         <Link 
           to="/upload" 

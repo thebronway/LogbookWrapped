@@ -39,8 +39,8 @@ export const About = () => {
       <div className="space-y-10 text-lg leading-relaxed">
         <section>
           <p>
-            Welcome to LogbookWrapped, the ultimate tool for pilots wanting to visualize their aviation milestones. 
-            We believe your flight history is more than just rows in an EFB export, it's the story of your journey through the skies.
+            Welcome to LogbookWrapped, the ultimate tool for pilots who want to visualize their aviation milestones. 
+            We believe your flight history is more than just rows in an EFB export. It's the story of your journey through the skies.
           </p>
         </section>
         <section>

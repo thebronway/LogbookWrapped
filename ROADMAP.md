@@ -1,12 +1,19 @@
 # LogbookWrapped Roadmap
 
-*Last updated: 2026-05-03* 
-*Current Version: v1.0.5*
+*Last updated: 2026-05-05* 
+*Current Version: v1.0.7*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
+
+### Release v1.0.8
+- CFI / Instructor mode: detect dual given in logbook and surface an optional view that leads with dual given / students / endorsements.
+- Dual given vs. dual received breakdown (copy-level, not new card) if CFI mode. Maybe just put it on the stats card IF dual given are present?
+
+### Release v1.0.9
+- Add a link shortern for share links
 
 ### Release v1.1.0: Pilot Pages (detailed)
 
@@ -95,10 +102,6 @@ Navbar / footer link: a small "My Pilot Page" entry surfaces when `localStorage.
 #### Migration from v1.0.5 hash links
 
 v1.0.5 hash URLs (`/s#...`) remain permanently supported; they cost nothing to maintain since they're decoded client-side. Users with a v1.0.5 link can visit it, click "Claim this as a Pilot Page" in the viewer-mode CTA, and upgrade to `/pilot/:handle` without re-uploading their CSV.
-
-### Release v1.0.6: CFI Mode
-- CFI / Instructor mode: detect dual given in logbook and surface an optional view that leads with dual given / students / endorsements.
-- Dual given vs. dual received breakdown (copy-level, not new card).
 
 ### Reddit Questions
 - Add Page 10 Milestones Analyze Checkrides? 

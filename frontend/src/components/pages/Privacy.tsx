@@ -16,6 +16,16 @@ export const Privacy = () => {
         <title>Privacy Policy | LogbookWrapped</title>
         <meta name="description" content="LogbookWrapped is built with a 100% client-side, privacy-first architecture. Read our commitment to keeping your sensitive flight data on your device." />
         <link rel="canonical" href="https://logbookwrapped.com/privacy" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Privacy Policy | LogbookWrapped",
+            "url": "https://logbookwrapped.com/privacy",
+            "dateModified": "2026-05-03",
+            "description": "LogbookWrapped is built with a 100% client-side, privacy-first architecture. Your raw flight data never leaves your device."
+          })}
+        </script>
       </Helmet>
 
       <header className="mb-12">

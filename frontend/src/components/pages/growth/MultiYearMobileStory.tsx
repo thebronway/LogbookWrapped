@@ -22,12 +22,13 @@ export interface MultiYearMobileStoryProps {
   totalSlides: number;
   hasHighLow: boolean;
   highLowSlideIdx: number;
+  isDemo?: boolean;
 }
 
 export const MultiYearMobileStory: React.FC<MultiYearMobileStoryProps> = ({
   pairs, yearData, firstYear, lastYear, copied, closeRoute, onResetStore,
   onOpenExport, onOpenDonation, onShareApp, handleViewWrapped, totalSlides,
-  hasHighLow, highLowSlideIdx
+  hasHighLow, highLowSlideIdx, isDemo
 }) => {
   const [slide, setSlide] = useState(0);
   const isLastSlide = slide === totalSlides - 1;
@@ -115,6 +116,7 @@ export const MultiYearMobileStory: React.FC<MultiYearMobileStoryProps> = ({
                 onOpenDonation={onOpenDonation}
                 onShareApp={onShareApp}
                 handleViewWrapped={handleViewWrapped}
+                isDemo={isDemo}
               />
             )}
           </motion.div>

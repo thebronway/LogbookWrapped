@@ -172,17 +172,17 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
             className={`flex flex-col h-full justify-center max-w-md mx-auto w-full ${isExportMode ? 'hidden' : ''}`}
           >
             <h2 className="text-3xl sm:text-4xl font-black text-center text-white leading-tight tracking-tight mb-4">
-              Unlock Community Averages
+              See How You Stack Up
             </h2>
             
             <p className="text-slate-400 text-sm sm:text-base text-center leading-relaxed mb-8">
-              To see how you stack up, contribute your high-level totals to the pool. 
-              <strong className="text-white block mt-2">Your logbook entries remain 100% private.</strong> 
+              Help build the community average. Optionally contribute your anonymous high-level totals below, to unlock the comparison of your LogbookWrapped to the community averages.
+              <strong className="text-white block mt-2">Your raw logbook data never leaves your device.</strong>
             </p>
 
             <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl">
               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 flex items-center gap-2">
-                <ShieldCheck size={14} className="text-emerald-500" /> Anonymous Data to Share
+                <ShieldCheck size={14} className="text-emerald-500" /> Anonymous Data That Will Be Shared
               </h3>
               <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
                 <div className="flex justify-between border-b border-slate-800 pb-1">
@@ -226,7 +226,7 @@ export const Page10_Community: React.FC<Props> = ({ stats, isExportMode = false,
                         {loadingPhase === 1 ? 'Transmitting...' : loadingPhase === 2 ? 'Crunching Numbers...' : 'Comparing Averages...'}
                       </>
                     ) : (
-                      <><Send size={20} /> Share & Unlock</>
+                      <><Send size={20} /> Share to Unlock</>
                     )}
                   </button>
                   <button 
