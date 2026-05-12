@@ -46,9 +46,9 @@ export const Home = () => {
 
       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <Link to="/upload" onClick={() => window.umami?.track('Funnel Started', { path: 'upload_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-yellow-500/30 hover:border-yellow-400 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-yellow-500/10 hover:-translate-y-1 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl group-hover:bg-yellow-500/20 transition-colors" />
-          <div className="w-16 h-16 bg-yellow-500/20 text-yellow-400 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
+        <Link to="/upload" onClick={() => window.umami?.track('Funnel Started', { path: 'upload_card' })} className="flex flex-col items-center text-center p-8 bg-slate-800/40 border border-yellow-400/30 hover:border-yellow-300 hover:bg-slate-800/80 rounded-3xl transition-all group shadow-xl hover:shadow-yellow-400/10 hover:-translate-y-1 relative overflow-hidden">
+         <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl group-hover:bg-yellow-400/20 transition-colors" />
+         <div className="w-16 h-16 bg-yellow-400/20 text-yellow-300 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform z-10">
             <Plane size={32} />
           </div>
           <h3 className="text-2xl font-bold text-white mb-3 z-10">Upload Your Logbook</h3>

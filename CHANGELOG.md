@@ -1,12 +1,16 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-05-05* 
-*Current Version: v1.0.7*
+*Current Version: v1.0.8*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.0.7
+- SEO/AEO updates
+- Content Updates
 
 ### Release v1.0.7
 - Bug fix: Page 1 (Cover) PPL milestone showing 0 landings; corrected key mismatch (`destLandings` vs `departureCounts`) in MathEngine

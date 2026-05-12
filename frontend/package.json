@@ -1,7 +1,7 @@
 {
   "name": "logbook-wrapped-client",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "LogbookWrapped Frontend",
   "type": "module",
   "scripts": {

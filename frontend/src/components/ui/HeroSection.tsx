@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Shield, Zap, Share2, ArrowRight, LayoutDashboard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogbookStore } from '../../store/useLogbookStore';
 
 const SCREENSHOTS = Array.from({ length: 10 }, (_, i) => `/screenshots/page${i + 1}.webp`);
 
 export const HeroSection = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const navigate = useNavigate();
+  const [isLoadingDemo, setIsLoadingDemo] = useState(false);
+  const { setDateFilter, processFiles, setIsDemo } = useLogbookStore();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,6 +17,29 @@ export const HeroSection = () => {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
+
+  const handleLoadDemo = async () => {
+    try {
+      setIsLoadingDemo(true);
+      window.umami?.track('Sample Dashboard Clicked', { file: 'demo_2026.csv', filterType: 'custom' });
+      
+      const response = await fetch('/assets/demo_files/demo_2026.csv');
+      if (!response.ok) throw new Error('Failed to fetch demo file');
+      
+      const blob = await response.blob();
+      const file = new File([blob], 'demo_2026.csv', { type: 'text/csv' });
+
+      setIsDemo(true);
+      setDateFilter({ type: 'custom', start: '2026-01-01', end: '2026-12-31' });
+      await processFiles([file], true);
+      setIsLoadingDemo(false);
+      navigate('/wrapped');
+    } catch (error) {
+      console.error('Error loading demo:', error);
+      alert("Failed to load demo data. Please try again.");
+      setIsLoadingDemo(false);
+    }
+  };
 
   return (
     <section className="flex flex-col lg:flex-row items-center justify-between gap-16 w-full">
@@ -115,16 +142,20 @@ export const HeroSection = () => {
           </div>
         </div>
 
-        <a
-          href="https://logbookwrapped.com/s#v1.H4sIAAAAAAAAE41WS2_jKhj9KxVrhhowxniXtKqmczNp1fZ2E2VBE5JYk5hcG3c0GvW_X2Eg8SPT8cry8cf53gf_BkYbuf-q67ICGaEYJdBBd_t8uzMVyDCJINjpg5rKSoEM_PPwNAPe6DavjCxWan4AGRZRFEFQF_l_tZrk5aqUG_Py66gsccBfZL6f14c3VTq02unSqMo4byCLEOuDt9JYt-Sa0GuSgP7nJ12bENaV0Vc-vL0uti3exIbWwcac867xNeHOdZP0TBbrvNg2peGthI-6tPUizNvNnes4QalH7r_fgIzEiPj35_xQ76VRa5Bx6rHJytRyPynWz_kBZIKfjCfHY6nlamfrKSIICkv_qMqVKgzIbJNUZfKDpbur1X5alwXISEqpLelOVveFUWUhTa4LuQfZRu4rBcFBV-bfSq0nebkp5cGm-zghKRh-udF10VTy_OncTZCBOSZ0MgWXvraObuS7LnOj_lD-zmd_rBlAS_qaV7lR62fj2nI3A0Pcn6FJHDrTwFXAIZDvqpRb5Tr8ktuUMRIQbNzAP6ryuy7MDmQ4guCtrnJVGY-Ab3WhrkjUzEJYid44yJXJ31VzoIEgOMjjrTQSZL9Bode2fYvFlxQjSikkKWJxsoSLL2mEaJJCwlEsWANgFDEBiUA4pR4gkBKECW9eCWKWgSPBkwCw2AL0xJBGwvpISWCIKbcAEf4E4cS6SNx7jCiLIY1QHGEfVCQSSBKU-BgIIiRuguIOoIhwbo_wlPgjSYytDxwFgIsmCoZdWAzFDFKMKMGek9tEbSIhs4RwC_AkJEIosxScxx6gAlsOzJyTBFER2-pQHzlGQmAbuSD-nXNm3zGjPqzYlo-hJE49gHlzAgu-XEKg1lvXrL92awkXlxvYOuRsBjydJgebQd8v8Px5NoJFZ1jGxNIZKGfz-YydbPpjN_A14BkZT9_Xhfq1RjzYDKZ-TB_OmxFMursyLuLzPoXEP9kwZzJYujGeOosZ5q-3qyMjPu_zKeTuio_h6ciAsxkow7i8WuoR8uoJyjielugEnp4OXZzTXu5trXImffUaV-WWwgVPPdEbx9MSxsAz0MoBzwVJHqjXhY1oae5JUwYyPIz5M6k--eqq95jcOwrvbC6I_phNP18MwaR_VYxhaV0nwaZ3w4yb09YtFLrVu5jG8XQur0UfGvIsIXjTdbG2V5wrJRWCO79cQKcnjInEFThiIl2e_3putC790Q7tBwTS_6hOSyV_rPXPwv753M-eQRZB8DSfvLr_19eHpwaZPdw0z_nttHlqs7P_k9HHx_-ylGRanQwAAA"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => window.umami?.track('Sample Dashboard Clicked')}
-          className="w-[280px] md:w-[320px] inline-flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-800/60 border border-slate-600 hover:border-sky-500/60 hover:bg-slate-800 text-sky-400 hover:text-sky-300 text-base font-semibold transition-all shadow hover:shadow-sky-500/10 hover:-translate-y-0.5"
+        <button
+          onClick={handleLoadDemo}
+          disabled={isLoadingDemo}
+          className={`w-[280px] md:w-[320px] hidden md:inline-flex items-center justify-center gap-2 px-5 py-4 rounded-2xl bg-slate-800/60 border border-slate-600 hover:border-sky-500/60 hover:bg-slate-800 text-sky-400 hover:text-sky-300 text-base font-semibold transition-all shadow hover:shadow-sky-500/10 hover:-translate-y-0.5 ${
+            isLoadingDemo ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          <LayoutDashboard size={18} />
-          View a Sample Wrapped
-        </a>
+          {isLoadingDemo ? (
+            <div className="w-5 h-5 border-2 border-sky-400/30 border-t-sky-400 rounded-full animate-spin" />
+          ) : (
+            <LayoutDashboard size={18} />
+          )}
+          View a 2026 Wrapped
+        </button>
       </div>
     </section>
   );

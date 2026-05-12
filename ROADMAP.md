@@ -1,18 +1,16 @@
 # LogbookWrapped Roadmap
 
-*Last updated: 2026-05-05* 
-*Current Version: v1.0.7*
+*Last updated: 2026-05-12* 
+*Current Version: v1.0.8*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
 
-### Release v1.0.8
+### Release v1.0.9
 - CFI / Instructor mode: detect dual given in logbook and surface an optional view that leads with dual given / students / endorsements.
 - Dual given vs. dual received breakdown (copy-level, not new card) if CFI mode. Maybe just put it on the stats card IF dual given are present?
-
-### Release v1.0.9
 - Add a link shortern for share links
 
 ### Release v1.1.0: Pilot Pages (detailed)

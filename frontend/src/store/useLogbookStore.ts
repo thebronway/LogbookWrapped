@@ -102,13 +102,13 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
     isDemo: val,
     hasSharedCommunityStats: val,
     communityAverages: val ? {
-      flight_time: 145.5,
-      flights: 112,
-      distance: 12500,
-      landings: 154,
-      night_hours: 18.2
+      flight_time: 75.5,
+      flights: 62,
+      distance: 6800,
+      landings: 140,
+      night_hours: 8.5
     } : null,
-    communityPercentile: val ? 18 : null,
+    communityPercentile: val ? 12 : null, // Set to 12th percentile as a realistic demo rank
   }),
 
   setDateFilter: (filter) => {
