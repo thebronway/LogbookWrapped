@@ -8,7 +8,7 @@ import { useLogbookStore } from '../../store/useLogbookStore';
 type ConfigMode = 'annual' | 'milestone' | 'all_time' | 'yoy';
 
 export const Config = () => {
-  const { datasets, dateFilter, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
+  const { datasets, dateFilter, setDateFilter, applyFilterAndCalculate, referralSource } = useLogbookStore();
   const navigate = useNavigate();
   const [mode, setMode] = useState<ConfigMode>('annual');
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +52,7 @@ export const Config = () => {
       ...(mode === 'yoy' && dateFilter.year1 ? { yoy_year1: dateFilter.year1 } : {}),
       ...(mode === 'yoy' && dateFilter.year2 ? { yoy_year2: dateFilter.year2 } : {}),
       ...(mode === 'annual' && dateFilter.start ? { annual_year: dateFilter.start.substring(0, 4) } : {}),
+      ...(referralSource ? { source: referralSource } : {}),
     });
 
     applyFilterAndCalculate();

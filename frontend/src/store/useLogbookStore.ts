@@ -50,6 +50,8 @@ export interface CommunityAverages {
 export type CommunityPercentile = number | null;
 
 interface LogbookState {
+  referralSource: string | null;
+  setReferralSource: (source: string | null) => void;
   hasSharedCommunityStats: boolean;
   setHasSharedCommunityStats: (val: boolean) => void;
   communityAverages: CommunityAverages | null;
@@ -80,6 +82,14 @@ interface LogbookState {
 }
 
 export const useLogbookStore = create<LogbookState>((set, get) => ({
+  referralSource: typeof window !== 'undefined' ? sessionStorage.getItem('referralSource') : null,
+  setReferralSource: (src) => {
+    if (typeof window !== 'undefined') {
+      if (src) sessionStorage.setItem('referralSource', src);
+      else sessionStorage.removeItem('referralSource');
+    }
+    set({ referralSource: src });
+  },
   datasets: [],
   rawFlights: [],
   flights: [],
@@ -253,7 +263,8 @@ export const useLogbookStore = create<LogbookState>((set, get) => ({
         const { flights: parsedFlights, efb } = await parseLogbookCSV(file);
         
         window.umami?.track('Logbook Uploaded', { 
-          flight_count: parsedFlights.length 
+          flight_count: parsedFlights.length,
+          ...(get().referralSource ? { source: get().referralSource as string } : {})
         });
 
         // Fire-and-forget telemetry — aborted after 5 s to avoid lingering requests

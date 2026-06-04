@@ -1,15 +1,12 @@
 # LogbookWrapped Roadmap
 
 *Last updated: 2026-06-04* 
-*Current Version: v1.1.0*
+*Current Version: v1.1.1*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
-
-### Release v1.1.1
-- **Advanced Referral Attribution (The Custom Event Way):** Set up a global background memory listener to capture and persist the URL `?source=xyz` parameter across the entire user session. Update key custom event triggers (e.g., "Generate Wrapped Clicked") to pass this saved referrer string directly to Umami as metadata, enabling a granular conversion funnel breakdown of where successful reports are coming from.
 
 ### Release v1.1.2
 - **Partner API & Secure Tracking Infrastructure:** Enhance the upload API to accept a `partner_id` parameter, secured via server-side API key validation. When a 3rd-party app submits a logbook, the backend will return a tamper-proof session token and track the partner's specific traffic in Umami. This establishes the secure, spoof-proof groundwork for future UI white-labeling (e.g., co-branded watermarks) without making any immediate visual changes to the frontend.

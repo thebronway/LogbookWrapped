@@ -20,8 +20,20 @@ import { SharedView } from './components/pages/SharedView';
 import { Dev } from './components/pages/Dev';
 import { FAQ } from './components/pages/FAQ';
 import { ScrollToTop } from './components/layout/ScrollToTop';
+import { useEffect } from 'react';
+import { useLogbookStore } from './store/useLogbookStore';
 
 function App() {
+  const setReferralSource = useLogbookStore((state) => state.setReferralSource);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const source = params.get('source');
+    if (source) {
+      setReferralSource(source);
+    }
+  }, [setReferralSource]);
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-900 text-slate-200 font-sans relative overflow-hidden">
       <ScrollToTop />
