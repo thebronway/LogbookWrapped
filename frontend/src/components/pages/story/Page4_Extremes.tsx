@@ -22,11 +22,13 @@ export const Page4_Extremes: React.FC<Props> = ({ stats, exportFormat = 'story' 
         <span className="text-rose-400">Extremes.</span>
       </h2>
       <div className="space-y-10">
-        <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-          <p className="text-red-500 text-sm font-bold uppercase tracking-widest mb-1">Autopilot’s Default</p>
-          <p className="text-3xl font-bold mb-2">{stats.favoriteRoute}</p>
-          <p className="text-pink-200/50 text-sm font-mono mb-2">Route flown {stats.favoriteRouteCount} times</p>
-        </motion.div>
+        {stats.secondHome !== 'None' && stats.secondHomeVisits > 0 && (
+          <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+            <p className="text-red-500 text-sm font-bold uppercase tracking-widest mb-1">Second Home</p>
+            <p className="text-3xl font-bold mb-2">{stats.secondHome}</p>
+            <p className="text-pink-200/50 text-sm font-mono mb-2">{stats.secondHomeVisits} visits</p>
+          </motion.div>
+        )}
 
         <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
           <p className="text-red-400 text-sm font-bold uppercase tracking-widest mb-1">The Quickie</p>

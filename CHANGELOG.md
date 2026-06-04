@@ -1,12 +1,16 @@
 # LogbookWrapped Changelog
 
 *Last updated: 2026-06-04* 
-*Current Version: v1.0.9*
+*Current Version: v1.1.0*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+
+### Release v1.1.0
+- UI / Feature: Replace "Autopilot's Default" (favorite route) on the Extremes page with "Second Home" (most visited destination excluding home base) to eliminate redundant A-to-A local pattern flights. Subtst should list the times visited. 
+- UX / Feature / bug: Added a 1s delayed fade-in to the action buttons (and make sure the button is disabled for that 1 second) on Page 11 (Export / CTA) to prevent accidental route changes when rapidly tapping through the mobile story.
 
 ### Release v1.0.9
 - Bug: When viewing demo logbook, and you click create your own logbook, it goes to the configure screen, not the upload screen, and since you didnt upload it uses the demo logbook. It should go to the upload screen

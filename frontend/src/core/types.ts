@@ -63,6 +63,8 @@ export interface CalculatedStats {
   mostUsedTailNumberCount: number;
   favoriteRoute: string;
   favoriteRouteCount: number;
+  secondHome: string;
+  secondHomeVisits: number;
   mostVisitedState: string;
   mostVisitedStateCount: number;
   uniqueStatesCount: number;

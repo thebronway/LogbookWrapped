@@ -37,6 +37,15 @@ export const getWinners = (tracker: SuperlativeTracker) => {
     tracker.departureCounts[a] > tracker.departureCounts[b] ? a : b
   , "Unknown");
 
+  let secondHome = "None";
+  let secondHomeVisits = 0;
+  const validDests = Object.entries(tracker.destLandings).filter(([apt]) => apt !== homeBase);
+  if (validDests.length > 0) {
+    const topDest = validDests.reduce((a, b) => a[1] > b[1] ? a : b);
+    secondHome = topDest[0];
+    secondHomeVisits = topDest[1];
+  }
+
   const busiestMonthKey = Object.keys(tracker.monthStats).reduce((a, b) => {
     if (!a) return b;
     const statA = tracker.monthStats[a];
@@ -64,6 +73,8 @@ export const getWinners = (tracker: SuperlativeTracker) => {
     mostUsedTailNumberCount: tracker.tailNumberCounts[mostUsedTailNumber] || 0,
     favoriteRoute,
     favoriteRouteCount: tracker.routeCounts[favoriteRoute] || 0,
+    secondHome,
+    secondHomeVisits,
     homeBase,
     homeBaseLandings: tracker.destLandings[homeBase] || 0,
     busiestMonth,

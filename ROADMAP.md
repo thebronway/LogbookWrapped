@@ -1,16 +1,12 @@
 # LogbookWrapped Roadmap
 
 *Last updated: 2026-06-04* 
-*Current Version: v1.0.9*
+*Current Version: v1.1.0*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
-
-### Release v1.1.0
-- UI / Feature: Replaced "Autopilot's Default" (favorite route) on the Extremes page with "The Second Home" (most visited destination excluding home base) to eliminate redundant A-to-A local pattern flights.
-- UX / Feature: Added a 0.5s delayed fade-in to the action buttons (and make sure the button is disabled for that .5 seconds) on Page 11 (Export / CTA) to prevent accidental route changes when rapidly tapping through the mobile story.
 
 ### Release v1.1.1
 - **Advanced Referral Attribution (The Custom Event Way):** Set up a global background memory listener to capture and persist the URL `?source=xyz` parameter across the entire user session. Update key custom event triggers (e.g., "Generate Wrapped Clicked") to pass this saved referrer string directly to Umami as metadata, enabling a granular conversion funnel breakdown of where successful reports are coming from.
@@ -26,7 +22,7 @@ This document tracks planned improvements, enhancements, and maintenance.
   - **The IMC Mentor:** Hours of instruction given under the hood or in actual clouds.
   - **The Night Shift:** Hours spent teaching in the dark.
 - **Main Stats Update:** Inject "Dual Given" as a standard sub-metric under the "Total Time" row on the main Stats page so CFIs see their core instruction metric regardless of the dedicated page.
-- **Component Renumbering:** Shift all components from Page 7 onward to maintain chronological file structure. Rename `Page7_Passport` to `Page8`, `Page8_Stats` to `Page9`, up through `Page12_Export`. Update all imports and Umami tracking arrays accordingly.
+- **Component Renumbering:** Shift all components from Page 7 onward to maintain chronological file structure. Rename `Page7_Passport` to `Page8_Passport`, `Page8_Stats` to `Page9_Stats`, up through `Page12_Export`. Update all imports and Umami tracking arrays accordingly.
 - **Desktop Grid Layout Protection (Max 3 Columns):** Update the `StoryContainer` masonry grid to prevent the new Page 7 from breaking the standard layout. Inject the CFI page into the dynamic "Row 3" container, but **cap the grid at a maximum of 3 columns**. If 4 items are present (Instructor, Growth, Community, Export), snap to a 2x2 grid (`md:grid-cols-2`) so the cards remain wide and legible.
 - **Mobile Sequence Update:** Conditionally inject the new `p7` component into the mobile `pages` swipe array so it perfectly precedes the Passport and Stats pages during the mobile flow.
 

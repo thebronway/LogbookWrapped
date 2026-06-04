@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Share2, Bug, Check, Forward, HandCoins, TrendingUp } from 'lucide-react';
 import { useLogbookStore } from '../../../store/useLogbookStore';
@@ -12,7 +12,13 @@ interface Props {
 export const ExportCTA_Owner: React.FC<Props> = ({ onOpenExport, onOpenDonation }) => {
   const { dateFilter, rawFlights, setDateFilter, applyFilterAndCalculate } = useLogbookStore();
   const [copied, setCopied] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Derive the year range to use for the growth report button
   const generateGrowthLink = () => {
@@ -109,8 +115,9 @@ export const ExportCTA_Owner: React.FC<Props> = ({ onOpenExport, onOpenDonation 
           <div className="absolute -right-4 w-8 h-8 bg-slate-950 rounded-full shadow-[inset_2px_0_4px_rgba(0,0,0,0.5)] z-10"></div>
         </div>
 
-        <div data-no-nav className="p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12">
+        <div data-no-nav className={`p-6 pt-8 flex flex-col flex-1 justify-center gap-4 sm:px-12 sm:pb-12 ${!isReady ? 'pointer-events-none' : ''}`}>
           <button
+            disabled={!isReady}
             onClick={() => {
               window.umami?.track('Export Modal Opened');
               if (onOpenExport) onOpenExport();
