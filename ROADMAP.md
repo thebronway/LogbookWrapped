@@ -1,16 +1,12 @@
 # LogbookWrapped Roadmap
 
-*Last updated: 2026-05-27* 
-*Current Version: v1.0.8*
+*Last updated: 2026-06-04* 
+*Current Version: v1.0.9*
 
 ## Overview
 This document tracks planned improvements, enhancements, and maintenance.
 
 ## Release Roadmap
-
-### Release v1.0.9
-- Bug: When viewing demo logbook, and you click create your own logbook, it goes to the configure screen, not the upload screen, and since you didnt upload it uses the demo logbook. It should go to the upload screen
-- Bug: When viewing a shared link /s and you click create your own logbook, it goes to the home screen, it should go to the upload screen
 
 ### Release v1.1.0
 - UI / Feature: Replaced "Autopilot's Default" (favorite route) on the Extremes page with "The Second Home" (most visited destination excluding home base) to eliminate redundant A-to-A local pattern flights.

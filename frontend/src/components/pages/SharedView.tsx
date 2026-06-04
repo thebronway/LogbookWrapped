@@ -94,7 +94,7 @@ export const SharedView = () => {
       {/* Floating desktop CTA. Mobile uses Page 11's own CTA in shared view. */}
       <div className="hidden lg:flex fixed bottom-6 left-0 right-0 z-[50] justify-center pointer-events-none">
         <Link
-          to="/"
+          to="/upload"
           onClick={() => window.umami?.track('Shared View CTA Clicked', { location: 'desktop_floating' })}
           className="pointer-events-auto flex items-center gap-2 px-5 py-3 bg-yellow-400 hover:bg-yellow-300 text-black font-bold rounded-full shadow-2xl shadow-yellow-500/20 transition-all hover:scale-105 active:scale-95 text-sm"
         >

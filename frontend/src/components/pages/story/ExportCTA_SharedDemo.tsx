@@ -5,7 +5,7 @@ import { useLogbookStore } from '../../../store/useLogbookStore';
 import { useNavigate } from 'react-router-dom';
 
 export const ExportCTA_SharedDemo: React.FC = () => {
-  const { dateFilter, isDemo, isSharedView } = useLogbookStore();
+  const { dateFilter, isDemo, isSharedView, resetStore } = useLogbookStore();
   const navigate = useNavigate();
 
   const isDemoFlow = isDemo && !isSharedView;
@@ -27,7 +27,7 @@ export const ExportCTA_SharedDemo: React.FC = () => {
     <>That's someone's<br /><span className="text-sky-400">year in the skies.</span></>
   );
   const subline = isDemoFlow ? `${titleX}Wrapped · Demo Sample` : `${titleX}Wrapped · Shared Snapshot`;
-  const primaryTarget = isDemoFlow ? '/upload' : '/';
+  const primaryTarget = '/upload';
   const trackLocation = isDemoFlow ? 'demo_page11_primary' : 'page11_primary';
   const secondaryHref = isDemoFlow ? '/demos' : '/about';
   const secondaryLabel = isDemoFlow ? 'Browse more demo logbooks' : 'Learn more about LogbookWrapped';
@@ -57,6 +57,7 @@ export const ExportCTA_SharedDemo: React.FC = () => {
           <button
             onClick={() => {
               window.umami?.track(isDemoFlow ? 'Demo CTA Clicked' : 'Shared View CTA Clicked', { location: trackLocation });
+              resetStore();
               navigate(primaryTarget);
             }}
             className="w-full bg-yellow-400 hover:bg-yellow-300 text-black py-4 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-yellow-500/20 hover:-translate-y-0.5"

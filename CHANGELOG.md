@@ -1,14 +1,19 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-05-05* 
-*Current Version: v1.0.8*
+*Last updated: 2026-06-04* 
+*Current Version: v1.0.9*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
 
-### Release v1.0.7
+### Release v1.0.9
+- Bug: When viewing demo logbook, and you click create your own logbook, it goes to the configure screen, not the upload screen, and since you didnt upload it uses the demo logbook. It should go to the upload screen
+- Feature:  When viewing demo logbook add the floating create your own logbook button, similar to shared link /s
+- Bug: When viewing a shared link /s and you click create your own logbook, it goes to the home screen, it should go to the upload screen
+
+### Release v1.0.8
 - SEO/AEO updates
 - Content Updates
 
