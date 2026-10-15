@@ -1,12 +1,15 @@
 # LogbookWrapped Changelog
 
-*Last updated: 2026-06-04* 
+*Last updated: 2026-06-04*  
 *Current Version: v1.1.1*
 
 ## Overview
 This document tracks past changes starting with v0.8.1.
 
 ## Changelog
+### Release v1.1.2
+- Minor bugfix
+
 ### Release v1.1.1
 - **Advanced Referral Attribution:** Set up a global background memory listener to capture and persist the URL `?source=xyz` parameter across the entire user session. Update key custom event triggers (e.g., "Generate Wrapped Clicked") to pass this saved referrer string directly to Umami as metadata, enabling a granular conversion funnel breakdown of where successful reports are coming from. ?utm_source=xyz&source=xyz
 
